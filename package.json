@@ -1,0 +1,21 @@
+{
+	"name": "matthewvandoff.com-v2",
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"astro": "^5.10.1",
+    "gsap": "^3.13.0",
+		"sharp": "^0.34.2"
+	},
+	"devDependencies": {
+		"prettier": "^3.5.3",
+		"prettier-plugin-astro": "^0.14.1",
+		"typescript": "^5.8.3"
+	}
+}

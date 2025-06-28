@@ -1,0 +1,22 @@
+:root {
+	/* --main-900: #090812; */
+	--main-900: hsl(240, 40%, 2%);
+	/* --main-900: #0303077f; */
+}
+html,
+body {
+	height: 100%;
+}
+body {
+	background: var(--main-900);
+	color: white;
+	font-family: 'DotGothic16', sans-serif;
+	font-weight: 400;
+	font-style: normal;
+	position: relative;
+}
+a {
+	text-decoration: none;
+	color: unset;
+	font-size: 26px;
+}

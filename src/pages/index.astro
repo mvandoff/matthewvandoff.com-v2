@@ -1,0 +1,35 @@
+---
+import 'normalize.css';
+import 'styles.css';
+
+import Hero from 'sections/hero/Hero.astro';
+import Nav from 'sections/nav/Nav.astro';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet" />
+
+		<title>matthew van doff's cool website</title>
+	</head>
+	<body>
+		<Nav />
+		<main>
+			<Hero />
+		</main>
+	</body>
+</html>
+<script>
+	import { gsap } from 'gsap';
+	import { InertiaPlugin } from 'gsap/InertiaPlugin';
+	import { initDotGrid } from 'sections/hero/initDotGrid';
+	gsap.registerPlugin(InertiaPlugin);
+
+	initDotGrid();
+</script>

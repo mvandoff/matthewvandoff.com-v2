@@ -1,0 +1,50 @@
+.section-dots {
+	justify-content: center;
+	align-items: stretch;
+	height: calc(100% - 16rem);
+	padding: 8rem;
+	display: flex;
+	position: relative;
+	overflow: hidden;
+}
+
+.section-dots__wrap {
+	width: 100%;
+	min-height: 30em;
+	position: relative;
+}
+
+.dots-container {
+	gap: 2em;
+	pointer-events: none;
+	flex-flow: wrap;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	position: absolute;
+	inset: 0;
+}
+
+.dot {
+	will-change: transform, background-color;
+	transform-origin: center;
+	background-color: #245e51;
+	border-radius: 50%;
+	width: 1em;
+	height: 1em;
+	position: relative;
+	transform: translate(0);
+}
+
+.osmo-icon__link {
+	color: currentColor;
+	text-decoration: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.osmo-icon-svg {
+	width: 10em;
+}

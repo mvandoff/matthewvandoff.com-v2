@@ -1,0 +1,55 @@
+---
+import './dot-grid.css';
+---
+
+<section id="hero">
+	<div class="section-dots">
+		<div class="section-dots__wrap">
+			<div data-dots-container-init="" class="dots-container">
+				<div class="dot"></div>
+			</div>
+		</div>
+	</div>
+	<div class="attribute-wrapper">
+		<h1>matthew van doff</h1>
+		<h2>developer</h2>
+		<h2>tinkerer</h2>
+		<h2>good guy</h2>
+	</div>
+</section>
+
+<style>
+	#hero {
+		height: 100vh;
+		position: relative;
+
+		.attribute-wrapper {
+			position: absolute;
+			right: 10rem;
+			bottom: 10rem;
+			display: flex;
+			flex-direction: column;
+			align-items: end;
+		}
+		h1,
+		h2 {
+			font-size: 50px;
+			display: block;
+			padding: 0.5rem 1rem;
+			margin: 0;
+			/* background: var(--main-900); */
+			width: max-content;
+		}
+		h1 {
+			margin-bottom: 0.5rem;
+			color: #c0c6e7;
+			/* color: rgb(from var(--brand) r g b / 40%); */
+			/* text-shadow: white 5px 5px; */
+		}
+		h2 {
+		}
+		a {
+			color: white;
+		}
+	}
+</style>
