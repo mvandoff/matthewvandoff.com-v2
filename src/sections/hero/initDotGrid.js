@@ -2,7 +2,7 @@ import { gsap } from 'gsap';
 
 export function initDotGrid() {
 	document.querySelectorAll('[data-dots-container-init]').forEach((container) => {
-		const colors = { base: '#090812', active: '#C0C6E7' };
+		const colors = { base: 'hsl(246 38% 10% / 1)', active: '#C0C6E7' };
 		const threshold = 200;
 		const speedThreshold = 100;
 		const shockRadius = 325;

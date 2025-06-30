@@ -1,6 +1,10 @@
+---
+const { pathname } = Astro.url;
+---
+
 <nav>
 	<span class="nav-row">
-		<a href="#">[ home ]</a>
+		<a href="#" class={pathname === '/' ? 'selected' : ''} }>[ home ]</a>
 		<a href="#">[ work ]</a>
 	</span>
 	<span class="nav-row">
@@ -8,6 +12,7 @@
 		<a href="#">[ contact ]</a>
 	</span>
 </nav>
+
 <style>
 	nav {
 		box-sizing: border-box;
@@ -16,6 +21,7 @@
 		max-width: 100%;
 		padding: 2rem;
 		display: flex;
+		flex-direction: column;
 		justify-content: space-between;
 		position: fixed;
 		top: 0;
@@ -24,11 +30,17 @@
 
 		.nav-row {
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
 			justify-content: space-between;
 		}
 		a {
-			/* width: 50%; */
+			transition: all 1s ease;
+			&:hover {
+				letter-spacing: 0.2rem;
+			}
+			&.selected {
+				color: var(--main-100);
+			}
 		}
 	}
 </style>

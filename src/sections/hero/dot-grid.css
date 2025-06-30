@@ -28,7 +28,6 @@
 .dot {
 	will-change: transform, background-color;
 	transform-origin: center;
-	background-color: #245e51;
 	border-radius: 50%;
 	width: 1em;
 	height: 1em;
