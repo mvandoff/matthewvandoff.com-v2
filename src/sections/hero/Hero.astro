@@ -12,9 +12,9 @@ import './dot-grid.css';
 	</div>
 	<div class="attribute-wrapper">
 		<h1>matthew van doff</h1>
-		<h2>developer</h2>
-		<h2>tinkerer</h2>
-		<h2>good guy</h2>
+		<h2 data-scramble="sandwich artist">software developer</h2>
+		<h2 data-scramble="breaker">tinkerer</h2>
+		<h2 data-scramble="grumpy sometimes">good guy</h2>
 	</div>
 </section>
 
@@ -38,12 +38,18 @@ import './dot-grid.css';
 			padding: 0.5rem 1rem;
 			margin: 0;
 			width: max-content;
+			z-index: 99;
+			background: rgb(0 0 10 / 0.25);
 		}
 		h1 {
 			margin-bottom: 0.5rem;
-			color: var(--main-100);
+			color: var(--main-200);
 		}
 		h2 {
+			user-select: none;
+			&:hover {
+				color: var(--main-200);
+			}
 		}
 		a {
 			color: white;
