@@ -37,4 +37,4 @@ export function initScrambleOnHover() {
 	});
 }
 
-const SCRAMBLE_CHARS = '◊∆▫▹|zx';
+const SCRAMBLE_CHARS = '◊∆01';

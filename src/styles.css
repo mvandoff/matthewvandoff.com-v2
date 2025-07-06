@@ -28,4 +28,46 @@ a {
 	text-decoration: none;
 	color: unset;
 	font-size: 26px;
+	color: white;
+}
+h1,
+h2 {
+	font-size: 50px;
+	display: block;
+	padding: 0.5rem 1rem;
+	margin: 0;
+	width: max-content;
+	z-index: 99;
+	background: rgb(0 0 10 / 0.25);
+}
+h1 {
+	margin-bottom: 0.5rem;
+	color: var(--main-200);
+}
+h2 {
+	user-select: none;
+	&:hover {
+		color: var(--main-200);
+	}
+}
+button {
+	color: white;
+}
+@media (max-width: 1023px) {
+	h1,
+	h2 {
+		font-size: 40px;
+	}
+	a {
+		font-size: 24px;
+	}
+}
+@media (max-width: 767px) {
+	h1,
+	h2 {
+		font-size: 30px;
+	}
+	a {
+		font-size: 22px;
+	}
 }

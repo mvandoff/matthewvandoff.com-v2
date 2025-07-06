@@ -1,8 +1,8 @@
 .section-dots {
 	justify-content: center;
 	align-items: stretch;
-	height: calc(100% - 16rem);
-	padding: 8rem;
+	height: calc(100% - 12rem);
+	padding: 6rem 5svw;
 	display: flex;
 	position: relative;
 	overflow: hidden;

@@ -1,9 +1,11 @@
 ---
 import 'normalize.css';
 import 'styles.css';
+import 'my-reset.css';
 
 import Hero from 'sections/hero/Hero.astro';
 import Nav from 'sections/nav/Nav.astro';
+import MenuButton from 'components/MenuButton.astro';
 ---
 
 <html lang="en">
@@ -20,6 +22,7 @@ import Nav from 'sections/nav/Nav.astro';
 	</head>
 	<body>
 		<Nav />
+		<MenuButton />
 		<main>
 			<Hero />
 		</main>
