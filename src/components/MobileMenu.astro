@@ -1,0 +1,43 @@
+---
+const { pathname } = Astro.url;
+---
+
+<nav id="mobile-menu" class="closed">
+	<ul>
+		<li><a href="#" class={pathname === '/' ? 'selected' : ''}>home</a></li>
+		<li><a href="#">about</a></li>
+		<li><a href="#">work</a></li>
+		<li><a href="#">contact</a></li>
+	</ul>
+</nav>
+
+<style>
+	#mobile-menu {
+		background: var(--main-800);
+		height: 100svh;
+		position: fixed;
+		width: 100svw;
+		z-index: 100;
+
+		ul {
+			display: flex;
+			flex-direction: column;
+			gap: 1.5rem;
+			height: 100%;
+			justify-content: center;
+			align-items: center;
+		}
+		a {
+			font-size: 36px;
+			&.selected {
+				color: var(--main-200);
+			}
+		}
+		&.closed {
+			display: none;
+		}
+		&.open {
+			display: block;
+		}
+	}
+</style>

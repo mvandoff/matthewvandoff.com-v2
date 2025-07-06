@@ -1,10 +1,11 @@
-<button id="menu-btn">[ menu ]</button>
+<button id="menu-btn" class="closed">[ menu ]</button>
 <style>
 	#menu-btn {
 		display: none;
 		position: fixed;
 		top: 2rem;
 		right: 2rem;
+		z-index: 200;
 	}
 	@media (max-width: 1023px) {
 		#menu-btn {
@@ -20,3 +21,23 @@
 		}
 	}
 </style>
+<script>
+	document.addEventListener('DOMContentLoaded', (e) => {
+		const btn = document.querySelector('#menu-btn')!;
+		const menu = document.querySelector('#mobile-menu')!;
+
+		btn.addEventListener('mousedown', () => {
+			e.stopPropagation();
+			e.stopImmediatePropagation();
+			if (btn.classList.contains('open')) {
+				btn.textContent = '[ menu ]';
+				btn.classList.replace('open', 'closed');
+				menu.classList.replace('open', 'closed');
+			} else {
+				btn.textContent = '[ close ]';
+				btn.classList.replace('closed', 'open');
+				menu.classList.replace('closed', 'open');
+			}
+		});
+	});
+</script>
