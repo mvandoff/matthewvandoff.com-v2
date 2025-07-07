@@ -1,5 +1,5 @@
 :root {
-	--main-900: #00000a;
+	--main-900: #000005;
 	--main-800: #01001f;
 	--main-700: #02002e;
 	--main-600: #030042;
@@ -24,6 +24,10 @@ body {
 	font-style: normal;
 	position: relative;
 }
+section:not(.unset-height) {
+	height: 100svh;
+	position: relative;
+}
 a {
 	text-decoration: none;
 	color: unset;
@@ -32,7 +36,7 @@ a {
 }
 h1,
 h2 {
-	font-size: 50px;
+	font-size: 60px;
 	display: block;
 	padding: 0.5rem 1rem;
 	margin: 0;
@@ -49,6 +53,9 @@ h2 {
 	&:hover {
 		color: var(--main-200);
 	}
+}
+h3 {
+	font-size: 24px;
 }
 button {
 	color: white;

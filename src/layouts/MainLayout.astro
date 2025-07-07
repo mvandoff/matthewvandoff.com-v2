@@ -1,0 +1,35 @@
+---
+import 'normalize.css';
+import 'styles.css';
+import 'my-reset.css';
+
+import Hero from 'sections/hero/Hero.astro';
+import MenuButton from 'components/MenuButton.astro';
+import MobileMenu from 'components/MobileMenu.astro';
+import Nav from 'components/Nav.astro';
+import Footer from 'components/Footer.astro';
+
+const { title } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet" />
+
+		<title>{title}</title>
+	</head>
+	<body>
+		<Nav />
+		<MenuButton />
+		<MobileMenu />
+		<main>
+			<slot />
+		</main>
+	</body>
+</html>

@@ -20,9 +20,6 @@ import './dot-grid.css';
 
 <style>
 	#hero {
-		height: 100svh;
-		position: relative;
-
 		.attribute-wrapper {
 			position: absolute;
 			right: 8vw;
@@ -33,3 +30,18 @@ import './dot-grid.css';
 		}
 	}
 </style>
+<script>
+	import { gsap } from 'gsap';
+	import InertiaPlugin from 'gsap/InertiaPlugin';
+	import ScrambleTextPlugin from 'gsap/ScrambleTextPlugin';
+	import SplitText from 'gsap/SplitText';
+	import { initScrambleOnHover } from 'scripts/initScrambleOnHover';
+	import { initDotGrid } from 'sections/hero/initDotGrid';
+
+	gsap.registerPlugin(InertiaPlugin);
+	gsap.registerPlugin(ScrambleTextPlugin);
+	gsap.registerPlugin(SplitText);
+
+	initScrambleOnHover();
+	initDotGrid();
+</script>

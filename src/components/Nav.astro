@@ -3,21 +3,16 @@ const { pathname } = Astro.url;
 ---
 
 <nav>
-	<span class="nav-row">
-		<a href="#" class={pathname === '/' ? 'selected' : ''} }>[ home ]</a>
-		<a href="#">[ work ]</a>
-	</span>
-	<span class="nav-row">
-		<a href="#">[ about ]</a>
-		<a href="#">[ contact ]</a>
-	</span>
+	<a href="/" class={pathname === '/' ? 'selected' : ''}>[ home ]</a>
+	<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
+	<a href="#">[ about ]</a>
+	<a href="#">[ contact ]</a>
 </nav>
 
 <style>
 	nav {
 		box-sizing: border-box;
-		height: 100vh;
-		width: 100vw;
+		width: 100%;
 		max-width: 100%;
 		padding: 2rem;
 		display: flex;
@@ -27,12 +22,10 @@ const { pathname } = Astro.url;
 		top: 0;
 		left: 0;
 		z-index: 10;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 
-		.nav-row {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-		}
 		a {
 			/* transition: all 1s ease; */
 			&:hover {

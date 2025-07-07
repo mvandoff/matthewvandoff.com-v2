@@ -1,7 +1,11 @@
 button {
 	background: unset;
 	border: 0;
+	cursor: pointer;
 }
 ul {
 	list-style: none;
+}
+a {
+	text-decoration: none !important;
 }
