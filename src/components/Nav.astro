@@ -2,7 +2,7 @@
 const { pathname } = Astro.url;
 ---
 
-<nav>
+<nav id="main-nav">
 	<a href="/" class={pathname === '/' ? 'selected' : ''}>[ home ]</a>
 	<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
 	<a href="#">[ about ]</a>
@@ -27,9 +27,15 @@ const { pathname } = Astro.url;
 		justify-content: space-between;
 
 		a {
-			/* transition: all 1s ease; */
+			transition: all 0.25s ease;
+			&.inactive {
+				color: var(--slate-400) !important;
+			}
+			&.active {
+				color: white;
+			}
 			&:hover {
-				/* letter-spacing: 0.2rem; */
+				/* transform: scaleX(1.1); */
 				color: var(--main-200);
 			}
 			&.selected {
@@ -43,3 +49,24 @@ const { pathname } = Astro.url;
 		}
 	}
 </style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const nav = document.querySelector('#main-nav');
+		const navItems = nav?.querySelectorAll('a');
+
+		navItems?.forEach((navItem) => {
+			navItem.addEventListener('mouseenter', (e) => {
+				const selectedEle = e.target;
+				navItems.forEach((ele) => {
+					if (ele !== selectedEle) ele.classList.add('inactive');
+					else ele.classList.add('active');
+				});
+			});
+
+			navItem.addEventListener('mouseleave', (e) => {
+				navItems.forEach((ele) => ele.classList.remove('inactive', 'active'));
+			});
+		});
+	});
+</script>
