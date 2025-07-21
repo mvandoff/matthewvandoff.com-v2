@@ -16,7 +16,7 @@ export function initScrambleOnHover() {
 
 		target.addEventListener('mouseenter', () => {
 			gsap.to(target, {
-				duration: 1,
+				duration: 0.75,
 				scrambleText: {
 					text: customHoverText ? customHoverText : originalText,
 					chars: SCRAMBLE_CHARS,
@@ -26,7 +26,7 @@ export function initScrambleOnHover() {
 
 		target.addEventListener('mouseleave', () => {
 			gsap.to(target, {
-				duration: 1,
+				duration: 0.75,
 				scrambleText: {
 					text: originalText,
 					speed: 2,

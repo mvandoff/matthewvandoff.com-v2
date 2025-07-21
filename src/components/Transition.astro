@@ -1,0 +1,40 @@
+<div class="transition" id="transition">
+	<div class="transition-block"></div>
+</div>
+
+<style>
+	.transition {
+		display: grid;
+		z-index: 100;
+		background-color: transparent;
+		flex-flow: wrap;
+		grid-template-columns: repeat(8, 1fr);
+		place-content: center;
+		place-items: center;
+		width: 100%;
+		min-height: 100vh;
+		position: fixed;
+		top: 0%;
+		left: 0%;
+		right: 0%;
+	}
+
+	.transition-block {
+		aspect-ratio: 1;
+		background-color: #ff4c24;
+		width: 100%;
+		height: 100%;
+	}
+
+	@media screen and (max-width: 767px) {
+		.transition {
+			grid-template-columns: repeat(6, 1fr);
+		}
+	}
+
+	@media screen and (max-width: 479px) {
+		.transition {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+</style>

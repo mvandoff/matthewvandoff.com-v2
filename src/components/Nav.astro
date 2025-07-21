@@ -14,7 +14,7 @@ const { pathname } = Astro.url;
 		box-sizing: border-box;
 		width: 100%;
 		max-width: 100%;
-		padding: 2rem;
+		padding: 1.25rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -25,21 +25,22 @@ const { pathname } = Astro.url;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+		font-size: 28px;
 
 		a {
 			transition: all 0.25s ease;
+			color: var(--slate-400);
 			&.inactive {
-				color: var(--slate-400) !important;
+				color: var(--slate-500) !important;
 			}
 			&.active {
 				color: white;
 			}
 			&:hover {
-				/* transform: scaleX(1.1); */
-				color: var(--main-200);
+				color: white;
 			}
 			&.selected {
-				color: var(--main-200);
+				color: white;
 			}
 		}
 	}

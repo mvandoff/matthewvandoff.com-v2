@@ -44,7 +44,6 @@ section:not(.unset-height) {
 a {
 	text-decoration: none;
 	color: unset;
-	font-size: 26px;
 	color: white;
 }
 h1,
