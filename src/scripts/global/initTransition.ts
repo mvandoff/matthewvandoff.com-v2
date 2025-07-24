@@ -88,7 +88,13 @@ export async function initTransition() {
 	validLinks.forEach((link: HTMLAnchorElement) => {
 		link.addEventListener('pointerdown', (event: MouseEvent) => {
 			event.preventDefault();
+
+			// Intercept mouseleave event. Prevents the current page nav link from re-highlighting when transition starts.
+			validLinks.forEach((vl: HTMLAnchorElement) =>
+				vl.addEventListener('mouseleave', (e) => e.stopImmediatePropagation(), true),
+			);
 			link.classList.add('transitioning');
+
 			const destination: string = link.href;
 
 			// Show loading grid with animation

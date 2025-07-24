@@ -4,10 +4,9 @@
 	min-height: 100vh;
 	display: flex;
 }
-.section-resource.is--dark {
+.section-resource {
 	color: #fff;
 	background-color: #000;
-	/* background: #6e8cc6; */
 }
 a {
 	color: inherit;
@@ -49,16 +48,13 @@ p {
 	height: 100%;
 }
 .project-list {
+	position: absolute;
 	flex-flow: column;
 	align-items: flex-start;
-	height: 90%;
 	padding: 0;
-	list-style: none;
 	display: flex;
-	position: relative;
 	gap: 1rem;
-	margin-top: 40vh;
-	position: absolute;
+	bottom: 0;
 }
 .main-title__item {
 	justify-content: flex-start;

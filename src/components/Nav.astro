@@ -71,7 +71,9 @@ const { pathname } = Astro.url;
 
 		navItems?.forEach((navItem) => {
 			navItem.addEventListener('mouseenter', (e) => {
-				const selectedEle = e.target;
+				const selectedEle = e.target as HTMLAnchorElement;
+				if (selectedEle.classList.contains('selected')) return;
+
 				navItems.forEach((ele) => {
 					if (ele !== selectedEle) ele.classList.add('inactive');
 					else ele.classList.add('active');
