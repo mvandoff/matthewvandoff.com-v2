@@ -30,7 +30,7 @@ const { pathname } = Astro.url;
 		a {
 			transition: all 0.25s ease;
 			color: var(--slate-400);
-			&.inactive {
+			&.inactive:not(.transitioning) {
 				color: var(--slate-500) !important;
 			}
 			&.active {
@@ -42,11 +42,24 @@ const { pathname } = Astro.url;
 			&.selected {
 				color: white;
 			}
+			&.transitioning {
+				animation: flash infinite 0.2s;
+				transition: color none !important;
+			}
 		}
 	}
 	@media (max-width: 1023px) {
 		nav {
 			display: none;
+		}
+	}
+
+	@keyframes flash {
+		from {
+			color: white;
+		}
+		to {
+			color: var(--slate-500);
 		}
 	}
 </style>

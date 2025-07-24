@@ -36,7 +36,7 @@ function adjustGrid() {
 	gsap.set('.transition-block', { opacity: 1 });
 }
 
-export async function initPixelTransition() {
+export async function initTransition() {
 	adjustGrid();
 
 	const pageLoadTimeline = gsap.timeline({
@@ -86,8 +86,9 @@ export async function initPixelTransition() {
 
 	// Add event listeners to pre-processed valid links
 	validLinks.forEach((link: HTMLAnchorElement) => {
-		link.addEventListener('click', (event: MouseEvent) => {
+		link.addEventListener('pointerdown', (event: MouseEvent) => {
 			event.preventDefault();
+			link.classList.add('transitioning');
 			const destination: string = link.href;
 
 			// Show loading grid with animation
@@ -99,7 +100,7 @@ export async function initPixelTransition() {
 					autoAlpha: 1,
 					duration: 0.001,
 					ease: 'linear',
-					stagger: { amount: 0.5, from: 'random' },
+					stagger: { amount: 0.75, from: 'random' },
 					onComplete: () => {
 						window.location.href = destination;
 					},
