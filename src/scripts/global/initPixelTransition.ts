@@ -31,6 +31,9 @@ function adjustGrid() {
 		block.classList.add('transition-block');
 		transition.appendChild(block);
 	}
+
+	// Set initial state for page load animation - blocks start visible
+	gsap.set('.transition-block', { opacity: 1 });
 }
 
 export async function initPixelTransition() {
@@ -41,14 +44,14 @@ export async function initPixelTransition() {
 			gsap.set('#transition', { background: 'transparent' });
 		},
 		onComplete: () => {
-			// gsap.set('#transition', { display: 'none' });
+			gsap.set('#transition', { display: 'none' });
 		},
 		defaults: {
 			ease: 'linear',
 		},
 	});
 
-	// Play the timeline only after the grid is ready
+	// Animate blocks out on page load
 	pageLoadTimeline.to(
 		'.transition-block',
 		{
@@ -56,7 +59,7 @@ export async function initPixelTransition() {
 			duration: 0.1,
 			stagger: { amount: 0.75, from: 'random' },
 		},
-		0.5,
+		0.1,
 	);
 
 	// Pre-process all valid links

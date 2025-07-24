@@ -1,27 +1,21 @@
-<div class="transition" id="transition">
-	<div class="transition-block"></div>
-</div>
+<div class="transition" id="transition"></div>
 
-<style>
+<style is:global>
+	:root {
+		--transition-bg: var(--main-700);
+	}
 	.transition {
 		display: grid;
 		z-index: 100;
-		background-color: transparent;
-		flex-flow: wrap;
-		grid-template-columns: repeat(8, 1fr);
-		place-content: center;
-		place-items: center;
+		background-color: var(--transition-bg);
 		width: 100%;
 		min-height: 100vh;
 		position: fixed;
-		top: 0%;
-		left: 0%;
-		right: 0%;
+		grid-template-columns: repeat(12, 1fr);
 	}
 
 	.transition-block {
-		aspect-ratio: 1;
-		background-color: #ff4c24;
+		background-color: var(--transition-bg);
 		width: 100%;
 		height: 100%;
 	}

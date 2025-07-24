@@ -29,6 +29,7 @@ const { title } = Astro.props;
 		<Nav />
 		<MenuButton />
 		<MobileMenu />
+
 		<main>
 			<slot />
 		</main>
@@ -37,7 +38,5 @@ const { title } = Astro.props;
 <script>
 	import { initPixelTransition } from 'scripts/global/initPixelTransition';
 
-	document.addEventListener('DOMContentLoaded', () => {
-		initPixelTransition();
-	});
+	initPixelTransition();
 </script>

@@ -1,5 +1,5 @@
 :root {
-	--main-900: #000005;
+	/* --main-900: #000005;
 	--main-800: #01001f;
 	--main-700: #02002e;
 	--main-600: #030042;
@@ -9,10 +9,20 @@
 	--main-200: #818ae4;
 	--main-100: #acb3f1;
 	--main-50: #a9bde0;
+	--accent-300: #62c1fd; */
 
-	--accent-300: #62c1fd;
+	--main-50: #e1f3fe;
+	--main-100: #95d7ff;
+	--main-200: #63c4fe;
+	--main-300: #30b1fe;
+	--main-400: #17a7ff;
+	--main-500: #009dfd;
+	--main-600: #008ee3;
+	--main-700: #006eb1;
+	--main-800: #004e7e;
+	--main-900: #002f4b;
+	--main-950: #001623;
 
-	/* Tailwind Slate palette as CSS variables */
 	--slate-50: #f8fafc;
 	--slate-100: #f1f5f9;
 	--slate-200: #e2e8f0;
@@ -30,7 +40,6 @@ body {
 	height: 100%;
 }
 body {
-	background: var(--main-900);
 	color: white;
 	font-family: 'DotGothic16', sans-serif;
 	font-weight: 400;

@@ -19,6 +19,9 @@ import './dot-grid.css';
 </section>
 
 <style>
+	body {
+		background: black;
+	}
 	#hero {
 		.attribute-wrapper {
 			position: absolute;
@@ -35,7 +38,7 @@ import './dot-grid.css';
 	import InertiaPlugin from 'gsap/InertiaPlugin';
 	import ScrambleTextPlugin from 'gsap/ScrambleTextPlugin';
 	import SplitText from 'gsap/SplitText';
-	import { initScrambleOnHover } from 'scripts/initScrambleOnHover';
+	import { initScrambleOnHover } from 'scripts/home/initScrambleOnHover';
 	import { initDotGrid } from 'sections/hero/initDotGrid';
 
 	gsap.registerPlugin(InertiaPlugin);
