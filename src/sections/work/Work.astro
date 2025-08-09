@@ -2,40 +2,14 @@
 import Overlay from 'sections/work/Overlay.astro';
 import ProjectList from 'sections/work/ProjectList.astro';
 import './gallery.css';
+import ProjectImageList from 'sections/work/ProjectImageList.astro';
 ---
 
-<section class="section-resource" id="work">
+<section class="section-resource overlay-closed" id="work">
 	<div class="page">
 		<div class="main">
 			<div class="main-col">
-				<div class="main-img-list">
-					<div class="main-img-item" style="opacity: 1; visibility: inherit;">
-						<img
-							alt=""
-							src="https://cdn.prod.website-files.com/67698689512e0fc28ac45d04/67698a0416860b36f6dd7f44_tobias-reich-AwqQch2wAmM-unsplash.avif"
-							loading="lazy"
-							class="image"
-							data-flip-id="auto-2"
-							style=""
-						/>
-					</div>
-					<div class="main-img-item" style="opacity: 0; visibility: hidden;">
-						<img
-							alt=""
-							src="https://cdn.prod.website-files.com/67698689512e0fc28ac45d04/67698a0416860b36f6dd7f82_massimiliano-morosinotto-oJmVzkVStoo-unsplash.avif"
-							loading="lazy"
-							class="image"
-						/>
-					</div>
-					<div class="main-img-item" style="opacity: 0; visibility: hidden;">
-						<img
-							alt=""
-							src="https://cdn.prod.website-files.com/67698689512e0fc28ac45d04/67698a0416860b36f6dd7f6d_karsten-winegeart-9CTqIV6kPQ0-unsplash.avif"
-							loading="lazy"
-							class="image"
-						/>
-					</div>
-				</div>
+				<ProjectImageList />
 			</div>
 			<div class="main-col">
 				<p id="work-intro">
@@ -50,11 +24,24 @@ import './gallery.css';
 		<Overlay />
 	</div>
 </section>
+
+<style>
+	section {
+		justify-content: center;
+		align-items: center;
+		min-height: 100vh;
+		display: flex;
+		color: #fff;
+		background-color: #000;
+		transition: background 1s ease;
+	}
+</style>
+
 <script>
 	import { gsap } from 'gsap';
 	import { CustomEase } from 'gsap/CustomEase';
 	import { Flip } from 'gsap/Flip';
-	import { initGalleryOverlayTransitionFlip } from 'sections/work/gallery';
+	import { initGalleryOverlayTransitionFlip } from 'sections/work/scripts/gallery';
 
 	document.addEventListener('DOMContentLoaded', () => {
 		gsap.registerPlugin(CustomEase, Flip);

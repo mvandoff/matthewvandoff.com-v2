@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
 import { SplitText } from 'gsap/SplitText';
+import { setProjectBackground } from './setProjectBackground';
 
 gsap.registerPlugin(Flip, SplitText);
 
@@ -13,6 +14,7 @@ export function initGalleryOverlayTransitionFlip() {
 	const closeButton = document.querySelector("[data-overlay='close']");
 	const headings = document.querySelectorAll('.main-title');
 	const workIntro = document.querySelector('#work-intro');
+	const section = document.getElementById('work');
 
 	// Split the work intro text into lines
 	const workIntroSplit = new SplitText(workIntro, {
@@ -42,6 +44,7 @@ export function initGalleryOverlayTransitionFlip() {
 		projectButtons.forEach((item) => item.classList.remove('active'));
 		activeListItem = projectButtons[index];
 		activeListItem.classList.add('active');
+		section.classList.replace('overlay-closed', 'overlay-open');
 
 		// Record the state of the title
 		const title = activeListItem.querySelector('.main-title');
@@ -55,7 +58,7 @@ export function initGalleryOverlayTransitionFlip() {
 		const overlayItem = overlayItems[index];
 		const content = overlayItem.querySelector('.overlay-row');
 
-		gsap.set(overlayItem, { display: 'block', autoAlpha: 110 });
+		gsap.set(overlayItem, { display: 'block', autoAlpha: 1 });
 		gsap.fromTo(content, { autoAlpha: 0 }, { autoAlpha: 1, delay: 0.5 });
 
 		const textTarget = overlayItem.querySelector("[data-overlay='text-target']");
@@ -78,17 +81,7 @@ export function initGalleryOverlayTransitionFlip() {
 		});
 
 		gsap.set(overlayNav, { display: 'flex' });
-		gsap.fromTo(
-			navItems,
-			{
-				yPercent: 110,
-			},
-			{
-				yPercent: 0,
-				stagger: 0.1,
-			},
-		);
-
+		gsap.fromTo(navItems, { yPercent: 110 }, { yPercent: 0, stagger: 0.1 });
 		gsap.set(imageItems, { autoAlpha: 0 });
 
 		projectButtons.forEach((listItem, i) => {
@@ -101,6 +94,9 @@ export function initGalleryOverlayTransitionFlip() {
 
 	function closeOverlay() {
 		if (!activeListItem) return;
+		setProjectBackground();
+		section.classList.replace('overlay-open', 'overlay-closed');
+		document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
 
 		// Find active overlay
 		const index = Array.from(projectButtons).indexOf(activeListItem);
@@ -154,8 +150,9 @@ export function initGalleryOverlayTransitionFlip() {
 	}
 
 	// Add click event listeners to list items
-	projectButtons.forEach((listItem, index) => {
-		listItem.addEventListener('pointerdown', () => {
+	projectButtons.forEach((li, index) => {
+		li.addEventListener('pointerdown', () => {
+			setProjectBackground(li.dataset.projId);
 			openOverlay(index);
 		});
 	});

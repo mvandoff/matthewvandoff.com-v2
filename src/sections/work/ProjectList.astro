@@ -1,5 +1,5 @@
 <ul class="project-list">
-	<li class="main-title-item">
+	<li class="main-title-item" data-proj-id="syfr">
 		<button class="button">
 			<h3
 				class="main-title"
@@ -10,7 +10,7 @@
 			</h3>
 		</button>
 	</li>
-	<li class="main-title-item">
+	<li class="main-title-item" data-proj-id="btsm">
 		<button class="button">
 			<h3
 				class="main-title"
@@ -20,7 +20,7 @@
 			</h3>
 		</button>
 	</li>
-	<li class="main-title-item">
+	<li class="main-title-item" data-proj-id="mvdc">
 		<button class="button">
 			<h3
 				class="main-title"
@@ -31,3 +31,11 @@
 		</button>
 	</li>
 </ul>
+
+<style is:global>
+	.overlay-closed {
+		.button {
+			pointer-events: none;
+		}
+	}
+</style>

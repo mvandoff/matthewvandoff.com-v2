@@ -1,16 +1,4 @@
 :root {
-	/* --main-900: #000005;
-	--main-800: #01001f;
-	--main-700: #02002e;
-	--main-600: #030042;
-	--main-500: #070354;
-	--main-400: #2f3dbf;
-	--main-300: #5763d6;
-	--main-200: #818ae4;
-	--main-100: #acb3f1;
-	--main-50: #a9bde0;
-	--accent-300: #62c1fd; */
-
 	--main-50: #e1f3fe;
 	--main-100: #95d7ff;
 	--main-200: #63c4fe;
@@ -34,6 +22,8 @@
 	--slate-800: #1e293b;
 	--slate-900: #0f172a;
 	--slate-950: #020617;
+
+	transition: background 1s ease;
 }
 html,
 body {
