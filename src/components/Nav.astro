@@ -5,7 +5,7 @@ const { pathname } = Astro.url;
 <nav id="main-nav">
 	<a href="/" class={pathname === '/' ? 'selected' : ''}>[ home ]</a>
 	<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
-	<a href="#">[ about ]</a>
+	<a href="/about" class={pathname === '/about' ? 'selected' : ''}>[ about ]</a>
 	<a href="#">[ contact ]</a>
 </nav>
 
