@@ -5,8 +5,8 @@ import { SplitText } from 'gsap/SplitText';
 gsap.registerPlugin(Flip, SplitText);
 
 export function initGalleryOverlayTransitionFlip() {
-	const projectButtons = document.querySelectorAll('.main-title__item');
-	const imageItems = document.querySelectorAll('.main-img__item');
+	const projectButtons = document.querySelectorAll('.main-title-item');
+	const imageItems = document.querySelectorAll('.main-img-item');
 	const overlayItems = document.querySelectorAll('.overlay-item');
 	const overlayNav = document.querySelector('.overlay-nav');
 	const navItems = document.querySelectorAll("[data-overlay='nav-item']");

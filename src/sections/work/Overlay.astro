@@ -1,0 +1,23 @@
+---
+import Project from 'sections/work/Project.astro';
+import ByTheSea from 'sections/work/projects/ByTheSea.astro';
+import Syfr from 'sections/work/projects/Syfr.astro';
+---
+
+<div class="overlay-wrap">
+	<Project>
+		<Syfr />
+	</Project>
+	<Project>
+		<ByTheSea />
+	</Project>
+
+	<div class="overlay-nav" style="display: none;">
+		<button data-overlay="close" class="button text">
+			<p data-overlay="nav-item" class="text-reg" style="translate: none; rotate: none; scale: none">Back to list</p>
+		</button>
+		<p data-overlay="nav-item" class="text-reg" style="translate: none; rotate: none; scale: none;">
+			Scroll to explore
+		</p>
+	</div>
+</div>

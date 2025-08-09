@@ -41,6 +41,8 @@ const { pathname } = Astro.url;
 			}
 			&.selected {
 				color: white;
+				cursor: default;
+				pointer-events: none;
 			}
 			&.transitioning {
 				animation: flash infinite 0.2s;
@@ -53,7 +55,6 @@ const { pathname } = Astro.url;
 			display: none;
 		}
 	}
-
 	@keyframes flash {
 		from {
 			color: white;
