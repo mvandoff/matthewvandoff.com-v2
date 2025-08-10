@@ -24,6 +24,7 @@
 	--slate-950: #020617;
 
 	transition: background 1s ease;
+	background-color: black;
 }
 html,
 body {

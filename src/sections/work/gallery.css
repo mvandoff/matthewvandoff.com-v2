@@ -248,13 +248,16 @@ p {
 @media screen and (max-width: 767px) {
 	#work {
 		.page {
-			inset: 6rem 2rem 4rem 2rem;
+			inset: 5rem 1rem 4rem 1rem;
 		}
 		#work-intro {
 			display: none;
 		}
 		.main-title {
 			font-size: min(10vw, 3.5rem);
+		}
+		.project-list {
+			gap: 0.5rem;
 		}
 	}
 }
