@@ -6,7 +6,7 @@ import { setProjectBackground } from './setProjectBackground';
 gsap.registerPlugin(Flip, SplitText);
 
 export function initGalleryOverlayTransitionFlip() {
-	const projectButtons = document.querySelectorAll('.main-title-item');
+	const projectButtons = document.querySelectorAll('.project-list-item');
 	const imageItems = document.querySelectorAll('.main-img-item');
 	const overlayItems = document.querySelectorAll('.overlay-item');
 	const overlayNav = document.querySelector('.overlay-nav');

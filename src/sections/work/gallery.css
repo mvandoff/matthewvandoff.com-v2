@@ -7,7 +7,6 @@ p {
 }
 .page {
 	z-index: 0;
-	inset: 6em;
 	position: absolute;
 }
 .main {
@@ -46,28 +45,25 @@ p {
 	gap: 1rem;
 	bottom: 0;
 }
-.main-title-item {
+.project-list-item {
 	justify-content: flex-start;
 	align-items: center;
-	/* height: 1.25em; */
-	/* font-size: 18px; */
 	transition: opacity 0.2s;
 	display: flex;
 	position: relative;
 	cursor: pointer;
 }
 .main-title {
-	letter-spacing: -0.03em;
-	white-space: nowrap;
 	margin-top: 0;
 	margin-bottom: 0;
-	font-size: 4.5em;
-	font-weight: 500;
-	line-height: 1;
 	color: #fff;
+	letter-spacing: -0.03em;
+	line-height: 1;
+	white-space: nowrap;
 	cursor: pointer;
+	font-weight: 500;
 }
-.project-list:hover:has(.main-title-item:hover) .main-title-item:not(:hover) {
+.project-list:hover:has(.project-list-item:hover) .project-list-item:not(:hover) {
 	opacity: 0.45;
 }
 .main-title::after {
@@ -83,7 +79,7 @@ p {
 	transform: translate(100%, 0%) scale(0);
 	animation: spin 4s infinite linear;
 }
-.main-title-item:hover .main-title::after {
+.project-list-item:hover .main-title::after {
 	transform: translate(0%, 0%) scale(1);
 	opacity: 1;
 	width: 0.15em;
@@ -192,10 +188,11 @@ p {
 	}
 }
 #work-intro {
-	font-size: 22px;
-	width: 500px;
+	position: absolute;
+	right: 0;
 	padding-top: 8rem;
 	text-align: right;
+	margin-left: auto;
 }
 .work-intro-line {
 	overflow: hidden;
@@ -210,18 +207,54 @@ p {
 	}
 }
 
-@media screen and (max-width: 991px) {
-	.main {
-		flex-flow: wrap;
+@media screen and (min-width: 1024px) {
+	#work {
+		.main-title {
+			font-size: clamp(3.5rem, 5vw, 4.5rem);
+		}
+		#work-intro {
+			font-size: 22px;
+			width: 475px;
+		}
+		.page {
+			inset: 6rem 4rem 4rem 4rem;
+		}
 	}
-	.main-col {
-		width: 100%;
-		height: auto;
+}
+@media screen and (max-width: 1023px) {
+	#work {
+		.main {
+			flex-flow: wrap;
+		}
+		.main-col {
+			width: 100%;
+			height: auto;
+		}
+		.project-list {
+			margin-top: 0;
+		}
+		#work-intro {
+			font-size: 22px;
+			width: 275px;
+		}
+		.main-title {
+			font-size: 4rem;
+		}
+		.page {
+			inset: 6rem 2rem 4rem 2rem;
+		}
 	}
-	.project-list {
-		margin-top: 0;
-	}
-	#work-intro {
-		padding-top: 0;
+}
+@media screen and (max-width: 767px) {
+	#work {
+		.page {
+			inset: 6rem 2rem 4rem 2rem;
+		}
+		#work-intro {
+			display: none;
+		}
+		.main-title {
+			font-size: min(10vw, 3.5rem);
+		}
 	}
 }
