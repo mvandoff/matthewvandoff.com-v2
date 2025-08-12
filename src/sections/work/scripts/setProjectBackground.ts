@@ -3,7 +3,7 @@ const BTSM_BG = '#312e2b';
 const MVDC_BG = 'var(--main-950)';
 
 /** Sets the project's predefined color, or if no project is given, unsets the background color. */
-export function setProjectBackground(projId: string) {
+export function setProjectBackground(projId?: string) {
 	const section = document.getElementById('work');
 	if (!section) return;
 
