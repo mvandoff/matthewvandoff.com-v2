@@ -16,19 +16,19 @@ export function initGalleryOverlayTransitionFlip() {
 	const workIntro = document.querySelector<HTMLElement>('#work-intro');
 	const section = document.getElementById('work')!;
 
-	if (
-		!workIntro ||
-		!section ||
-		!overlayNav ||
-		!closeButton ||
-		projectButtons.length === 0 ||
-		imageItems.length === 0 ||
-		overlayItems.length === 0 ||
-		navItems.length === 0 ||
-		headings.length === 0
-	) {
-		throw Error();
-	}
+	// if (
+	// 	!workIntro ||
+	// 	!section ||
+	// 	!overlayNav ||
+	// 	!closeButton ||
+	// 	projectButtons.length === 0 ||
+	// 	imageItems.length === 0 ||
+	// 	overlayItems.length === 0 ||
+	// 	navItems.length === 0 ||
+	// 	headings.length === 0
+	// ) {
+	// 	throw Error();
+	// }
 
 	// Split the work intro text into lines
 	const workIntroSplit = new SplitText(workIntro, {
@@ -201,7 +201,7 @@ export function initGalleryOverlayTransitionFlip() {
 	});
 
 	// Close button (guaranteed by early bail)
-	closeButton.addEventListener('pointerdown', closeOverlay);
+	// closeButton.addEventListener('pointerdown', closeOverlay);
 
 	// Show corresponding image on hover of a list item, based on index
 	projectButtons.forEach((listItem, i) => {

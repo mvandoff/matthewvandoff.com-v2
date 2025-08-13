@@ -1,79 +1,69 @@
 ---
 import Overlay from 'sections/work/Overlay.astro';
 import ProjectList from 'sections/work/ProjectList.astro';
-// import './gallery.css';
 import ProjectImageList from 'sections/work/ProjectImageList.astro';
 ---
 
-<section class="section-resource overlay-closed" id="work">
-	<div class="page">
-		<div class="main">
-			<p id="work-intro">
-				Below is some of the work I have completed outside of my full time employment. Select a project to learn more
-				about it.
-			</p>
-			<div class="main-col">
-				<ProjectImageList />
-			</div>
-			<div class="main-col">
-				<ProjectList />
-			</div>
+<section class="overlay-closed" id="work">
+	<div class="main">
+		<p id="work-intro">
+			Below is some of the work I have completed outside of my full time employment. Select a project to learn more
+			about it.
+		</p>
+		<div class="main-col img-col">
+			<ProjectImageList />
 		</div>
-
-		<Overlay />
+		<div class="main-col proj-col">
+			<ProjectList />
+		</div>
 	</div>
+
+	<!-- <Overlay /> -->
 </section>
 
 <style is:global>
 	#work {
-		justify-content: center;
-		align-items: center;
-		min-height: 100vh;
-		display: flex;
-		color: #fff;
-		background-color: #000;
+		/* background-color: black; */
 		transition: background 1s ease;
 
-		a {
-			color: inherit;
-			text-decoration: underline;
-		}
-		p {
-			margin: 0px;
-		}
-		.page {
-			z-index: 0;
-			position: absolute;
-		}
 		.main {
-			opacity: 1;
 			width: 100%;
 			height: 100%;
+			box-sizing: border-box;
+			padding: 6rem 4rem;
+			position: relative;
 			display: flex;
 		}
 		.main-col {
 			width: 50%;
 			height: 100%;
 		}
-		.main-img-list {
-			width: 16em;
-			height: 22em;
+		.proj-col {
 			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+		}
+		#work-intro {
+			position: absolute;
+			right: 4rem;
+			padding-top: 6rem;
+			text-align: right;
+			margin-left: auto;
 		}
 		.main-img-item {
 			z-index: 1;
-			width: 100%;
-			height: 100%;
 			position: absolute;
-		}
-		.image {
-			object-fit: cover;
-			border-radius: 0.5em;
-			width: 100%;
-			height: 100%;
+
+			img {
+				object-fit: cover;
+				border-radius: 0.5em;
+				/* width: 50px; */
+				height: 45vh;
+			}
 		}
 		.project-list {
-			position: absolute;
+			/* position: absolute; */
 			flex-flow: column;
 			align-items: flex-start;
 			padding: 0;
@@ -131,108 +121,6 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 		.button.text:hover {
 			opacity: 0.7;
 		}
-		.overlay-wrap {
-			z-index: 2;
-			pointer-events: none;
-			padding-top: 6em;
-			position: absolute;
-			inset: 0%;
-		}
-		.overlay-item {
-			z-index: 1;
-			pointer-events: auto;
-			padding-bottom: 16em;
-			display: none;
-			position: relative;
-		}
-		.overlay-item.active {
-			display: block;
-		}
-		.overlay-hero {
-			grid-column-gap: 5em;
-			grid-row-gap: 5em;
-			flex-flow: column;
-			justify-content: flex-start;
-			align-items: center;
-			margin-bottom: 7.5em;
-			display: flex;
-		}
-		.overlay-title-wrap {
-			text-align: center;
-			flex-flow: column;
-			justify-content: center;
-			align-items: center;
-			width: 100%;
-			height: 8em;
-			display: flex;
-			position: relative;
-		}
-		.overlay-title-wrap .main-title {
-			position: absolute;
-			font-size: 8em;
-		}
-		.overlay-img-wrap {
-			width: 100vw;
-			height: 64em;
-		}
-		.overlay-row {
-			justify-content: space-between;
-			align-items: center;
-			padding-left: 6em;
-			display: flex;
-		}
-		.overlay-col {
-			grid-column-gap: 2em;
-			grid-row-gap: 2em;
-			flex-flow: column;
-			display: flex;
-		}
-		.overlay-col.col-left {
-			max-width: 26em;
-			transform: translate(0, 50%);
-		}
-		.overlay-col.col-right {
-			max-width: 35em;
-		}
-		.overlay-col__img {
-			height: 26em;
-		}
-		.paragraph {
-			text-indent: 4em;
-			margin-bottom: 0;
-			font-size: 1.25em;
-			line-height: 1.25;
-		}
-		.overlay-nav {
-			z-index: 999;
-			pointer-events: auto;
-			justify-content: space-between;
-			align-items: flex-end;
-			display: none;
-			position: absolute;
-			inset: auto 0% 0%;
-			overflow: hidden;
-			color: white;
-
-			button:hover {
-				color: var(--main-200);
-			}
-			p {
-				margin-bottom: 0;
-				font-size: 1.125em;
-				line-height: 1.25;
-			}
-		}
-		#work-intro {
-			position: absolute;
-			right: 0;
-			padding-top: 8rem;
-			text-align: right;
-			margin-left: auto;
-		}
-		.work-intro-line {
-			overflow: hidden;
-		}
 
 		@keyframes spin {
 			from {
@@ -242,7 +130,6 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 				transform: rotate(360deg);
 			}
 		}
-
 		@media screen and (min-width: 1024px) {
 			.main-title {
 				font-size: clamp(3.5rem, 5vw, 4.5rem);
@@ -251,36 +138,24 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 				font-size: 22px;
 				width: 475px;
 			}
-			.page {
-				inset: 6rem 4rem 4rem 4rem;
-			}
 		}
 		@media screen and (max-width: 1023px) {
 			.main {
-				flex-flow: wrap;
+				padding: 2rem;
+				flex-direction: column;
 			}
-			.main-col {
-				width: 100%;
-				height: auto;
-			}
-			.project-list {
-				margin-top: 0;
+			.proj-col {
+				padding-bottom: 1rem;
 			}
 			#work-intro {
 				font-size: 22px;
-				width: 275px;
+				width: 375px;
 			}
 			.main-title {
 				font-size: 4rem;
 			}
-			.page {
-				inset: 6rem 2rem 4rem 2rem;
-			}
 		}
 		@media screen and (max-width: 767px) {
-			.page {
-				inset: 5rem 1rem 4rem 1rem;
-			}
 			#work-intro {
 				display: none;
 			}
@@ -288,7 +163,14 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 				font-size: min(10vw, 3.5rem);
 			}
 			.project-list {
-				gap: 0.5rem;
+				width: 100%;
+				margin: 0 auto;
+			}
+			.main-img-list {
+				margin: 0 auto;
+			}
+			.img-col {
+				padding-top: 3rem;
 			}
 		}
 	}

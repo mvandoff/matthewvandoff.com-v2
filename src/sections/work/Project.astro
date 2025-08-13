@@ -3,10 +3,6 @@ const { id } = Astro.props;
 ---
 
 <div class="overlay-item proj" id={`proj-${id}`}>
-	<div class="overlay-hero">
-		<div data-overlay="text-target" class="overlay-title-wrap"></div>
-		<div data-overlay="img-target" class="overlay-img-wrap"></div>
-	</div>
 	<div class="overlay-row">
 		<slot />
 	</div>

@@ -26,9 +26,17 @@
 	transition: background 1s ease;
 	background-color: black;
 }
+* {
+	box-sizing: border-box;
+}
 html,
-body {
+body,
+main {
+	width: 100%;
 	height: 100%;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 body {
 	color: white;
@@ -39,6 +47,7 @@ body {
 }
 section:not(.unset-height) {
 	height: 100svh;
+	box-sizing: border-box;
 	position: relative;
 }
 a {

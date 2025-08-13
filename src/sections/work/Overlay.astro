@@ -6,6 +6,11 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 ---
 
 <div class="overlay-wrap">
+	<div class="overlay-hero">
+		<div data-overlay="text-target" class="overlay-title-wrap"></div>
+		<div data-overlay="img-target" class="overlay-img-wrap"></div>
+	</div>
+
 	<Project id="syfr">
 		<Syfr />
 	</Project>
@@ -25,3 +30,91 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 		</p>
 	</div>
 </div>
+<style is:global>
+	.overlay-wrap {
+		z-index: 2;
+		pointer-events: none;
+		padding-top: 6em;
+		position: absolute;
+		inset: 0%;
+	}
+	.overlay-item {
+		z-index: 1;
+		pointer-events: auto;
+		padding-bottom: 16em;
+		display: none;
+		position: relative;
+	}
+	.overlay-item.active {
+		display: block;
+	}
+	.overlay-hero {
+		grid-column-gap: 5em;
+		grid-row-gap: 5em;
+		flex-flow: column;
+		justify-content: flex-start;
+		align-items: center;
+		margin-bottom: 7.5em;
+		display: flex;
+	}
+	.overlay-title-wrap {
+		text-align: center;
+		flex-flow: column;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 8em;
+		display: flex;
+		position: relative;
+	}
+	.overlay-title-wrap .main-title {
+		position: absolute;
+		font-size: 8em;
+	}
+	.overlay-img-wrap {
+		width: 100vw;
+		height: 64em;
+	}
+	.overlay-row {
+		justify-content: space-between;
+		align-items: center;
+		padding-left: 6em;
+		display: flex;
+	}
+	.overlay-col {
+		grid-column-gap: 2em;
+		grid-row-gap: 2em;
+		flex-flow: column;
+		display: flex;
+	}
+	.overlay-col.col-left {
+		max-width: 26em;
+		transform: translate(0, 50%);
+	}
+	.overlay-col.col-right {
+		max-width: 35em;
+	}
+	.overlay-col__img {
+		height: 26em;
+	}
+	.overlay-nav {
+		z-index: 999;
+		pointer-events: auto;
+		justify-content: space-between;
+		align-items: flex-end;
+		display: none;
+		position: absolute;
+		inset: auto 0% 0%;
+		overflow: hidden;
+		color: white;
+
+		button:hover {
+			color: var(--main-200);
+		}
+		p {
+			margin-bottom: 0;
+			font-size: 1.125em;
+			line-height: 1.25;
+		}
+	}
+</style>
