@@ -1,11 +1,11 @@
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
-import { SplitText } from 'gsap/SplitText';
 import { setProjectBackground } from './setProjectBackground';
+import { initWorkIntro } from 'sections/work/scripts/initWorkPage/initWorkIntro';
 
-gsap.registerPlugin(Flip, SplitText);
+gsap.registerPlugin(Flip);
 
-export function initGalleryOverlayTransitionFlip() {
+export function initWorkPage() {
 	const projectButtons = document.querySelectorAll<HTMLElement>('.project-list-item');
 	const imageItems = document.querySelectorAll<HTMLElement>('.main-img-item');
 	const overlayItems = document.querySelectorAll<HTMLElement>('.overlay-item');
@@ -13,7 +13,7 @@ export function initGalleryOverlayTransitionFlip() {
 	const navItems = document.querySelectorAll<HTMLElement>("[data-overlay='nav-item']");
 	const closeButton = document.querySelector<HTMLElement>("[data-overlay='close']");
 	const headings = document.querySelectorAll<HTMLElement>('.main-title');
-	const workIntro = document.querySelector<HTMLElement>('#work-intro');
+
 	const section = document.getElementById('work')!;
 
 	// if (
@@ -30,29 +30,7 @@ export function initGalleryOverlayTransitionFlip() {
 	// 	throw Error();
 	// }
 
-	// Split the work intro text into lines
-	const workIntroSplit = new SplitText(workIntro, {
-		type: 'lines',
-		linesClass: 'work-intro-line',
-	});
-	const workIntroLines = workIntroSplit.lines as HTMLElement[];
-
-	// Wrap each line in a div with overflow: hidden and move text into a span
-	workIntroLines.forEach((line) => {
-		const wrapper = document.createElement('div');
-		wrapper.className = 'work-intro-line';
-		wrapper.style.overflow = 'hidden';
-
-		const span = document.createElement('span');
-		span.className = 'work-intro-line-inner';
-		span.style.display = 'inline-block';
-		span.textContent = line.textContent ?? '';
-
-		wrapper.appendChild(span);
-		line.parentNode?.replaceChild(wrapper, line);
-	});
-
-	const workIntroLineSpans = Array.from(document.querySelectorAll<HTMLElement>('.work-intro-line-inner'));
+	const workIntroLineSpans = initWorkIntro();
 
 	let activeListItem: HTMLElement | null = null;
 

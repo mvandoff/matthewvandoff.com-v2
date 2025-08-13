@@ -5,13 +5,13 @@ import MVD from 'sections/work/projects/MVD.astro';
 import Syfr from 'sections/work/projects/Syfr.astro';
 ---
 
-<div class="overlay-wrap">
+<div id="project-overlay">
 	<div class="overlay-hero">
 		<div data-overlay="text-target" class="overlay-title-wrap"></div>
 		<div data-overlay="img-target" class="overlay-img-wrap"></div>
 	</div>
 
-	<Project id="syfr">
+	<!-- <Project id="syfr">
 		<Syfr />
 	</Project>
 	<Project id="btsm">
@@ -19,24 +19,26 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 	</Project>
 	<Project id="mvdc">
 		<MVD />
-	</Project>
+	</Project> -->
 
-	<div class="overlay-nav" style="display: none;">
+	<!-- <div class="overlay-nav" style="display: none;">
 		<button data-overlay="close" class="button text">
 			<p data-overlay="nav-item" class="text-reg" style="translate: none; rotate: none; scale: none">Back to list</p>
 		</button>
 		<p data-overlay="nav-item" class="text-reg" style="translate: none; rotate: none; scale: none;">
 			Scroll to explore
 		</p>
-	</div>
+	</div> -->
 </div>
+
 <style is:global>
-	.overlay-wrap {
+	#project-overlay {
 		z-index: 2;
 		pointer-events: none;
 		padding-top: 6em;
 		position: absolute;
 		inset: 0%;
+		border: 1px solid green;
 	}
 	.overlay-item {
 		z-index: 1;

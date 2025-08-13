@@ -18,7 +18,7 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 		</div>
 	</div>
 
-	<!-- <Overlay /> -->
+	<Overlay />
 </section>
 
 <style is:global>
@@ -172,7 +172,7 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 	import { gsap } from 'gsap';
 	import { CustomEase } from 'gsap/CustomEase';
 	import { Flip } from 'gsap/Flip';
-	import { initGalleryOverlayTransitionFlip } from 'sections/work/scripts/gallery';
+	import { initWorkPage } from 'sections/work/scripts/initWorkPage/initWorkPage';
 
 	document.addEventListener('DOMContentLoaded', () => {
 		gsap.registerPlugin(CustomEase, Flip);
@@ -182,6 +182,7 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 			ease: 'osmo-ease',
 			duration: 0.725,
 		});
-		initGalleryOverlayTransitionFlip();
+
+		initWorkPage();
 	});
 </script>
