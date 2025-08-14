@@ -6,14 +6,13 @@ import { initWorkIntro } from 'sections/work/scripts/initWorkPage/initWorkIntro'
 gsap.registerPlugin(Flip);
 
 export function initWorkPage() {
-	const projectButtons = document.querySelectorAll<HTMLElement>('.project-list-item');
+	const projectListItems = document.querySelectorAll<HTMLElement>('.proj-list-item');
 	const imageItems = document.querySelectorAll<HTMLElement>('.main-img-item');
 	const overlayItems = document.querySelectorAll<HTMLElement>('.overlay-item');
 	const overlayNav = document.querySelector<HTMLElement>('.overlay-nav')!;
 	const navItems = document.querySelectorAll<HTMLElement>("[data-overlay='nav-item']");
 	const closeButton = document.querySelector<HTMLElement>("[data-overlay='close']");
-	const headings = document.querySelectorAll<HTMLElement>('.main-title');
-
+	const headings = document.querySelectorAll<HTMLElement>('.proj-title');
 	const section = document.getElementById('work')!;
 
 	// if (
@@ -35,40 +34,41 @@ export function initWorkPage() {
 	let activeListItem: HTMLElement | null = null;
 
 	function openOverlay(index: number) {
-		if (index < 0 || index >= projectButtons.length || index >= imageItems.length || index >= overlayItems.length) {
-			return;
-		}
+		// if (index < 0 || index >= projectListItems.length || index >= imageItems.length || index >= overlayItems.length) {
+		// 	return;
+		// }
 		section.classList.replace('overlay-closed', 'overlay-open');
 
 		// Set active class to the clicked list item
-		projectButtons.forEach((item) => item.classList.remove('active'));
-		activeListItem = projectButtons[index] as HTMLElement;
+		projectListItems.forEach((item) => item.classList.remove('active'));
+		activeListItem = projectListItems[index] as HTMLElement;
 		activeListItem.classList.add('active');
 
-		const title = activeListItem.querySelector<HTMLElement>('.main-title');
-		const imageContainer = imageItems[index];
-		const image = imageContainer.querySelector<HTMLElement>('.image');
-		if (!title || !image) throw Error();
+		const title = activeListItem.querySelector<HTMLElement>('.proj-title');
+		// const imageContainer = imageItems[index];
+		// const image = imageContainer.querySelector<HTMLElement>('.image');
+		// if (!title || !image) throw Error();
+		if (!title) throw Error();
 
 		// Record the state of the title and image
 		const titleState = Flip.getState(title, { props: 'fontSize' });
-		const imageState = Flip.getState(image);
+		// const imageState = Flip.getState(image);
 
 		// Show the overlay and get elements for animation
-		const overlayItem = overlayItems[index];
-		const content = overlayItem.querySelector<HTMLElement>('.overlay-row');
+		// const overlayItem = overlayItems[index];
+		// const content = overlayItem.querySelector<HTMLElement>('.overlay-row');
 
-		gsap.set(overlayItem, { display: 'block', autoAlpha: 1 });
-		if (content) gsap.fromTo(content, { autoAlpha: 0 }, { autoAlpha: 1, delay: 0.5 });
+		// gsap.set(overlayItem, { display: 'block', autoAlpha: 1 });
+		// if (content) gsap.fromTo(content, { autoAlpha: 0 }, { autoAlpha: 1, delay: 0.5 });
 
 		const textTarget = document.querySelector<HTMLElement>("[data-overlay='text-target']");
-		const imgTarget = document.querySelector<HTMLElement>("[data-overlay='img-target']");
+		// const imgTarget = document.querySelector<HTMLElement>("[data-overlay='img-target']");
 
 		if (textTarget) textTarget.appendChild(title);
-		if (imgTarget) imgTarget.appendChild(image);
+		// if (imgTarget) imgTarget.appendChild(image);
 
 		Flip.from(titleState);
-		Flip.from(imageState);
+		// Flip.from(imageState);
 
 		gsap.to(workIntroLineSpans, {
 			yPercent: 110,
@@ -77,13 +77,13 @@ export function initWorkPage() {
 			duration: 0.5,
 		});
 
-		gsap.set(overlayNav, { display: 'flex' });
-		gsap.fromTo(navItems, { yPercent: 110 }, { yPercent: 0, stagger: 0.1 });
-		gsap.set(imageItems, { autoAlpha: 0 });
+		// gsap.set(overlayNav, { display: 'flex' });
+		// gsap.fromTo(navItems, { yPercent: 110 }, { yPercent: 0, stagger: 0.1 });
+		// gsap.set(imageItems, { autoAlpha: 0 });
 
-		projectButtons.forEach((listItem, i) => {
+		projectListItems.forEach((listItem, i) => {
 			if (i !== index) {
-				const otherTitle = listItem.querySelector<HTMLElement>('.main-title');
+				const otherTitle = listItem.querySelector<HTMLElement>('.proj-title');
 				if (otherTitle) {
 					gsap.to(otherTitle, {
 						yPercent: 100,
@@ -104,14 +104,14 @@ export function initWorkPage() {
 		// document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
 
 		// Find active overlay
-		const index = Array.from(projectButtons).indexOf(activeListItem);
+		const index = Array.from(projectListItems).indexOf(activeListItem);
 		if (index < 0 || index >= overlayItems.length || index >= imageItems.length) {
 			activeListItem = null;
 			return;
 		}
 
 		const overlayItem = overlayItems[index]!;
-		const title = document.querySelector<HTMLElement>("[data-overlay='text-target'] .main-title");
+		const title = document.querySelector<HTMLElement>("[data-overlay='text-target'] .proj-title");
 		const image = document.querySelector<HTMLElement>("[data-overlay='img-target'] .image");
 		const overlayContent = overlayItem.querySelector<HTMLElement>('.overlay-row');
 
@@ -166,7 +166,7 @@ export function initWorkPage() {
 	}
 
 	// Add click event listeners to list items
-	projectButtons.forEach((li, index) => {
+	projectListItems.forEach((li, index) => {
 		li.addEventListener('pointerdown', () => {
 			setProjectBackground(li.dataset.projId);
 			openOverlay(index);
@@ -182,7 +182,7 @@ export function initWorkPage() {
 	// closeButton.addEventListener('pointerdown', closeOverlay);
 
 	// Show corresponding image on hover of a list item, based on index
-	projectButtons.forEach((listItem, i) => {
+	projectListItems.forEach((listItem, i) => {
 		listItem.addEventListener('mouseenter', () => {
 			gsap.set(imageItems, { autoAlpha: 0 }); // hide all
 			if (imageItems[i]) gsap.set(imageItems[i], { autoAlpha: 1 }); // show matching

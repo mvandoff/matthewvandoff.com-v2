@@ -1,25 +1,75 @@
-<ul class="project-list">
-	<li class="project-list-item" data-proj-id="syfr">
+<ul class="proj-list">
+	<li class="proj-list-item" data-proj-id="syfr">
 		<button class="button">
-			<h3 class="main-title" data-flip-id="auto-1">syfr.studio</h3>
+			<h3 class="proj-title">syfr.studio</h3>
 		</button>
 	</li>
-	<li class="project-list-item" data-proj-id="btsm">
+	<li class="proj-list-item" data-proj-id="btsm">
 		<button class="button">
-			<h3 class="main-title">by the sea massage</h3>
+			<h3 class="proj-title">by the sea massage</h3>
 		</button>
 	</li>
-	<li class="project-list-item" data-proj-id="mvdc">
+	<li class="proj-list-item" data-proj-id="mvdc">
 		<button class="button">
-			<h3 class="main-title">matthewvandoff.com</h3>
+			<h3 class="proj-title">matthewvandoff.com</h3>
 		</button>
 	</li>
 </ul>
-
-<style is:global>
-	.overlay-open {
-		li {
-			pointer-events: none;
-		}
+<style>
+	.proj-list {
+		flex-flow: column;
+		align-items: flex-start;
+		padding: 0;
+		display: flex;
+		gap: 1rem;
+		bottom: 0;
+	}
+	.proj-list-item {
+		justify-content: flex-start;
+		align-items: center;
+		transition: opacity 0.2s;
+		display: flex;
+		position: relative;
+		cursor: pointer;
+	}
+	.proj-list:hover:has(.proj-list-item:hover) .proj-list-item:not(:hover) {
+		opacity: 0.45;
+	}
+	.proj-title::after {
+		position: absolute;
+		content: '';
+		top: 60%;
+		left: -0.5em;
+		width: 0.75em;
+		height: 0.15em;
+		background: currentColor;
+		opacity: 0;
+		transition: all 0.525s cubic-bezier(0.65, 0.05, 0, 1);
+		/* transform: translate(100%, 0%) scale(0); */
+		animation: spin 4s infinite linear;
+	}
+	.proj-list-item:hover .proj-title::after {
+		/* transform: translate(0%, 0%) scale(1); */
+		opacity: 1;
+		width: 0.15em;
+	}
+	.button {
+		background-color: transparent;
+		border: none;
+		padding: 0;
+	}
+	.button.text {
+		transition: opacity 0.2s;
+	}
+	.button.text:hover {
+		opacity: 0.7;
+	}
+	.proj-title {
+		margin-top: 0;
+		margin-bottom: 0;
+		letter-spacing: -0.03em;
+		line-height: 1;
+		white-space: nowrap;
+		cursor: pointer;
 	}
 </style>

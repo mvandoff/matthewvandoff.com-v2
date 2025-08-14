@@ -8,7 +8,7 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 <div id="project-overlay">
 	<div class="overlay-hero">
 		<div data-overlay="text-target" class="overlay-title-wrap"></div>
-		<div data-overlay="img-target" class="overlay-img-wrap"></div>
+		<!-- <div data-overlay="img-target" class="overlay-img-wrap"></div> -->
 	</div>
 
 	<!-- <Project id="syfr">
@@ -32,32 +32,20 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 </div>
 
 <style is:global>
+	.overlay-open {
+		.overlay-title-wrap {
+			/* pointer-events: none; */
+		}
+	}
 	#project-overlay {
+		position: absolute;
 		z-index: 2;
 		pointer-events: none;
 		padding-top: 6em;
-		position: absolute;
 		inset: 0%;
 		border: 1px solid green;
 	}
-	.overlay-item {
-		z-index: 1;
-		pointer-events: auto;
-		padding-bottom: 16em;
-		display: none;
-		position: relative;
-	}
-	.overlay-item.active {
-		display: block;
-	}
 	.overlay-hero {
-		grid-column-gap: 5em;
-		grid-row-gap: 5em;
-		flex-flow: column;
-		justify-content: flex-start;
-		align-items: center;
-		margin-bottom: 7.5em;
-		display: flex;
 	}
 	.overlay-title-wrap {
 		text-align: center;
@@ -69,13 +57,19 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 		display: flex;
 		position: relative;
 	}
-	.overlay-title-wrap .main-title {
-		position: absolute;
-		font-size: 8em;
-	}
 	.overlay-img-wrap {
 		width: 100vw;
 		height: 64em;
+	}
+	.overlay-item {
+		z-index: 1;
+		pointer-events: auto;
+		padding-bottom: 16em;
+		display: none;
+		position: relative;
+	}
+	.overlay-item.active {
+		display: block;
 	}
 	.overlay-row {
 		justify-content: space-between;
