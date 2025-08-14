@@ -105,41 +105,42 @@ export function initWorkPage() {
 
 		// Find active overlay
 		const index = Array.from(projectListItems).indexOf(activeListItem);
-		if (index < 0 || index >= overlayItems.length || index >= imageItems.length) {
-			activeListItem = null;
-			return;
-		}
+		// if (index < 0 || index >= overlayItems.length || index >= imageItems.length) {
+		// 	activeListItem = null;
+		// 	return;
+		// }
 
-		const overlayItem = overlayItems[index]!;
+		const overlayItem = overlayItems[index];
 		const title = document.querySelector<HTMLElement>("[data-overlay='text-target'] .proj-title");
-		const image = document.querySelector<HTMLElement>("[data-overlay='img-target'] .image");
-		const overlayContent = overlayItem.querySelector<HTMLElement>('.overlay-row');
+		// const image = document.querySelector<HTMLElement>("[data-overlay='img-target'] .image");
+		// const overlayContent = overlayItem.querySelector<HTMLElement>('.overlay-row');
 
-		if (!title || !image) {
+		if (!title) {
+			// || !image
 			activeListItem = null;
 			return;
 		}
 
 		const titleState = Flip.getState(title, { props: 'fontSize' });
-		const imageState = Flip.getState(image);
+		// const imageState = Flip.getState(image);
 
-		gsap.to(navItems, {
-			yPercent: 110,
-			onComplete: () => {
-				overlayNav.style.display = 'none';
-			},
-		});
+		// gsap.to(navItems, {
+		// 	yPercent: 110,
+		// 	onComplete: () => {
+		// 		overlayNav.style.display = 'none';
+		// 	},
+		// });
 
-		if (overlayContent) {
-			gsap.to(overlayContent, {
-				autoAlpha: 0,
-				onComplete: () => {
-					overlayItem.style.display = 'none';
-				},
-			});
-		} else {
-			overlayItem.style.display = 'none';
-		}
+		// if (overlayContent) {
+		// 	gsap.to(overlayContent, {
+		// 		autoAlpha: 0,
+		// 		onComplete: () => {
+		// 			overlayItem.style.display = 'none';
+		// 		},
+		// 	});
+		// } else {
+		// 	overlayItem.style.display = 'none';
+		// }
 
 		gsap.fromTo(
 			workIntroLineSpans,
@@ -153,11 +154,11 @@ export function initWorkPage() {
 
 		const button = activeListItem.querySelector<HTMLElement>('.button');
 		if (button) button.appendChild(title);
-		imageItems[index]!.appendChild(image);
+		// imageItems[index]!.appendChild(image);
 		gsap.set(imageItems[index]!, { autoAlpha: 1 });
 
 		Flip.from(titleState);
-		Flip.from(imageState);
+		// Flip.from(imageState);
 
 		activeListItem.classList.remove('active');
 		activeListItem = null;
