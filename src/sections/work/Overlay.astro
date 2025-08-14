@@ -6,10 +6,8 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 ---
 
 <div id="project-overlay">
-	<div class="overlay-hero">
-		<div data-overlay="text-target" class="overlay-title-wrap"></div>
-		<!-- <div data-overlay="img-target" class="overlay-img-wrap"></div> -->
-	</div>
+	<div data-overlay="text-target" class="overlay-title-wrap"></div>
+	<div data-overlay="img-target" class="overlay-img-wrap"></div>
 
 	<!-- <Project id="syfr">
 		<Syfr />
@@ -33,19 +31,20 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 
 <style is:global>
 	.overlay-open {
-		.overlay-title-wrap {
-			/* pointer-events: none; */
+		#project-overlay {
+		}
+	}
+	.overlay-closed {
+		#project-overlay {
+			pointer-events: none;
 		}
 	}
 	#project-overlay {
 		position: absolute;
 		z-index: 2;
-		pointer-events: none;
 		padding-top: 6em;
 		inset: 0%;
-		border: 1px solid green;
-	}
-	.overlay-hero {
+		/* border: 1px solid green; */
 	}
 	.overlay-title-wrap {
 		text-align: center;
@@ -58,8 +57,13 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 		position: relative;
 	}
 	.overlay-img-wrap {
-		width: 100vw;
-		height: 64em;
+		display: flex;
+		justify-content: center;
+		img {
+			width: 90%;
+			border-radius: 0.5rem;
+			margin-top: 4rem;
+		}
 	}
 	.overlay-item {
 		z-index: 1;
@@ -107,10 +111,13 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 		button:hover {
 			color: var(--main-200);
 		}
-		p {
-			margin-bottom: 0;
-			font-size: 1.125em;
-			line-height: 1.25;
+	}
+	#project-overlay {
+		@media screen and (min-width: 1024px) {
+		}
+		@media screen and (max-width: 1023px) {
+		}
+		@media screen and (max-width: 767px) {
 		}
 	}
 </style>

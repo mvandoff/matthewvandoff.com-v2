@@ -29,7 +29,7 @@ export function initWorkPage() {
 	// 	throw Error();
 	// }
 
-	const workIntroLineSpans = initWorkIntro();
+	// const workIntroLineSpans = initWorkIntro();
 
 	let activeListItem: HTMLElement | null = null;
 
@@ -45,14 +45,13 @@ export function initWorkPage() {
 		activeListItem.classList.add('active');
 
 		const title = activeListItem.querySelector<HTMLElement>('.proj-title');
-		// const imageContainer = imageItems[index];
-		// const image = imageContainer.querySelector<HTMLElement>('.image');
-		// if (!title || !image) throw Error();
-		if (!title) throw Error();
+		const imageContainer = imageItems[index];
+		const image = imageContainer.querySelector<HTMLElement>('img');
+		if (!title || !image) throw Error();
 
 		// Record the state of the title and image
 		const titleState = Flip.getState(title, { props: 'fontSize' });
-		// const imageState = Flip.getState(image);
+		const imageState = Flip.getState(image);
 
 		// Show the overlay and get elements for animation
 		// const overlayItem = overlayItems[index];
@@ -62,20 +61,20 @@ export function initWorkPage() {
 		// if (content) gsap.fromTo(content, { autoAlpha: 0 }, { autoAlpha: 1, delay: 0.5 });
 
 		const textTarget = document.querySelector<HTMLElement>("[data-overlay='text-target']");
-		// const imgTarget = document.querySelector<HTMLElement>("[data-overlay='img-target']");
+		const imgTarget = document.querySelector<HTMLElement>("[data-overlay='img-target']");
 
 		if (textTarget) textTarget.appendChild(title);
-		// if (imgTarget) imgTarget.appendChild(image);
+		if (imgTarget) imgTarget.appendChild(image);
 
 		Flip.from(titleState);
-		// Flip.from(imageState);
+		Flip.from(imageState);
 
-		gsap.to(workIntroLineSpans, {
-			yPercent: 110,
-			stagger: 0.05,
-			ease: 'sine.inOut',
-			duration: 0.5,
-		});
+		// gsap.to(workIntroLineSpans, {
+		// 	yPercent: 110,
+		// 	stagger: 0.05,
+		// 	ease: 'sine.inOut',
+		// 	duration: 0.5,
+		// });
 
 		// gsap.set(overlayNav, { display: 'flex' });
 		// gsap.fromTo(navItems, { yPercent: 110 }, { yPercent: 0, stagger: 0.1 });
@@ -110,19 +109,18 @@ export function initWorkPage() {
 		// 	return;
 		// }
 
-		const overlayItem = overlayItems[index];
+		// const overlayItem = overlayItems[index];
 		const title = document.querySelector<HTMLElement>("[data-overlay='text-target'] .proj-title");
-		// const image = document.querySelector<HTMLElement>("[data-overlay='img-target'] .image");
+		const image = document.querySelector<HTMLElement>("[data-overlay='img-target'] img");
 		// const overlayContent = overlayItem.querySelector<HTMLElement>('.overlay-row');
 
-		if (!title) {
-			// || !image
+		if (!title || !image) {
 			activeListItem = null;
 			return;
 		}
 
 		const titleState = Flip.getState(title, { props: 'fontSize' });
-		// const imageState = Flip.getState(image);
+		const imageState = Flip.getState(image);
 
 		// gsap.to(navItems, {
 		// 	yPercent: 110,
@@ -142,23 +140,23 @@ export function initWorkPage() {
 		// 	overlayItem.style.display = 'none';
 		// }
 
-		gsap.fromTo(
-			workIntroLineSpans,
-			{ yPercent: 110 },
-			{
-				yPercent: 0,
-				stagger: 0.05,
-				ease: 'power2.out',
-			},
-		);
+		// gsap.fromTo(
+		// 	workIntroLineSpans,
+		// 	{ yPercent: 110 },
+		// 	{
+		// 		yPercent: 0,
+		// 		stagger: 0.05,
+		// 		ease: 'power2.out',
+		// 	},
+		// );
 
 		const button = activeListItem.querySelector<HTMLElement>('.button');
 		if (button) button.appendChild(title);
-		// imageItems[index]!.appendChild(image);
+		imageItems[index]!.appendChild(image);
 		gsap.set(imageItems[index]!, { autoAlpha: 1 });
 
 		Flip.from(titleState);
-		// Flip.from(imageState);
+		Flip.from(imageState);
 
 		activeListItem.classList.remove('active');
 		activeListItem = null;
@@ -183,10 +181,13 @@ export function initWorkPage() {
 	// closeButton.addEventListener('pointerdown', closeOverlay);
 
 	// Show corresponding image on hover of a list item, based on index
-	projectListItems.forEach((listItem, i) => {
-		listItem.addEventListener('mouseenter', () => {
+	projectListItems.forEach((li, i) => {
+		li.addEventListener('mouseenter', () => {
 			gsap.set(imageItems, { autoAlpha: 0 }); // hide all
 			if (imageItems[i]) gsap.set(imageItems[i], { autoAlpha: 1 }); // show matching
+
+			projectListItems.forEach((li) => li.classList.remove('selected'));
+			li.classList.add('selected');
 		});
 	});
 }

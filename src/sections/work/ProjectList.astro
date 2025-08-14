@@ -1,5 +1,5 @@
 <ul class="proj-list">
-	<li class="proj-list-item" data-proj-id="syfr">
+	<li class="proj-list-item selected" data-proj-id="syfr">
 		<button class="button">
 			<h3 class="proj-title">syfr.studio</h3>
 		</button>
@@ -17,9 +17,11 @@
 </ul>
 <style>
 	.proj-list {
+		width: fit-content;
+		position: relative;
 		flex-flow: column;
 		align-items: flex-start;
-		padding: 0;
+		padding: 3rem 4rem;
 		display: flex;
 		gap: 1rem;
 		bottom: 0;
@@ -32,7 +34,7 @@
 		position: relative;
 		cursor: pointer;
 	}
-	.proj-list:hover:has(.proj-list-item:hover) .proj-list-item:not(:hover) {
+	.proj-list-item:not(.selected) {
 		opacity: 0.45;
 	}
 	.proj-title::after {
@@ -45,11 +47,10 @@
 		background: currentColor;
 		opacity: 0;
 		transition: all 0.525s cubic-bezier(0.65, 0.05, 0, 1);
-		/* transform: translate(100%, 0%) scale(0); */
 		animation: spin 4s infinite linear;
 	}
-	.proj-list-item:hover .proj-title::after {
-		/* transform: translate(0%, 0%) scale(1); */
+	.proj-list-item:hover .proj-title::after,
+	.proj-list-item.selected .proj-title::after {
 		opacity: 1;
 		width: 0.15em;
 	}

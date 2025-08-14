@@ -6,10 +6,10 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 
 <section class="overlay-closed" id="work">
 	<div class="main">
-		<p id="work-intro">
+		<!-- <p id="work-intro">
 			Below is some of the work I have completed outside of my full time employment. Select a project to learn more
 			about it.
-		</p>
+		</p> -->
 		<div class="main-col img-col">
 			<ProjectImageList />
 		</div>
@@ -48,6 +48,7 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
+		z-index: 99;
 	}
 	#work-intro {
 		position: absolute;
@@ -58,52 +59,67 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 	}
 </style>
 <style is:global>
-	@media screen and (min-width: 1024px) {
-		.proj-title {
-			font-size: clamp(3.5rem, 5vw, 4.5rem);
-		}
-		#work-intro {
-			font-size: 22px;
-			width: 475px;
-		}
-		.overlay-title-wrap {
+	#work {
+		@media screen and (min-width: 1024px) {
 			.proj-title {
-				font-size: 125px;
+				font-size: clamp(3.5rem, 5vw, 4.5rem);
+			}
+			#work-intro {
+				font-size: 20px;
+				width: 475px;
+			}
+			.overlay-title-wrap {
+				.proj-title {
+					font-size: 120px;
+				}
 			}
 		}
-	}
-	@media screen and (max-width: 1023px) {
-		.main {
-			padding: 2rem;
-			flex-direction: column;
+		@media screen and (max-width: 1023px) {
+			.main {
+				padding: 2rem;
+				flex-direction: column;
+			}
+			.proj-col {
+				padding-bottom: 1rem;
+			}
+			#work-intro {
+				display: none;
+			}
+			.proj-title {
+				font-size: 4rem;
+			}
+			.overlay-title-wrap {
+				.proj-title {
+					font-size: 80px;
+				}
+			}
+			.img-col {
+				width: 100%;
+				padding-top: 3rem;
+			}
 		}
-		.proj-col {
-			padding-bottom: 1rem;
-		}
-		#work-intro {
-			font-size: 22px;
-			width: 375px;
-		}
-		.proj-title {
-			font-size: 4rem;
-		}
-	}
-	@media screen and (max-width: 767px) {
-		#work-intro {
-			display: none;
-		}
-		.proj-title {
-			font-size: min(10vw, 3.5rem);
-		}
-		.proj-list {
-			width: 100%;
-			margin: 0 auto;
-		}
-		.main-img-list {
-			margin: 0 auto;
-		}
-		.img-col {
-			padding-top: 3rem;
+		@media screen and (max-width: 767px) {
+			#work-intro {
+				display: none;
+			}
+			.proj-title {
+				font-size: min(10vw, 3.5rem);
+			}
+			.proj-list {
+				margin: 0 auto;
+			}
+			.main-img-list {
+				margin: 0 auto;
+			}
+			.img-col {
+				padding-top: 3rem;
+				width: 100%;
+			}
+			.overlay-title-wrap {
+				.proj-title {
+					font-size: 10vw;
+				}
+			}
 		}
 	}
 </style>
