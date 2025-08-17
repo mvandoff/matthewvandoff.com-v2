@@ -21,7 +21,7 @@
 		position: relative;
 		flex-flow: column;
 		align-items: flex-start;
-		padding: 3rem 4rem;
+		padding: 0rem 4rem;
 		display: flex;
 		gap: 1rem;
 		bottom: 0;
@@ -72,5 +72,45 @@
 		line-height: 1;
 		white-space: nowrap;
 		cursor: pointer;
+	}
+</style>
+<style is:global>
+	@media screen and (min-width: 1024px) {
+		.proj-title {
+			font-size: clamp(3rem, 4.75vw, 5rem);
+		}
+		.overlay-title-wrap {
+			.proj-title {
+				font-size: 120px;
+			}
+		}
+	}
+	@media screen and (max-width: 1023px) {
+		#work {
+			.proj-title {
+				font-size: 4rem;
+			}
+			.overlay-title-wrap {
+				.proj-title {
+					font-size: 80px;
+				}
+			}
+		}
+	}
+	@media screen and (max-width: 767px) {
+		#work {
+			.proj-list {
+				margin: 0 auto;
+				padding: 0;
+			}
+			.proj-title {
+				font-size: min(9.5vw, 3.5rem);
+			}
+			.overlay-title-wrap {
+				.proj-title {
+					font-size: 10vw;
+				}
+			}
+		}
 	}
 </style>

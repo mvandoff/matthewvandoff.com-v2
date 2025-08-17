@@ -5,47 +5,43 @@ import btsm from 'assets/images/btsm.png';
 import mvdc from 'assets/images/mvdc.png';
 ---
 
-<div class="main-img-item" style="opacity: 1; visibility: inherit;">
-	<Image src={syfrInterface} alt="syfr interface" id="syfr-interface-img" />
+<div class="main-img-item" style="display: block;">
+	<Image src={syfrInterface} alt="syfr interface" id="syfr-interface-img" class="proj-img" />
 </div>
-<div class="main-img-item" style="opacity: 0; visibility: hidden;">
-	<Image src={btsm} alt="by the sea massage website screenshot" id="btsm-img" />
+<div class="main-img-item" style="display: none;">
+	<Image src={btsm} alt="by the sea massage website screenshot" id="btsm-img" class="proj-img" />
 </div>
-<div class="main-img-item" style="opacity: 0; visibility: hidden;">
-	<Image src={mvdc} alt="matthewvandoff.com website screenshot" id="mvdc-img" />
+<div class="main-img-item" style="display: none;">
+	<Image src={mvdc} alt="matthewvandoff.com website screenshot" id="mvdc-img" class="proj-img" />
 </div>
 <style is:global>
-	.main-img-item {
-		z-index: 1;
-		position: absolute;
-
-		img {
-			object-fit: cover;
-			border-radius: 0.75em;
-			height: 45vh;
-		}
-	}
-	#syfr-interface-img,
-	#btsm-img,
-	#mvdc-img {
+	/* Dont nest this, since it moves to a new container */
+	.proj-img {
+		border-radius: 0.75em;
 		object-fit: scale-down;
-		width: 90%;
+		width: 100%;
 		height: auto;
 		max-height: 50vh;
-		/* border: 1px solid red; */
+	}
+	.main-img-item {
+		z-index: 1;
 	}
 	.overlay-img-wrap {
 		#syfr-interface-img,
 		#btsm-img,
 		#mvdc-img {
 			max-height: none;
-			/* padding-bottom: 50vh; */
 		}
 	}
 	@media screen and (max-width: 1023px) {
 		.main-img-item {
 			max-width: 100%;
-			/* width: 100%; */
+		}
+	}
+	@media screen and (max-width: 767px) {
+		.main-img-item {
+			display: flex;
+			justify-content: center;
 		}
 	}
 </style>

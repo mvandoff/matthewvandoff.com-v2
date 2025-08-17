@@ -61,40 +61,23 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 <style is:global>
 	#work {
 		@media screen and (min-width: 1024px) {
-			.proj-title {
-				font-size: clamp(3.5rem, 5vw, 4.5rem);
-			}
 			#work-intro {
 				font-size: 20px;
 				width: 475px;
 			}
-			.overlay-title-wrap {
-				.proj-title {
-					font-size: 120px;
-				}
-			}
 		}
 		@media screen and (max-width: 1023px) {
 			.main {
-				padding: 2rem;
+				padding: 2rem 0.5rem;
 				flex-direction: column;
 			}
-			.proj-col {
-				padding-bottom: 1rem;
-			}
-			#work-intro {
-				display: none;
-			}
-			.proj-title {
-				font-size: 4rem;
-			}
-			.overlay-title-wrap {
-				.proj-title {
-					font-size: 80px;
-				}
+			.main-col {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 100%;
 			}
 			.img-col {
-				width: 100%;
 				padding-top: 3rem;
 			}
 		}
@@ -102,23 +85,12 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 			#work-intro {
 				display: none;
 			}
-			.proj-title {
-				font-size: min(10vw, 3.5rem);
-			}
-			.proj-list {
-				margin: 0 auto;
-			}
 			.main-img-list {
 				margin: 0 auto;
 			}
 			.img-col {
 				padding-top: 3rem;
 				width: 100%;
-			}
-			.overlay-title-wrap {
-				.proj-title {
-					font-size: 10vw;
-				}
 			}
 		}
 	}

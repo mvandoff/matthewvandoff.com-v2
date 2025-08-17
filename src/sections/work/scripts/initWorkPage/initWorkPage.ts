@@ -183,8 +183,8 @@ export function initWorkPage() {
 	// Show corresponding image on hover of a list item, based on index
 	projectListItems.forEach((li, i) => {
 		li.addEventListener('mouseenter', () => {
-			gsap.set(imageItems, { autoAlpha: 0 }); // hide all
-			if (imageItems[i]) gsap.set(imageItems[i], { autoAlpha: 1 }); // show matching
+			gsap.set(imageItems, { display: 'none' }); // hide all
+			if (imageItems[i]) gsap.set(imageItems[i], { display: 'block' }); // show matching
 
 			projectListItems.forEach((li) => li.classList.remove('selected'));
 			li.classList.add('selected');
