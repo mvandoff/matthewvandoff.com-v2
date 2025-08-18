@@ -1,6 +1,6 @@
-const SYFR_BG = '#1e1a4d';
-const BTSM_BG = '#312e2b';
-const MVDC_BG = 'var(--main-950)';
+const SYFR_BG = 'black';
+const BTSM_BG = 'rgb(255 255 255)';
+const MVDC_BG = 'black';
 
 /** Sets the project's predefined color, or if no project is given, unsets the background color. */
 export function setProjectBackground(projId?: string) {
