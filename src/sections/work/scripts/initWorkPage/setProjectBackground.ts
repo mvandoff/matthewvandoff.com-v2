@@ -1,23 +1,21 @@
-const SYFR_BG = 'black';
-const BTSM_BG = 'rgb(255 255 255)';
-const MVDC_BG = 'black';
+const PROJECT_BACKGROUNDS = {
+	syfr: 'black',
+	btsm: 'rgb(255 255 255)',
+	mvdc: 'black',
+	default: 'black',
+} as const;
 
 /** Sets the project's predefined color, or if no project is given, unsets the background color. */
 export function setProjectBackground(projId?: string) {
 	const section = document.getElementById('work');
-	if (!section) return;
+	const mainNav = document.getElementById('main-nav');
+	if (!section || !mainNav) throw Error();
 
-	if (projId === 'syfr') {
-		document.documentElement.style.background = SYFR_BG;
-		section.style.background = SYFR_BG;
-	} else if (projId === 'btsm') {
-		document.documentElement.style.background = BTSM_BG;
-		section.style.background = BTSM_BG;
-	} else if (projId === 'mvdc') {
-		document.documentElement.style.background = MVDC_BG;
-		section.style.background = MVDC_BG;
-	} else if (!projId) {
-		document.documentElement.style.background = 'black';
-		section.style.background = 'black';
-	}
+	const bgColor = projId
+		? PROJECT_BACKGROUNDS[projId as keyof typeof PROJECT_BACKGROUNDS]
+		: PROJECT_BACKGROUNDS.default;
+
+	document.documentElement.style.background = bgColor;
+	mainNav.style.background = bgColor;
+	section.style.background = bgColor;
 }

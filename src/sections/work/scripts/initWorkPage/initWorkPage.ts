@@ -1,7 +1,7 @@
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
 import { setProjectBackground } from './setProjectBackground';
-import { initWorkIntro } from 'sections/work/scripts/initWorkPage/initWorkIntro';
+import { swapWorkNavItems } from 'sections/work/scripts/initWorkPage/swapWorkNavItems';
 
 gsap.registerPlugin(Flip);
 
@@ -93,6 +93,8 @@ export function initWorkPage() {
 				}
 			}
 		});
+
+		swapWorkNavItems();
 	}
 
 	function closeOverlay() {
@@ -162,6 +164,7 @@ export function initWorkPage() {
 		activeListItem = null;
 
 		gsap.to(headings, { yPercent: 0, autoAlpha: 1, delay: 0.3, stagger: 0.05 });
+		swapWorkNavItems();
 	}
 
 	// Add click event listeners to list items
