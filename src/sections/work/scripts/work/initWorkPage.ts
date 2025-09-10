@@ -1,10 +1,9 @@
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
+import { injectWorkNavItems } from 'sections/work/scripts/work/injectWorkNavItems';
+import { bindEvents } from './bindEvents';
 import { queryDom } from './queryDom';
 import { createWorkState } from './state';
-import { bindEvents } from './bindEvents';
-import { injectWorkNavItems } from 'sections/work/scripts/work/injectWorkNavItems';
-import { closeOverlay } from './closeOverlay';
 import type { WorkContext } from './types';
 
 gsap.registerPlugin(Flip);
