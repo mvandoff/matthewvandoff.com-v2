@@ -1,199 +1,21 @@
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
-import { setProjectBackground } from './setProjectBackground';
-import { swapWorkNavItems } from 'sections/work/scripts/initWorkPage/swapWorkNavItems';
+import { queryDom } from './queryDom';
+import { createWorkState } from './state';
+import { bindEvents } from './bindEvents';
 import { injectWorkNavItems } from 'sections/work/scripts/initWorkPage/injectWorkNavItems';
+import { closeOverlay } from './closeOverlay';
+import type { WorkContext } from './types';
 
 gsap.registerPlugin(Flip);
 
 export function initWorkPage() {
-	const projectListItems = document.querySelectorAll<HTMLElement>('.proj-list-item');
-	const imageItems = document.querySelectorAll<HTMLElement>('.main-img-item');
-	const overlayItems = document.querySelectorAll<HTMLElement>('.overlay-item');
-	const overlayNav = document.querySelector<HTMLElement>('.overlay-nav')!;
-	const navItems = document.querySelectorAll<HTMLElement>("[data-overlay='nav-item']");
-	const closeButton = document.querySelector<HTMLElement>("[data-overlay='close']");
-	const headings = document.querySelectorAll<HTMLElement>('.proj-title');
-	const section = document.getElementById('work')!;
+	const refs = queryDom();
+	const state = createWorkState();
+	const ctx: WorkContext = { refs, state };
 
 	// Inject work-only nav items immediately (runs once on DOMContentLoaded)
-	injectWorkNavItems(closeOverlay);
+	injectWorkNavItems(() => closeOverlay(ctx));
 
-	// if (
-	// 	!workIntro ||
-	// 	!section ||
-	// 	!overlayNav ||
-	// 	!closeButton ||
-	// 	projectButtons.length === 0 ||
-	// 	imageItems.length === 0 ||
-	// 	overlayItems.length === 0 ||
-	// 	navItems.length === 0 ||
-	// 	headings.length === 0
-	// ) {
-	// 	throw Error();
-	// }
-
-	// const workIntroLineSpans = initWorkIntro();
-
-	let activeListItem: HTMLElement | null = null;
-
-	function openOverlay(index: number) {
-		// if (index < 0 || index >= projectListItems.length || index >= imageItems.length || index >= overlayItems.length) {
-		// 	return;
-		// }
-		section.classList.replace('overlay-closed', 'overlay-open');
-
-		// Set active class to the clicked list item
-		projectListItems.forEach((item) => item.classList.remove('active'));
-		activeListItem = projectListItems[index] as HTMLElement;
-		activeListItem.classList.add('active');
-
-		const title = activeListItem.querySelector<HTMLElement>('.proj-title');
-		const imageContainer = imageItems[index];
-		const image = imageContainer.querySelector<HTMLElement>('img');
-		if (!title || !image) throw Error();
-
-		// Record the state of the title and image
-		const titleState = Flip.getState(title, { props: 'fontSize' });
-		const imageState = Flip.getState(image);
-
-		// Show the overlay and get elements for animation
-		// const overlayItem = overlayItems[index];
-		// const content = overlayItem.querySelector<HTMLElement>('.overlay-row');
-
-		// gsap.set(overlayItem, { display: 'block', autoAlpha: 1 });
-		// if (content) gsap.fromTo(content, { autoAlpha: 0 }, { autoAlpha: 1, delay: 0.5 });
-
-		const textTarget = document.querySelector<HTMLElement>("[data-overlay='text-target']");
-		const imgTarget = document.querySelector<HTMLElement>("[data-overlay='img-target']");
-
-		if (textTarget) textTarget.appendChild(title);
-		if (imgTarget) imgTarget.appendChild(image);
-
-		Flip.from(titleState);
-		Flip.from(imageState);
-
-		// gsap.to(workIntroLineSpans, {
-		// 	yPercent: 110,
-		// 	stagger: 0.05,
-		// 	ease: 'sine.inOut',
-		// 	duration: 0.5,
-		// });
-
-		// gsap.set(overlayNav, { display: 'flex' });
-		// gsap.fromTo(navItems, { yPercent: 110 }, { yPercent: 0, stagger: 0.1 });
-		// gsap.set(imageItems, { autoAlpha: 0 });
-
-		projectListItems.forEach((listItem, i) => {
-			if (i !== index) {
-				const otherTitle = listItem.querySelector<HTMLElement>('.proj-title');
-				if (otherTitle) {
-					gsap.to(otherTitle, {
-						yPercent: 100,
-						autoAlpha: 0,
-						duration: 0.45,
-						delay: Math.max(0, 0.2 - i * 0.05),
-					});
-				}
-			}
-		});
-
-		swapWorkNavItems();
-	}
-
-	function closeOverlay() {
-		if (!activeListItem) return;
-
-		setProjectBackground();
-		section.classList.replace('overlay-open', 'overlay-closed');
-		// document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
-
-		// Find active overlay
-		const index = Array.from(projectListItems).indexOf(activeListItem);
-		// if (index < 0 || index >= overlayItems.length || index >= imageItems.length) {
-		// 	activeListItem = null;
-		// 	return;
-		// }
-
-		// const overlayItem = overlayItems[index];
-		const title = document.querySelector<HTMLElement>("[data-overlay='text-target'] .proj-title");
-		const image = document.querySelector<HTMLElement>("[data-overlay='img-target'] img");
-		// const overlayContent = overlayItem.querySelector<HTMLElement>('.overlay-row');
-
-		if (!title || !image) {
-			activeListItem = null;
-			return;
-		}
-
-		const titleState = Flip.getState(title, { props: 'fontSize' });
-		const imageState = Flip.getState(image);
-
-		// gsap.to(navItems, {
-		// 	yPercent: 110,
-		// 	onComplete: () => {
-		// 		overlayNav.style.display = 'none';
-		// 	},
-		// });
-
-		// if (overlayContent) {
-		// 	gsap.to(overlayContent, {
-		// 		autoAlpha: 0,
-		// 		onComplete: () => {
-		// 			overlayItem.style.display = 'none';
-		// 		},
-		// 	});
-		// } else {
-		// 	overlayItem.style.display = 'none';
-		// }
-
-		// gsap.fromTo(
-		// 	workIntroLineSpans,
-		// 	{ yPercent: 110 },
-		// 	{
-		// 		yPercent: 0,
-		// 		stagger: 0.05,
-		// 		ease: 'power2.out',
-		// 	},
-		// );
-
-		const button = activeListItem.querySelector<HTMLElement>('.button');
-		if (button) button.appendChild(title);
-		imageItems[index]!.appendChild(image);
-		gsap.set(imageItems[index]!, { autoAlpha: 1 });
-
-		Flip.from(titleState);
-		Flip.from(imageState);
-
-		activeListItem.classList.remove('active');
-		activeListItem = null;
-
-		gsap.to(headings, { yPercent: 0, autoAlpha: 1, delay: 0.3, stagger: 0.05 });
-		swapWorkNavItems();
-	}
-
-	// Add click event listeners to list items
-	projectListItems.forEach((li, index) => {
-		li.addEventListener('pointerdown', () => {
-			setProjectBackground(li.dataset.projId);
-			openOverlay(index);
-		});
-	});
-
-	// Close overlay on ESC key
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape') closeOverlay();
-	});
-
-	// closeButton.addEventListener('pointerdown', closeOverlay);
-
-	// Show corresponding image on hover of a list item, based on index
-	projectListItems.forEach((li, i) => {
-		li.addEventListener('mouseenter', () => {
-			gsap.set(imageItems, { display: 'none' }); // hide all
-			if (imageItems[i]) gsap.set(imageItems[i], { display: 'block' }); // show matching
-
-			projectListItems.forEach((li) => li.classList.remove('selected'));
-			li.classList.add('selected');
-		});
-	});
+	bindEvents(ctx);
 }
