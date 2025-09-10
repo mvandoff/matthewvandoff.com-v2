@@ -1,7 +1,9 @@
+import type { WorkContext } from 'sections/work/scripts/initWorkPage/types';
 import { SELECTORS } from './selectors';
+import { closeOverlay } from 'sections/work/scripts/initWorkPage/closeOverlay';
 
 // Simple creation utility used once on DOMContentLoaded via initWorkPage.
-export function injectWorkNavItems(onBack: () => void): void {
+export function injectWorkNavItems(ctx: WorkContext) {
 	const mainNav = document.querySelector<HTMLElement>(SELECTORS.mainNav);
 	if (!mainNav) return;
 
@@ -24,5 +26,5 @@ export function injectWorkNavItems(onBack: () => void): void {
 	mainNav.appendChild(backBtn);
 	mainNav.appendChild(scrollMsg);
 
-	backBtn.addEventListener('pointerdown', onBack);
+	backBtn.addEventListener('pointerdown', () => closeOverlay(ctx));
 }

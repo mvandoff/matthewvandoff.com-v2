@@ -15,7 +15,6 @@ export function initWorkPage() {
 	const ctx: WorkContext = { refs, state };
 
 	// Inject work-only nav items immediately (runs once on DOMContentLoaded)
-	injectWorkNavItems(() => closeOverlay(ctx));
-
+	injectWorkNavItems(ctx);
 	bindEvents(ctx);
 }
