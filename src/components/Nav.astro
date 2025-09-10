@@ -7,13 +7,6 @@ const { pathname } = Astro.url;
 	<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
 	<a href="/about" class={pathname === '/about' ? 'selected' : ''}>[ about ]</a>
 	<a href="#">[ contact ]</a>
-
-	<button id="work-back-btn" class="work-nav-item" style={pathname === '/work' ? {} : { display: 'none' }}
-		>&lt;- back to projects</button
-	>
-	<span id="work-scroll-msg" class="work-nav-item" style={pathname === '/work' ? {} : { display: 'none' }}
-		>scroll to explore</span
-	>
 </nav>
 
 <style>
@@ -31,12 +24,13 @@ const { pathname } = Astro.url;
 		z-index: 10;
 		flex-direction: row;
 		font-size: 28px;
+		transition: background 1s ease;
 
 		a {
-			transition: all 0.25s ease;
-			color: var(--slate-400);
+			transition: color 0.25s ease;
+			color: #737373;
 			&.inactive:not(.transitioning) {
-				color: var(--slate-500) !important;
+				color: #494949 !important;
 			}
 			&.active {
 				color: white;
@@ -54,6 +48,13 @@ const { pathname } = Astro.url;
 				transition: color none !important;
 			}
 		}
+		button {
+			color: #737373;
+			transition: color 0.25s ease;
+			&:hover {
+				color: white;
+			}
+		}
 	}
 	@media (max-width: 1023px) {
 		nav {
@@ -68,7 +69,9 @@ const { pathname } = Astro.url;
 			color: var(--slate-500);
 		}
 	}
+</style>
 
+<style is:global>
 	#work-back-btn,
 	#work-scroll-msg {
 		position: absolute;

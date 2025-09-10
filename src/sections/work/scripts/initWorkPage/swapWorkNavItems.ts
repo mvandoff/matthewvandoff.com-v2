@@ -4,11 +4,10 @@ let open = false;
 
 export function swapWorkNavItems() {
 	document.querySelectorAll('#main-nav a')?.forEach((navItem) => {
-		console.log(navItem);
 		gsap.to(navItem, {
 			yPercent: open ? 0 : -100,
 			autoAlpha: open ? 1 : 0,
-			duration: open ? 1.25 : 0.45,
+			duration: open ? 1.25 : 0.75,
 		});
 	});
 

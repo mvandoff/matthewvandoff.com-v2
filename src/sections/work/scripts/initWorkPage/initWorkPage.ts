@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
 import { setProjectBackground } from './setProjectBackground';
 import { swapWorkNavItems } from 'sections/work/scripts/initWorkPage/swapWorkNavItems';
+import { injectWorkNavItems } from 'sections/work/scripts/initWorkPage/injectWorkNavItems';
 
 gsap.registerPlugin(Flip);
 
@@ -14,6 +15,9 @@ export function initWorkPage() {
 	const closeButton = document.querySelector<HTMLElement>("[data-overlay='close']");
 	const headings = document.querySelectorAll<HTMLElement>('.proj-title');
 	const section = document.getElementById('work')!;
+
+	// Inject work-only nav items immediately (runs once on DOMContentLoaded)
+	injectWorkNavItems(closeOverlay);
 
 	// if (
 	// 	!workIntro ||
@@ -180,7 +184,6 @@ export function initWorkPage() {
 		if (e.key === 'Escape') closeOverlay();
 	});
 
-	// Close button (guaranteed by early bail)
 	// closeButton.addEventListener('pointerdown', closeOverlay);
 
 	// Show corresponding image on hover of a list item, based on index
