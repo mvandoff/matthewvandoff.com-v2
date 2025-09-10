@@ -3,7 +3,7 @@ import { Flip } from 'gsap/Flip';
 import { queryDom } from './queryDom';
 import { createWorkState } from './state';
 import { bindEvents } from './bindEvents';
-import { injectWorkNavItems } from 'sections/work/scripts/initWorkPage/injectWorkNavItems';
+import { injectWorkNavItems } from 'sections/work/scripts/work/injectWorkNavItems';
 import { closeOverlay } from './closeOverlay';
 import type { WorkContext } from './types';
 

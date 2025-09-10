@@ -1,6 +1,6 @@
-import type { WorkContext } from 'sections/work/scripts/initWorkPage/types';
+import type { WorkContext } from 'sections/work/scripts/work/types';
 import { SELECTORS } from './selectors';
-import { closeOverlay } from 'sections/work/scripts/initWorkPage/closeOverlay';
+import { closeOverlay } from 'sections/work/scripts/work/closeOverlay';
 
 // Simple creation utility used once on DOMContentLoaded via initWorkPage.
 export function injectWorkNavItems(ctx: WorkContext) {

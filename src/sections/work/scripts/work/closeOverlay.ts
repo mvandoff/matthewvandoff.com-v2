@@ -1,7 +1,7 @@
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
 import type { WorkContext } from './types';
-import { swapWorkNavItems } from 'sections/work/scripts/initWorkPage/swapWorkNavItems';
+import { swapWorkNavItems } from 'sections/work/scripts/work/swapWorkNavItems';
 import { setProjectBackground } from './setProjectBackground';
 import { SELECTORS } from './selectors';
 
