@@ -13,7 +13,6 @@ export function closeOverlay(ctx: WorkContext) {
 
 	setProjectBackground();
 	section.classList.replace('overlay-open', 'overlay-closed');
-	document.querySelector('html')!.removeAttribute('active-proj');
 
 	const index = projectListItems.indexOf(state.activeListItem);
 	const title = document.querySelector<HTMLElement>(`${SELECTORS.overlayTextTarget} ${SELECTORS.projectTitle}`);
@@ -23,7 +22,7 @@ export function closeOverlay(ctx: WorkContext) {
 		return;
 	}
 
-	const titleState = Flip.getState(title, { props: 'fontSize' });
+	const titleState = Flip.getState(title, { props: 'fontSize, color' });
 	const imageState = Flip.getState(image);
 
 	const button = state.activeListItem.querySelector<HTMLElement>(SELECTORS.projectButton);
@@ -31,7 +30,7 @@ export function closeOverlay(ctx: WorkContext) {
 	imageItems[index]?.appendChild(image);
 	gsap.set(imageItems[index], { autoAlpha: 1 });
 
-	Flip.from(titleState);
+	Flip.from(titleState, { onComplete: () => document.querySelector('html')!.removeAttribute('active-proj') });
 	Flip.from(imageState);
 
 	state.activeListItem.classList.remove('active');
