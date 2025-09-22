@@ -23,6 +23,20 @@
 	--slate-900: #0f172a;
 	--slate-950: #020617;
 
+	--btsm-bg-50: #fffbf7;
+	--btsm-bg-100: #f1ede9;
+	--btsm-bg-200: hsl(28, 19%, 84%);
+	--btsm-bg-300: #c7bbae;
+	--btsm-bg-400: #a7998b;
+	--btsm-bg-500: #9b8f82;
+	--btsm-bg-600: #7d7164;
+	--btsm-bg-700: #635a4f;
+	--btsm-bg-800: #4f4a45;
+	--btsm-bg-900: #44403c;
+	--btsm-bg-1000: #312e2b;
+	--btsm-bg-1100: #1b1918;
+	--btsm-bg-1200: hsl(20 10% 2% / 1);
+
 	transition: background 1s ease;
 	background-color: black;
 }

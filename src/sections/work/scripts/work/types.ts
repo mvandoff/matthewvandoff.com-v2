@@ -6,7 +6,7 @@ export interface WorkDomRefs {
 	navItems: HTMLElement[];
 	closeButton: HTMLElement | null;
 	headings: HTMLElement[];
-	section: HTMLElement | null;
+	section: HTMLElement;
 }
 
 export interface WorkState {

@@ -13,6 +13,7 @@ export function closeOverlay(ctx: WorkContext) {
 
 	setProjectBackground();
 	section.classList.replace('overlay-open', 'overlay-closed');
+	section.removeAttribute('active-proj');
 
 	const index = projectListItems.indexOf(state.activeListItem);
 	const title = document.querySelector<HTMLElement>(`${SELECTORS.overlayTextTarget} ${SELECTORS.projectTitle}`);

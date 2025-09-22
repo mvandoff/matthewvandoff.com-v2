@@ -18,15 +18,6 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 	<Project id="mvdc">
 		<MVD />
 	</Project> -->
-
-	<!-- <div class="overlay-nav" style="display: none;">
-		<button data-overlay="close" class="button text">
-			<p data-overlay="nav-item" class="text-reg" style="translate: none; rotate: none; scale: none">Back to list</p>
-		</button>
-		<p data-overlay="nav-item" class="text-reg" style="translate: none; rotate: none; scale: none;">
-			Scroll to explore
-		</p>
-	</div> -->
 </div>
 
 <style is:global>
@@ -43,7 +34,10 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 		position: absolute;
 		z-index: 2;
 		inset: 0%;
-		/* border: 1px solid green; */
+
+		#proj-btsm-header {
+			color: var(--btsm-bg-700);
+		}
 	}
 	.overlay-title-wrap {
 		text-align: center;
@@ -71,6 +65,7 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 	}
 	.overlay-item.active {
 		display: block;
+		color: green;
 	}
 	.overlay-row {
 		justify-content: space-between;

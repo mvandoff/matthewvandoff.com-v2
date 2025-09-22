@@ -10,7 +10,10 @@ export function bindEvents(ctx: WorkContext) {
 	// Open overlay on pointerdown
 	projectListItems.forEach((li, index) => {
 		li.addEventListener('pointerdown', () => {
-			setProjectBackground(li.dataset.projId);
+			const projId = li.dataset.projId;
+			if (projId) refs.section.setAttribute('active-proj', projId);
+
+			setProjectBackground(projId);
 			openOverlay(ctx, index);
 		});
 	});
