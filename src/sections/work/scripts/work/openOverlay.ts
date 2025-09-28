@@ -3,12 +3,15 @@ import { Flip } from 'gsap/Flip';
 import type { WorkContext } from './types';
 import { swapWorkNavItems } from 'sections/work/scripts/work/swapWorkNavItems';
 import { SELECTORS } from './selectors';
+import getCurrentBreakpoint from 'utils/getCurrentBreakpoint';
 
 export function openOverlay(ctx: WorkContext, index: number) {
 	const { refs, state } = ctx;
 	const { projectListItems, imageItems, section } = refs;
 
 	if (!section) return;
+
+	const bp = getCurrentBreakpoint();
 
 	section.classList.replace('overlay-closed', 'overlay-open');
 
@@ -30,10 +33,12 @@ export function openOverlay(ctx: WorkContext, index: number) {
 	const textTarget = document.querySelector<HTMLElement>(SELECTORS.overlayTextTarget);
 	const imgTarget = document.querySelector<HTMLElement>(SELECTORS.overlayImgTarget);
 	if (textTarget) textTarget.appendChild(title);
-	if (imgTarget) imgTarget.appendChild(image);
 
 	Flip.from(titleState);
-	Flip.from(imageState);
+	if (bp === 'lg') {
+		if (imgTarget) imgTarget.appendChild(image);
+		Flip.from(imageState);
+	}
 
 	projectListItems.forEach((other, i) => {
 		if (i !== index) {

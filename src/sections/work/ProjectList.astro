@@ -55,6 +55,11 @@
 	}
 </style>
 <style is:global>
+	#work.overlay-open {
+		.proj-title {
+			pointer-events: none;
+		}
+	}
 	@media screen and (min-width: 1024px) {
 		.proj-title {
 			font-size: clamp(3rem, 4.75vw, 5rem);
@@ -91,7 +96,7 @@
 	@media screen and (max-width: 1023px) {
 		#work {
 			.proj-list {
-				gap: 3rem;
+				gap: 3.5rem;
 				position: relative;
 				padding: 4rem;
 			}
@@ -112,6 +117,7 @@
 				width: 100%;
 				border-left: 0;
 				border-right: 0;
+				gap: 2.5rem;
 			}
 			.proj-title {
 				font-size: min(9.5vw, 3.5rem);
