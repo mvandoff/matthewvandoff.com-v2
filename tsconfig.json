@@ -4,6 +4,9 @@
 	"exclude": ["dist"],
 	"strict": true,
 	"compilerOptions": {
-		"baseUrl": "./src"
+		"baseUrl": "./src",
+		"paths": {
+			"utils/*": ["utils/*"]
+		}
 	}
 }
