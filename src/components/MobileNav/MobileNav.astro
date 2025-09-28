@@ -10,7 +10,8 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 <style is:global>
 	#menu-btn,
 	#work-back-btn-mobile,
-	#work-scroll-msg-mobile {
+	#work-scroll-msg-mobile,
+	#work-help-msg-mobile {
 		display: none;
 		position: fixed;
 		top: 1rem;
@@ -21,14 +22,28 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 	@media (max-width: 1023px) {
 		#menu-btn,
 		#work-back-btn-mobile,
-		#work-scroll-msg-mobile {
+		#work-scroll-msg-mobile,
+		#work-help-msg-mobile {
 			display: block;
 		}
-		#work-scroll-msg-mobile {
+		#work-scroll-msg-mobile,
+		#work-help-msg-mobile {
 			left: 1rem;
 			top: 20px;
-			font-size: larger;
-			letter-spacing: 0.1rem;
+			font-size: 20px;
+			letter-spacing: 0.15rem;
+			display: flex;
+			align-items: center;
+			gap: 1.25rem;
+		}
+		#work-help-msg-mobile::before {
+			content: '';
+			display: inline-block;
+			width: 6px;
+			height: 6px;
+			background: white;
+			margin-top: 4px;
+			animation: spin 4s infinite linear;
 		}
 	}
 	@media (max-width: 767px) {

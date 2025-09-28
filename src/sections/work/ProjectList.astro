@@ -1,5 +1,4 @@
 <ul class="proj-list">
-	<li id="select-proj-text">select project</li>
 	<li class="proj-list-item selected" data-proj-id="syfr">
 		<button class="button">
 			<h3 class="proj-title" id="proj-syfr-header">syfr.studio</h3>
@@ -88,15 +87,11 @@
 	}
 
 	@media screen and (min-width: 1024px) {
-		#select-proj-text {
-			display: none;
-		}
 	}
 	@media screen and (max-width: 1023px) {
 		#work {
 			.proj-list {
 				gap: 3rem;
-				border: 1px solid white;
 				position: relative;
 				padding: 4rem;
 			}
@@ -107,14 +102,6 @@
 				.proj-title {
 					font-size: 80px;
 				}
-			}
-			#select-proj-text {
-				font-size: 26px;
-				position: absolute;
-				top: -20px;
-				background: black;
-				padding: 0 2rem;
-				letter-spacing: 0.25rem;
 			}
 		}
 	}
@@ -133,9 +120,6 @@
 				.proj-title {
 					font-size: 10vw;
 				}
-			}
-			#select-proj-text {
-				align-self: center;
 			}
 		}
 	}

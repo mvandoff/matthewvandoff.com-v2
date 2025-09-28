@@ -33,11 +33,16 @@ export function injectWorkNavItems(ctx: WorkContext) {
 		mobileBackBtn.className = 'work-nav-item';
 		mobileBackBtn.textContent = '[ back ]';
 
+		const mobileHelpMsg = document.createElement('span');
+		mobileHelpMsg.id = 'work-help-msg-mobile';
+		mobileHelpMsg.textContent = 'select project';
+
 		const mobileScrollMsg = document.createElement('span');
 		mobileScrollMsg.id = 'work-scroll-msg-mobile';
 		mobileScrollMsg.className = 'work-nav-item';
 		mobileScrollMsg.textContent = 'scroll to explore';
 
+		mobileNav.prepend(mobileHelpMsg);
 		mobileNav.prepend(mobileBackBtn);
 		mobileNav.prepend(mobileScrollMsg);
 		mobileBackBtn.addEventListener('pointerdown', () => closeOverlay(ctx));
