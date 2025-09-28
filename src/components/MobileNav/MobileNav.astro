@@ -1,6 +1,16 @@
-<button id="menu-btn" class="closed">[ menu ]</button>
-<style>
-	#menu-btn {
+---
+import MobileMenu from 'components/MobileNav/MobileMenu.astro';
+---
+
+<div id="mobile-nav">
+	<button id="menu-btn" class="closed">[ menu ]</button>
+
+	<MobileMenu />
+</div>
+<style is:global>
+	#menu-btn,
+	#work-back-btn-mobile,
+	#work-scroll-msg-mobile {
 		display: none;
 		position: fixed;
 		top: 1rem;
@@ -9,12 +19,25 @@
 		font-size: 26px;
 	}
 	@media (max-width: 1023px) {
-		#menu-btn {
+		#menu-btn,
+		#work-back-btn-mobile,
+		#work-scroll-msg-mobile {
 			display: block;
+		}
+		#work-scroll-msg-mobile {
+			left: 1rem;
+			top: 20px;
+			font-size: larger;
+			letter-spacing: 0.1rem;
 		}
 	}
 	@media (max-width: 767px) {
 		#menu-btn {
+		}
+	}
+	@media (max-width: 1023px) {
+		#mobile-nav {
+			display: block;
 		}
 	}
 </style>

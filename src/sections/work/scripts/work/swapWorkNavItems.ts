@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 let open = false;
 
 export function swapWorkNavItems() {
-	document.querySelectorAll('#main-nav a')?.forEach((navItem) => {
+	document.querySelectorAll('#main-nav a, #menu-btn')?.forEach((navItem) => {
 		gsap.to(navItem, {
 			yPercent: open ? 0 : -100,
 			autoAlpha: open ? 1 : 0,

@@ -3,10 +3,9 @@ import 'normalize.css';
 import 'styles.css';
 import 'my-reset.css';
 
-import MenuButton from 'components/MenuButton.astro';
-import MobileMenu from 'components/MobileMenu.astro';
 import Nav from 'components/Nav.astro';
 import Transition from 'components/Transition.astro';
+import MobileNav from 'components/MobileNav/MobileNav.astro';
 
 const { title } = Astro.props;
 ---
@@ -27,8 +26,7 @@ const { title } = Astro.props;
 		<!-- <Transition /> -->
 
 		<Nav />
-		<MenuButton />
-		<MobileMenu />
+		<MobileNav />
 
 		<main>
 			<slot />
