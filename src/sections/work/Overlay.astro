@@ -9,10 +9,10 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 	<div data-overlay="text-target" class="overlay-title-wrap"></div>
 	<div data-overlay="img-target" class="overlay-img-wrap"></div>
 
-	<!-- <Project id="syfr">
+	<Project id="syfr">
 		<Syfr />
 	</Project>
-	<Project id="btsm">
+	<!-- <Project id="btsm">
 		<ByTheSea />
 	</Project>
 	<Project id="mvdc">
@@ -24,6 +24,7 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 	.overlay-closed {
 		#project-overlay {
 			pointer-events: none;
+			opacity: 0;
 		}
 	}
 	#project-overlay {
@@ -52,39 +53,7 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 			margin-top: 4rem;
 		}
 	}
-	.overlay-item {
-		z-index: 1;
-		pointer-events: auto;
-		padding-bottom: 16em;
-		display: none;
-		position: relative;
-	}
-	.overlay-item.active {
-		display: block;
-		color: green;
-	}
-	.overlay-row {
-		justify-content: space-between;
-		align-items: center;
-		padding-left: 6em;
-		display: flex;
-	}
-	.overlay-col {
-		grid-column-gap: 2em;
-		grid-row-gap: 2em;
-		flex-flow: column;
-		display: flex;
-	}
-	.overlay-col.col-left {
-		max-width: 26em;
-		transform: translate(0, 50%);
-	}
-	.overlay-col.col-right {
-		max-width: 35em;
-	}
-	.overlay-col__img {
-		height: 26em;
-	}
+
 	.overlay-nav {
 		z-index: 999;
 		pointer-events: auto;

@@ -19,7 +19,9 @@ export function openOverlay(ctx: WorkContext, index: number) {
 	projectListItems.forEach((li) => li.classList.remove('active'));
 	const listItem = projectListItems[index];
 	if (!listItem) return;
+
 	listItem.classList.add('active');
+	document.getElementById(`proj-${listItem.dataset.projId}`)!.classList.add('active');
 	state.activeListItem = listItem;
 
 	const title = listItem.querySelector<HTMLElement>(SELECTORS.projectTitle);
