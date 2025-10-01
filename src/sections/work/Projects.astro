@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+
+import syfrInterface from 'assets/images/syfr-interface-mobl.png';
+import ByTheSea from 'sections/work/projects/ByTheSea.astro';
+import MVD from 'sections/work/projects/MVD.astro';
+import Syfr from 'sections/work/projects/Syfr.astro';
+import btsm from 'assets/images/btsm.png';
+import mvdc from 'assets/images/mvdc.png';
+---
+
+<div class="overlay-item proj-container" id="proj-syfr">
+	<Image src={syfrInterface} alt="syfr interface screenshot" class="proj-img-mobl" />
+	<div class="mobl-img-overlay"></div>
+
+	<div class="proj" data-proj-id="syfr">
+		<Syfr />
+	</div>
+</div>
+
+<div class="overlay-item proj-container" id="proj-btsm">
+	<Image src={btsm} alt="btsm screenshot" class="proj-img-mobl" />
+	<div class="mobl-img-overlay"></div>
+
+	<div class="proj">
+		<ByTheSea />
+	</div>
+</div>
+<div class="overlay-item proj-container" id="proj-mvdc">
+	<Image src={mvdc} alt="matthew vandoff dot com screenshot" class="proj-img-mobl" />
+	<div class="mobl-img-overlay"></div>
+
+	<div class="proj">
+		<MVD />
+	</div>
+</div>
+
+<style>
+	.proj-container {
+		display: none;
+	}
+	.proj-container.active {
+		display: block;
+	}
+	.overlay-item {
+		z-index: 1;
+		display: none;
+		position: relative;
+	}
+	.overlay-item.active {
+		display: block;
+	}
+	.proj-img-mobl,
+	.mobl-img-overlay {
+		width: 100%;
+		height: auto;
+		object-fit: contain;
+		margin-top: 2rem;
+	}
+	.mobl-img-overlay {
+		background-color: red;
+	}
+	@media screen and (min-width: 1024px) {
+		.proj-img-mobl {
+			display: none;
+		}
+	}
+	@media screen and (max-width: 1023px) {
+		.proj-img-mobl {
+			display: block;
+		}
+	}
+	@media screen and (max-width: 767px) {
+	}
+</style>

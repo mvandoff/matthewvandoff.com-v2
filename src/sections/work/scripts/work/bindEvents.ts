@@ -11,7 +11,11 @@ export function bindEvents(ctx: WorkContext) {
 	projectListItems.forEach((li, index) => {
 		li.addEventListener('pointerdown', () => {
 			const projId = li.dataset.projId;
-			if (projId) document.querySelector('html')!.setAttribute('active-proj', projId);
+			if (projId !== 'mvdc' && projId !== 'btsm' && projId !== 'syfr') throw new Error();
+
+			ctx.state.activeProjId = projId;
+
+			document.querySelector('html')!.setAttribute('active-proj', projId);
 
 			setProjectBackground(projId);
 			openOverlay(ctx, index);

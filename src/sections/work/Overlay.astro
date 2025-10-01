@@ -1,5 +1,5 @@
 ---
-import Project from 'sections/work/Project.astro';
+import Projects from 'sections/work/Projects.astro';
 import ByTheSea from 'sections/work/projects/ByTheSea.astro';
 import MVD from 'sections/work/projects/MVD.astro';
 import Syfr from 'sections/work/projects/Syfr.astro';
@@ -9,15 +9,7 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 	<div data-overlay="text-target" class="overlay-title-wrap"></div>
 	<div data-overlay="img-target" class="overlay-img-wrap"></div>
 
-	<Project id="syfr">
-		<Syfr />
-	</Project>
-	<!-- <Project id="btsm">
-		<ByTheSea />
-	</Project>
-	<Project id="mvdc">
-		<MVD />
-	</Project> -->
+	<Projects />
 </div>
 
 <style is:global>
@@ -28,9 +20,13 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 		}
 	}
 	#project-overlay {
-		position: absolute;
+		height: auto;
+		position: fixed;
+		overflow: auto;
 		z-index: 2;
 		inset: 0%;
+
+		/* transition: opacity 1s ease-in-out; */
 
 		#proj-btsm-header {
 			color: var(--btsm-bg-700);

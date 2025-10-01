@@ -11,6 +11,8 @@ export interface WorkDomRefs {
 
 export interface WorkState {
 	activeListItem: HTMLElement | null;
+	activeProjId: 'syfr' | 'btsm' | 'mvdc' | null;
+	activeProjContainer: HTMLElement | null;
 }
 
 export interface WorkContext {

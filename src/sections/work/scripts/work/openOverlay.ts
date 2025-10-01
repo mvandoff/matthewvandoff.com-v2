@@ -7,6 +7,7 @@ import getCurrentBreakpoint from 'utils/getCurrentBreakpoint';
 
 export function openOverlay(ctx: WorkContext, index: number) {
 	const { refs, state } = ctx;
+	const { activeProjId } = state;
 	const { projectListItems, imageItems, section } = refs;
 
 	if (!section) return;
@@ -21,7 +22,11 @@ export function openOverlay(ctx: WorkContext, index: number) {
 	if (!listItem) return;
 
 	listItem.classList.add('active');
-	document.getElementById(`proj-${listItem.dataset.projId}`)!.classList.add('active');
+
+	const activeProj = document.getElementById(`proj-${activeProjId}`);
+	activeProj!.classList.add('active');
+
+	state.activeProjContainer = activeProj;
 	state.activeListItem = listItem;
 
 	const title = listItem.querySelector<HTMLElement>(SELECTORS.projectTitle);

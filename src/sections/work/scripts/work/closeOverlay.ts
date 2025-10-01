@@ -7,12 +7,16 @@ import { SELECTORS } from './selectors';
 
 export function closeOverlay(ctx: WorkContext) {
 	const { refs, state } = ctx;
+	const { activeProjContainer } = state;
 	const { projectListItems, imageItems, headings, section } = refs;
 
 	if (!state.activeListItem || !section) return;
 
 	setProjectBackground();
 	section.classList.replace('overlay-open', 'overlay-closed');
+	console.log('activeProjContainer', activeProjContainer);
+	activeProjContainer?.classList.remove('active');
+	state.activeProjContainer = null;
 
 	const index = projectListItems.indexOf(state.activeListItem);
 	const title = document.querySelector<HTMLElement>(`${SELECTORS.overlayTextTarget} ${SELECTORS.projectTitle}`);
