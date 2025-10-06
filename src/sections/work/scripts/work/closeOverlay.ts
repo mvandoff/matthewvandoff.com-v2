@@ -14,7 +14,6 @@ export function closeOverlay(ctx: WorkContext) {
 
 	setProjectBackground();
 	section.classList.replace('overlay-open', 'overlay-closed');
-	console.log('activeProjContainer', activeProjContainer);
 	activeProjContainer?.classList.remove('active');
 	state.activeProjContainer = null;
 
