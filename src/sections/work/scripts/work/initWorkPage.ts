@@ -5,6 +5,7 @@ import { bindEvents } from './bindEvents';
 import { queryDom } from './queryDom';
 import { createWorkState } from './state';
 import type { WorkContext } from './types';
+import { OVERLAY_TRANSITION_TIME } from './workConstants';
 
 gsap.registerPlugin(Flip);
 
@@ -16,4 +17,6 @@ export function initWorkPage() {
 	// Inject work-only nav items immediately (runs once on DOMContentLoaded)
 	injectWorkNavItems(ctx);
 	bindEvents(ctx);
+
+	document.documentElement.style.setProperty('--overlay-transition-time', `${OVERLAY_TRANSITION_TIME}ms`);
 }

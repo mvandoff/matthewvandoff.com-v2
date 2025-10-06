@@ -56,7 +56,7 @@ const { id, image, alt, projectId } = Astro.props;
 			display: none;
 			opacity: 0;
 			filter: blur(20px);
-			transition: all 1s ease;
+			transition: all var(--overlay-transition-time) ease;
 		}
 		.proj-container.active {
 			.proj-img-mobl {
