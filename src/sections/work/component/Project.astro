@@ -1,0 +1,59 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+	id: string;
+	image: ImageMetadata;
+	alt: string;
+	projectId?: string;
+}
+
+const { id, image, alt, projectId } = Astro.props;
+---
+
+<div class="overlay-item proj-container" id={id}>
+	<Image src={image} alt={alt} class="proj-img-mobl" />
+	<div class="mobl-img-overlay"></div>
+
+	<div class="proj" data-proj-id={projectId}>
+		<slot />
+	</div>
+</div>
+
+<style>
+	.proj-container {
+		display: none;
+	}
+	.proj-container.active {
+		display: block;
+	}
+	.overlay-item {
+		z-index: 1;
+		display: none;
+		position: relative;
+	}
+	.overlay-item.active {
+		display: block;
+	}
+	.proj-img-mobl,
+	.mobl-img-overlay {
+		width: 100%;
+		height: auto;
+		object-fit: contain;
+		margin-top: 2rem;
+	}
+	.mobl-img-overlay {
+		background-color: red;
+	}
+	@media screen and (min-width: 1024px) {
+		.proj-img-mobl {
+			display: none;
+		}
+	}
+	@media screen and (max-width: 1023px) {
+		.proj-img-mobl {
+			display: block;
+		}
+	}
+</style>
