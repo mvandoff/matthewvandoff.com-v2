@@ -4,6 +4,7 @@ import { setProjectBackground } from 'sections/work/scripts/work/openCloseOverla
 import { swapWorkNavItems } from 'sections/work/scripts/work/openCloseOverlay/swapWorkNavItems';
 import { SELECTORS } from 'sections/work/scripts/work/selectors';
 import type { WorkContext } from 'sections/work/scripts/work/types';
+import { OVERLAY_TRANSITION_TIME } from 'sections/work/scripts/work/workConstants';
 
 export function closeOverlay(ctx: WorkContext) {
 	const { refs, state } = ctx;
@@ -13,9 +14,15 @@ export function closeOverlay(ctx: WorkContext) {
 	if (!state.activeListItem || !section) return;
 
 	setProjectBackground();
-	section.classList.replace('overlay-open', 'overlay-closed');
-	activeProjContainer?.classList.remove('active');
-	state.activeProjContainer = null;
+
+	activeProjContainer?.classList.remove('animate-in');
+	activeProjContainer?.classList.add('animate-out');
+
+	setTimeout(() => {
+		section.classList.replace('overlay-open', 'overlay-closed');
+		activeProjContainer?.classList.remove('active', 'animate-out');
+		state.activeProjContainer = null;
+	}, OVERLAY_TRANSITION_TIME);
 
 	const index = projectListItems.indexOf(state.activeListItem);
 	const title = document.querySelector<HTMLElement>(`${SELECTORS.overlayTextTarget} ${SELECTORS.projectTitle}`);

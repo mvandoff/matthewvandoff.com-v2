@@ -54,9 +54,24 @@ const { id, image, alt, projectId } = Astro.props;
 	@media screen and (max-width: 1023px) {
 		.proj-img-mobl {
 			display: none;
+			opacity: 0;
+			filter: blur(20px);
+			transition: all 1s ease;
 		}
-		.proj-img-mobl.active {
-			display: block;
+		.proj-container.active {
+			.proj-img-mobl {
+				display: block;
+			}
+		}
+		.proj-container.animate-in {
+			.proj-img-mobl {
+				opacity: 1;
+				filter: blur(0);
+			}
+		}
+		.proj-container.animate-out {
+			.proj-img-mobl {
+			}
 		}
 	}
 </style>

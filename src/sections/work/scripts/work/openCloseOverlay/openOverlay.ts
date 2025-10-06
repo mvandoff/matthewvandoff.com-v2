@@ -25,6 +25,7 @@ export function openOverlay(ctx: WorkContext, index: number) {
 
 	const activeProj = document.getElementById(`proj-${activeProjId}`);
 	activeProj!.classList.add('active');
+	setTimeout(() => activeProj?.classList.add('animate-in'));
 
 	state.activeProjContainer = activeProj;
 	state.activeListItem = listItem;

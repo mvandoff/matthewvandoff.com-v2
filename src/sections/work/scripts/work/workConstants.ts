@@ -1,0 +1,1 @@
+export const OVERLAY_TRANSITION_TIME = 1000;
