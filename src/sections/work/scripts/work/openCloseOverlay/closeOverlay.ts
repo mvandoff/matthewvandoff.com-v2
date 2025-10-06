@@ -1,9 +1,9 @@
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
-import type { WorkContext } from './types';
-import { swapWorkNavItems } from 'sections/work/scripts/work/swapWorkNavItems';
-import { setProjectBackground } from './setProjectBackground';
-import { SELECTORS } from './selectors';
+import { setProjectBackground } from 'sections/work/scripts/work/openCloseOverlay/setProjectBackground';
+import { swapWorkNavItems } from 'sections/work/scripts/work/openCloseOverlay/swapWorkNavItems';
+import { SELECTORS } from 'sections/work/scripts/work/selectors';
+import type { WorkContext } from 'sections/work/scripts/work/types';
 
 export function closeOverlay(ctx: WorkContext) {
 	const { refs, state } = ctx;

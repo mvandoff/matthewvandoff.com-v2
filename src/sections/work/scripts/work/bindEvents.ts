@@ -1,7 +1,7 @@
 import type { WorkContext } from './types';
-import { openOverlay } from './openOverlay';
-import { closeOverlay } from './closeOverlay';
-import { setProjectBackground } from './setProjectBackground';
+import { openOverlay } from './openCloseOverlay/openOverlay';
+import { setProjectBackground } from './openCloseOverlay/setProjectBackground';
+import { closeOverlay } from 'sections/work/scripts/work/openCloseOverlay/closeOverlay';
 
 export function bindEvents(ctx: WorkContext) {
 	const { refs } = ctx;

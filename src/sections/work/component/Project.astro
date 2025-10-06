@@ -53,6 +53,9 @@ const { id, image, alt, projectId } = Astro.props;
 	}
 	@media screen and (max-width: 1023px) {
 		.proj-img-mobl {
+			display: none;
+		}
+		.proj-img-mobl.active {
 			display: block;
 		}
 	}
