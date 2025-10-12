@@ -2,22 +2,34 @@
 import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 ---
 
-<div id="mobile-nav">
-	<button id="menu-btn" class="closed">[ menu ]</button>
+<div id="mobile-nav"></div>
+<MobileMenu />
+<button id="menu-btn" class="closed">[ menu ]</button>
 
-	<MobileMenu />
-</div>
 <style is:global>
-	#menu-btn,
-	#work-back-btn-mobile,
-	#work-scroll-msg-mobile,
-	#work-help-msg-mobile {
+	#mobile-nav {
 		display: none;
 		position: fixed;
-		top: 1rem;
-		right: 1rem;
-		z-index: 1000;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 10;
+		justify-content: space-between;
+		align-items: center;
 		font-size: 26px;
+		padding: 1rem;
+		background: black;
+	}
+	#menu-btn {
+		position: fixed;
+		right: 0.5rem;
+		top: 11px;
+		z-index: 9999;
+		font-size: 26px;
+		display: none;
+	}
+	#work-back-btn-mobile {
+		right: 1rem;
 	}
 	@media (max-width: 1023px) {
 		#menu-btn,
@@ -28,13 +40,12 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 		}
 		#work-scroll-msg-mobile,
 		#work-help-msg-mobile {
-			left: 1rem;
-			top: 20px;
 			font-size: 20px;
 			letter-spacing: 0.15rem;
 			display: flex;
 			align-items: center;
 			gap: 1.25rem;
+			white-space: nowrap;
 		}
 		#work-help-msg-mobile::before {
 			content: '';
@@ -52,7 +63,7 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 	}
 	@media (max-width: 1023px) {
 		#mobile-nav {
-			display: block;
+			display: flex;
 		}
 	}
 </style>

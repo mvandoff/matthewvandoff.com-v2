@@ -43,8 +43,8 @@ export function injectWorkNavItems(ctx: WorkContext) {
 		mobileScrollMsg.textContent = 'scroll to explore';
 
 		mobileNav.prepend(mobileHelpMsg);
-		mobileNav.prepend(mobileBackBtn);
-		mobileNav.prepend(mobileScrollMsg);
+		mobileNav.append(mobileScrollMsg);
+		mobileNav.append(mobileBackBtn);
 		mobileBackBtn.addEventListener('pointerdown', () => closeOverlay(ctx));
 	}
 }
