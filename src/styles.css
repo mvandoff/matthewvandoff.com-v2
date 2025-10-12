@@ -73,6 +73,12 @@ body {
 	font-style: normal;
 	position: relative;
 }
+main,
+#project-overlay,
+nav {
+	max-width: 1600px;
+	margin: 0 auto;
+}
 section:not(.unset-height) {
 	height: 100svh;
 	box-sizing: border-box;
