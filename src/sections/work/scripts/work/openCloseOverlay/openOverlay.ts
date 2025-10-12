@@ -4,6 +4,7 @@ import type { WorkContext } from '../types';
 import { swapWorkNavItems } from 'sections/work/scripts/work/openCloseOverlay/swapWorkNavItems';
 import { SELECTORS } from '../selectors';
 import getCurrentBreakpoint from 'utils/getCurrentBreakpoint';
+import { OVERLAY_TRANSITION_TIME } from 'sections/work/scripts/work/workConstants';
 
 export function openOverlay(ctx: WorkContext, index: number) {
 	const { refs, state } = ctx;
@@ -63,4 +64,16 @@ export function openOverlay(ctx: WorkContext, index: number) {
 	});
 
 	swapWorkNavItems();
+
+	// After the overlay finishes opening, scroll the overlay container to the bottom
+	const container = document.getElementById('project-overlay-container');
+	if (container) {
+		setTimeout(() => {
+			try {
+				container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+			} catch {
+				container.scrollTop = container.scrollHeight;
+			}
+		}, OVERLAY_TRANSITION_TIME + 25);
+	}
 }

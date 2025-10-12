@@ -112,5 +112,28 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 		});
 
 		initWorkPage();
+
+		// Dev helpers: open overlay on load via ?open=syfr|btsm|mvdc and expose a global trigger
+		try {
+			const params = new URLSearchParams(location.search);
+			const openId = params.get('open'); // syfr | btsm | mvdc
+			if (openId) {
+				const li = document.querySelector(`.proj-list-item[data-proj-id="${openId}"]`);
+				if (li)
+					li.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', isPrimary: true }));
+			}
+
+			// Expose a quick global for DevTools: window.openWorkOverlay('syfr')
+			// This uses the existing pointerdown listener, keeping behavior identical to user interaction.
+			// @ts-ignore
+			window.openWorkOverlay = (id) => {
+				const li = document.querySelector(`.proj-list-item[data-proj-id="${id}"]`);
+				if (li) {
+					li.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', isPrimary: true }));
+				}
+			};
+		} catch (e) {
+			// no-op: helper only for local dev
+		}
 	});
 </script>

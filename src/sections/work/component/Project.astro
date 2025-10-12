@@ -20,6 +20,56 @@ const { id, image, alt, projectId } = Astro.props;
 	</div>
 </div>
 
+<style is:global>
+	.proj {
+		.live-site-btn {
+			border: 2px solid rgba(255, 192, 203, 0.6);
+			padding: 0.75rem 4rem;
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			transition: border 0.25s;
+			font-size: 18px;
+
+			&:hover {
+				border: 2px solid rgba(255, 192, 203, 1);
+			}
+			svg {
+				width: 1.5rem;
+				height: 1.5rem;
+			}
+		}
+
+		h3 {
+			font-size: 48px;
+			font-weight: bold;
+		}
+		p {
+			font-size: 18px;
+			width: 900px;
+			line-height: 2rem;
+			color: var(--slate-50);
+		}
+		.motivation {
+			text-align: center;
+		}
+		h3:first-of-type {
+			margin-top: 6rem;
+		}
+		.brands-grid {
+			font-size: 18px;
+			display: flex;
+			justify-content: space-between;
+			width: 800px;
+
+			.brands-col {
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+			}
+		}
+	}
+</style>
 <style>
 	.proj-container {
 		display: none;
@@ -28,9 +78,11 @@ const { id, image, alt, projectId } = Astro.props;
 		display: block;
 	}
 	.proj {
-		/* border: 1px solid lightcyan; */
+		/* border: 1px solid green; */
 		display: flex;
 		justify-content: center;
+		align-items: center;
+		flex-direction: column;
 	}
 	.overlay-item {
 		z-index: 1;
