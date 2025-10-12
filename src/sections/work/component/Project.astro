@@ -14,7 +14,6 @@ const { id, image, alt, projectId } = Astro.props;
 
 <div class="overlay-item proj-container" id={id}>
 	<Image src={image} alt={alt} class="proj-img-mobl" />
-	<div class="mobl-img-overlay"></div>
 
 	<div class="proj" data-proj-id={projectId}>
 		<slot />
@@ -36,15 +35,11 @@ const { id, image, alt, projectId } = Astro.props;
 	.overlay-item.active {
 		display: block;
 	}
-	.proj-img-mobl,
-	.mobl-img-overlay {
+	.proj-img-mobl {
 		width: 100%;
 		height: auto;
 		object-fit: contain;
 		margin-top: 2rem;
-	}
-	.mobl-img-overlay {
-		background-color: red;
 	}
 	@media screen and (min-width: 1024px) {
 		.proj-img-mobl {
