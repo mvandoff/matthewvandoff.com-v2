@@ -18,6 +18,9 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 			pointer-events: none;
 			opacity: 0;
 		}
+		.overlay-img-wrap::after {
+			opacity: 0;
+		}
 	}
 	#project-overlay {
 		height: auto;
@@ -43,13 +46,21 @@ import Syfr from 'sections/work/projects/Syfr.astro';
 		position: relative;
 	}
 	.overlay-img-wrap {
+		position: relative;
 		display: flex;
 		justify-content: center;
 		img {
 			margin-top: 4rem;
 		}
 	}
-
+	.overlay-img-wrap::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		opacity: 1;
+		background: linear-gradient(transparent, black);
+		transition: all var(--overlay-transition-time);
+	}
 	.overlay-nav {
 		z-index: 999;
 		pointer-events: auto;
