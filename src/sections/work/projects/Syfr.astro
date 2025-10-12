@@ -1,4 +1,31 @@
-<p>Info about syfr</p>
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<a class="live-site-btn" href="https://syfr.studio" target="_blank"
+	>live site
+	<Icon name="heroicons:arrow-top-right-on-square" />
+</a>
+<style>
+	.live-site-btn {
+		border: 2px solid rgba(255, 192, 203, 0.482);
+		padding: 0.75rem 4rem;
+		display: flex;
+		/* justify-content: center; */
+		align-items: center;
+		gap: 1rem;
+		transition: border 0.25s;
+
+		svg {
+			width: 1.5rem;
+			height: 1.5rem;
+		}
+
+		&:hover {
+			border: 2px solid rgba(255, 192, 203, 1);
+		}
+	}
+</style>
 <!-- <div class="overlay-col col-left">
 	<div class="overlay-col__img">
 		<img
