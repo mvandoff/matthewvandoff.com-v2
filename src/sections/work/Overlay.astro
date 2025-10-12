@@ -28,8 +28,15 @@ import Projects from 'sections/work/Projects.astro';
 		height: auto;
 		position: fixed;
 		overflow: auto;
+
+		/* Smooth scrolling on iOS/macOS */
+		-webkit-overflow-scrolling: touch;
 	}
+
 	#project-overlay {
+		/* background:
+			radial-gradient(1200px 600px at 100% 100%, rgba(255, 143, 201, 0.12), transparent 60%),
+			linear-gradient(180deg, rgba(16, 10, 19, 0.96), rgba(6, 6, 8, 0.98)); */
 		#proj-btsm-header {
 			color: var(--btsm-bg-700);
 		}
