@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import Brand from '../../../components/Brand.astro';
 ---
 
 <a class="live-site-btn" href="https://syfr.studio" target="_blank"
@@ -12,53 +13,71 @@ import { Icon } from 'astro-icon/components';
 	cloud based environment.
 </p>
 
-<h3>tech</h3>
+<h3>tech used</h3>
 <div class="brands-grid">
 	<div class="brands-col">
-		<span class="brand">
-			<Icon name="fa7-brands:js" />
-			<span class="brand-name">JavaScript / TypeScript</span>
-		</span>
-		<span>React</span>
-		<span>HTML</span>
-		<span>CSS</span>
-		<span>Tailwind CSS</span>
-		<span>Zustand</span>
+		<Brand icon="vscode-icons:file-type-typescript-official" label="JavaScript / TypeScript" />
+		<Brand icon="vscode-icons:file-type-reactjs" label="React" />
+		<Brand icon="vscode-icons:file-type-html" label="HTML" />
+		<Brand icon="vscode-icons:file-type-css2" label="CSS" />
+		<Brand icon="vscode-icons:file-type-tailwind" label="Tailwind CSS" />
 	</div>
 	<div class="brands-col">
-		<span>Next.js</span>
-		<span>Node.js</span>
-		<span>Prisma</span>
-		<span>tRPC</span>
+		<Brand icon="vscode-icons:file-type-next" label="Next.js" />
+		<Brand icon="vscode-icons:file-type-node" label="Node.js" />
+		<Brand icon="vscode-icons:file-type-light-prisma" label="Prisma" />
 	</div>
 	<div class="brands-col">
-		<span>AWS</span>
-		<span>PostgreSQL</span>
+		<Brand icon="fa7-brands:aws" label="AWS" class="aws" />
+		<Brand icon="skill-icons:postgresql-dark" label="PostgreSQL" />
 	</div>
 </div>
+
+<h3>about</h3>
+<p>
+	Syfr was my first baby. I initially thought of the idea when I was still in the early stages of my developer journey.
+	I had, for the most part, completed the "App Academy Open" boot camp curriculum and I knew I needed to start working
+	on a big project if I was really going to cut my teeth. In those days I was still doing a lot of music production
+	while learning to code. Perhaps that's what gave me the idea for something like a "GitHub for musicians".
+</p>
+<p>
+	I kept running into the same issues again and again. There were many different people who would collaborate on one
+	song, with many different roles, and they would all need access to different files. The artist might want to hear the
+	latest version of a track, a musician might need a stripped down version to play over, another producer might need
+	stems for the whole project, or maybe the project in some other format. Typically, this was done with Gmail, Dropbox,
+	WeTransfer, or some other service for sending files. (As far as I can tell, this is still the industry standard!) To
+	me this seemed like a problem that was begging for a solution.
+</p>
+<p>
+	I dove head first into the process of building a full scale web app, from scratch. I created mock ups, showed my ideas
+	to designers, researched different tech stacks, pulled all nighters, banged my head against the wall dealing with the
+	sort of problems that real developers face every day. Eventually that project helped me land my first job at AVI.
+</p>
+<p>
+	About a year into my tenure at AVI, having learned a ton, I decided to rewrite it entirely, this time foregoing any
+	component frameworks, using an appropriate database and server, and adopting the Next.js framework. Today, given what
+	I know now, I'd love to rewrite it again! That's how I learned how quickly tech evolves and ages. Today many companies
+	have been funded to build a similar product, from what I can tell, with little success. A few of them seem to have
+	pivoted to other ideas. It turns out musicians are not the most profitable target demographic. I still use syfr
+	ocasionally with friends and hope to one day continue improving it!
+</p>
 
 <style>
 	.motivation {
 		width: 725px;
 	}
 </style>
-<!-- <div class="overlay-col col-left">
-	<div class="overlay-col__img">
-		<img
-			alt=""
-			src="https://cdn.prod.website-files.com/67698689512e0fc28ac45d04/67698a0416860b36f6dd7f89_eberhard-grossgasteiger-UclnVUmf5aQ-unsplash.jpg"
-			loading="lazy"
-			class="image"
-		/>
-	</div>
+<style is:global>
+	.aws svg {
+		color: #ff9903;
+	}
+</style>
+<br />
+<div class="">
+	<img
+		alt=""
+		src="https://cdn.prod.website-files.com/67698689512e0fc28ac45d04/67698a0416860b36f6dd7f89_eberhard-grossgasteiger-UclnVUmf5aQ-unsplash.jpg"
+		loading="lazy"
+		class="image"
+	/>
 </div>
-<div class="overlay-col col-right">
-	<div class="overlay-col__img">
-		<img
-			alt=""
-			src="https://cdn.prod.website-files.com/67698689512e0fc28ac45d04/67698a0416860b36f6dd7f90_filippo-fFh53mf_6iE-unsplash.jpg"
-			loading="lazy"
-			class="image"
-		/>
-	</div>
-</div> -->

@@ -1,0 +1,16 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+	label: string;
+	icon?: string;
+	class?: string;
+}
+
+const { label, icon, class: className } = Astro.props as Props;
+---
+
+<span class={`brand${className ? ` ${className}` : ''}`}>
+	{icon ? <Icon name={icon} /> : null}
+	<span class="brand-name">{label}</span>
+</span>

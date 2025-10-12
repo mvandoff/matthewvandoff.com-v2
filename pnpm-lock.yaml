@@ -27,6 +27,15 @@ importers:
       '@iconify-json/heroicons':
         specifier: ^1.2.3
         version: 1.2.3
+      '@iconify-json/simple-icons':
+        specifier: ^1.2.54
+        version: 1.2.54
+      '@iconify-json/skill-icons':
+        specifier: ^1.2.3
+        version: 1.2.3
+      '@iconify-json/vscode-icons':
+        specifier: ^1.2.31
+        version: 1.2.31
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -246,6 +255,15 @@ packages:
 
   '@iconify-json/heroicons@1.2.3':
     resolution: {integrity: sha512-n+vmCEgTesRsOpp5AB5ILB6srsgsYK+bieoQBNlafvoEhjVXLq8nIGN4B0v/s4DUfa0dOrjwE/cKJgIKdJXOEg==}
+
+  '@iconify-json/simple-icons@1.2.54':
+    resolution: {integrity: sha512-OQQYl8yC5j3QklZOYnK31QYe5h47IhyCoxSLd53f0e0nA4dgi8VOZS30SgSAbsecQ+S0xlGJMjXIHTIqZ+ML3w==}
+
+  '@iconify-json/skill-icons@1.2.3':
+    resolution: {integrity: sha512-wyoP8uwox80jEi1ABZ3Z+I+ETtIr2brAERPPDzpJ9iALk8hyeg4/kdoC7M8HduhNkSkyq5kwBF8xvbqjNldnBQ==}
+
+  '@iconify-json/vscode-icons@1.2.31':
+    resolution: {integrity: sha512-lVb4R5CxosCsnGnQQ3NzrXWLgSeQoq+I2sYCowveVNHFwO2fGGbVmUTc6ApFkjxlqT1i43lNgM9zZuhnkL64hQ==}
 
   '@iconify/tools@4.1.4':
     resolution: {integrity: sha512-s6BcNUcCxQ3S6cvhlsoWzOuBt8qKXdVyXB9rT57uSJ/ARHD7dVM43+5ERBWn3tmkMWXeJ/s9DPVc3dUasayzeA==}
@@ -2123,6 +2141,18 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/heroicons@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/simple-icons@1.2.54':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/skill-icons@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/vscode-icons@1.2.31':
     dependencies:
       '@iconify/types': 2.0.0
 
