@@ -14,3 +14,8 @@ const { label, icon, class: className } = Astro.props as Props;
 	{icon ? <Icon name={icon} /> : null}
 	<span class="brand-name">{label}</span>
 </span>
+<style>
+	.brand {
+		font-weight: bold;
+	}
+</style>
