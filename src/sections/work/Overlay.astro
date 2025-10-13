@@ -57,6 +57,7 @@ import Projects from 'sections/work/Projects.astro';
 			margin-top: 4rem;
 		}
 	}
+
 	html:not([active-proj='btsm']) {
 		.overlay-img-wrap::after {
 			content: '';
@@ -65,6 +66,11 @@ import Projects from 'sections/work/Projects.astro';
 			opacity: 1;
 			background: linear-gradient(transparent, black);
 			transition: all var(--overlay-transition-time);
+		}
+		.overlay-closed {
+			.overlay-img-wrap::after {
+				opacity: 0;
+			}
 		}
 	}
 	.overlay-nav {
