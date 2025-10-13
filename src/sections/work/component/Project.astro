@@ -17,9 +17,7 @@ const { id, image, alt, projectId } = Astro.props;
 		<Image src={image} alt={alt} class="proj-img-mobl" />
 	</div>
 
-	<div class="proj" data-proj-id={projectId}>
-		<slot />
-	</div>
+	<slot />
 </div>
 
 <style is:global>
@@ -39,6 +37,11 @@ const { id, image, alt, projectId } = Astro.props;
 		}
 	}
 	.proj {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+
 		.live-site-btn {
 			border: 2px solid rgba(255, 192, 203, 0.6);
 			padding: 0.75rem 4rem;
@@ -170,12 +173,7 @@ const { id, image, alt, projectId } = Astro.props;
 	.proj-container.active {
 		display: block;
 	}
-	.proj {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-direction: column;
-	}
+
 	.overlay-item {
 		z-index: 1;
 		display: none;
