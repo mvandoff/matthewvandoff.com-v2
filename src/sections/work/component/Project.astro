@@ -26,14 +26,16 @@ const { id, image, alt, projectId } = Astro.props;
 	.proj-img-mobl-container {
 		position: relative;
 	}
-	.overlay-open {
-		.proj-img-mobl-container::after {
-			content: '';
-			position: absolute;
-			inset: 0;
-			opacity: 1;
-			background: linear-gradient(transparent, black);
-			transition: all var(--overlay-transition-time);
+	html:not([active-proj='btsm']) {
+		.overlay-open {
+			.proj-img-mobl-container::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				opacity: 1;
+				background: linear-gradient(transparent, black);
+				transition: all var(--overlay-transition-time);
+			}
 		}
 	}
 	.proj {

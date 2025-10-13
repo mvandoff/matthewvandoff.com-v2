@@ -9,13 +9,15 @@ const PROJECT_BACKGROUNDS = {
 export function setProjectBackground(projId?: string) {
 	const section = document.getElementById('work');
 	const mainNav = document.getElementById('main-nav');
-	if (!section || !mainNav) throw Error();
+	const mobileNav = document.getElementById('mobile-nav');
+	if (!section) throw Error();
 
 	const bgColor = projId
 		? PROJECT_BACKGROUNDS[projId as keyof typeof PROJECT_BACKGROUNDS]
 		: PROJECT_BACKGROUNDS.default;
 
 	document.documentElement.style.background = bgColor;
-	mainNav.style.background = bgColor;
 	section.style.background = bgColor;
+	if (mainNav) mainNav.style.background = bgColor;
+	if (mobileNav) mobileNav.style.background = bgColor;
 }

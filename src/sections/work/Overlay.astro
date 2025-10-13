@@ -28,6 +28,7 @@ import Projects from 'sections/work/Projects.astro';
 		height: auto;
 		position: fixed;
 		overflow: auto;
+		margin-top: 5rem;
 	}
 
 	#project-overlay {
@@ -56,13 +57,15 @@ import Projects from 'sections/work/Projects.astro';
 			margin-top: 4rem;
 		}
 	}
-	.overlay-img-wrap::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		opacity: 1;
-		background: linear-gradient(transparent, black);
-		transition: all var(--overlay-transition-time);
+	html:not([active-proj='btsm']) {
+		.overlay-img-wrap::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			opacity: 1;
+			background: linear-gradient(transparent, black);
+			transition: all var(--overlay-transition-time);
+		}
 	}
 	.overlay-nav {
 		z-index: 999;
@@ -81,10 +84,10 @@ import Projects from 'sections/work/Projects.astro';
 	}
 	#project-overlay {
 		@media screen and (min-width: 1024px) {
-			padding: 6rem 2rem;
+			padding: 2rem 2rem;
 		}
 		@media screen and (max-width: 1023px) {
-			padding: 6rem 0.5rem;
+			padding: 1rem 0.5rem;
 		}
 		@media screen and (max-width: 767px) {
 			.overlay-title-wrap {
