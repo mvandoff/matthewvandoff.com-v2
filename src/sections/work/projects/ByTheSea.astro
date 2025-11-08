@@ -1,1 +1,89 @@
-<p>Info about btsm</p>
+---
+import { Icon } from 'astro-icon/components';
+import Brand from '../../../components/Brand.astro';
+import ExternalLink from 'sections/work/component/ExternalLink.astro';
+---
+
+<div class="proj" data-proj-id={'btsm'}>
+	<a class="live-site-btn" href="https://bytheseamassage.com" target="_blank"
+		>live site
+		<Icon name="heroicons:arrow-top-right-on-square" />
+	</a>
+	<h3>motivation</h3>
+	<p class="motivation">
+		Create a brand identity, design, and build a professional website that conveys a sense of luxury to serve a high-end
+		massage therapy business, enhancing client trust and increasing bookings through an elegant, responsive one-page
+		website
+	</p>
+
+	<h3>tech used</h3>
+	<div class="brands-grid">
+		<Brand icon="vscode-icons:file-type-typescript-official" label={`JavaScript / TypeScript`} />
+		<Brand icon="vscode-icons:file-type-html" label="HTML" />
+		<Brand icon="vscode-icons:file-type-css2" label="CSS" />
+		<Brand icon="vscode-icons:file-type-light-astro" label="Astro" />
+	</div>
+
+	<h3>about</h3>
+	<p>
+		By the Sea, my most recent project, was an attempt to venture into the world of design. By no means would I consider
+		myself a designer! But at least I've always thought that I had a decent eye for aesthetics, at least when it came to
+		web design. I regularly peruse <ExternalLink link="https://www.awwwards.com" title="awwwards.com" />
+	</p>
+
+	<br />
+	<div class="proj-footer-img">
+		<img
+			alt=""
+			src="https://cdn.prod.website-files.com/67698689512e0fc28ac45d04/67698a0416860b36f6dd7f89_eberhard-grossgasteiger-UclnVUmf5aQ-unsplash.jpg"
+			loading="lazy"
+			class="image"
+		/>
+	</div>
+</div>
+
+<style>
+	.proj {
+		p,
+		.brand-name {
+			color: var(--btsm-bg-800);
+		}
+		h3 {
+			color: var(--btsm-bg-700);
+		}
+		.live-site-btn {
+			border: 2px solid var(--btsm-bg-600);
+			color: var(--btsm-bg-800);
+
+			&:hover {
+				border: 2px solid var(--btsm-bg-200);
+			}
+		}
+		.motivation {
+			width: 710px;
+		}
+	}
+	@media screen and (max-width: 1023px) {
+		.proj {
+			.brands-grid {
+				margin-left: 50%;
+			}
+		}
+	}
+	@media screen and (max-width: 767px) {
+		.proj {
+			.brands-grid {
+				margin-left: 50vw;
+			}
+			.motivation {
+				/* width: 7000px; */
+			}
+		}
+	}
+</style>
+<style is:global>
+	a {
+		color: var(--btsm-bg-700);
+		font-weight: 400;
+	}
+</style>

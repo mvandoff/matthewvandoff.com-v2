@@ -1,0 +1,13 @@
+---
+export interface Props {
+	link: string;
+	title?: string;
+	class?: string;
+}
+
+const { link, title, class: className } = Astro.props as Props;
+---
+
+<a href={link} target="_blank" class={className}>
+	{title ?? link}
+</a>
