@@ -59,7 +59,7 @@ const { id, image, alt, projectId } = Astro.props;
 			display: flex;
 			align-items: center;
 			gap: 1rem;
-			transition: border 0.25s;
+			transition: all 0.3s;
 			font-size: 18px;
 
 			svg {
@@ -79,7 +79,7 @@ const { id, image, alt, projectId } = Astro.props;
 			line-height: 2rem;
 			font-family: 'Inter', sans-serif;
 			font-weight: 250;
-			margin: 0;
+			margin: 0.5rem 0;
 		}
 		.motivation {
 			text-align: center;
@@ -139,6 +139,7 @@ const { id, image, alt, projectId } = Astro.props;
 			.brands-grid {
 				flex-direction: column;
 				gap: 2rem;
+				width: 100%;
 
 				.brands-col {
 					display: grid;
@@ -146,7 +147,7 @@ const { id, image, alt, projectId } = Astro.props;
 					row-gap: 1.75rem;
 					border-top: 1px dotted grey;
 					padding-top: 1.5rem;
-					margin: 0 4rem;
+					margin: 0 5rem;
 
 					&:first-of-type {
 						border-top: 0;

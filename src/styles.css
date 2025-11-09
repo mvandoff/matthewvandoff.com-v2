@@ -51,6 +51,12 @@
 	--btsm-bg-1100: #1b1918;
 	--btsm-bg-1200: hsl(20 10% 2% / 1);
 
+	--btsm-accent-300: hsl(191 42% 75% / 1);
+	--btsm-accent-400: hsl(191 33.68% 62.16%);
+	--btsm-accent-500: #6393a6;
+	--btsm-accent-600: hsl(192, 35%, 37%);
+	--btsm-accent-700: hsl(192 37% 23% / 1);
+
 	--scrollbar-thumb: #ff6fb5; /* base pink */
 	--scrollbar-thumb-2: #ff4fa3; /* deeper pink for gradient */
 	--scrollbar-thumb-hover: #ff8fc9;

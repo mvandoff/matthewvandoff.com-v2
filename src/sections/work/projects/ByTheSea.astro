@@ -18,7 +18,7 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 
 	<h3>tech used</h3>
 	<div class="brands-grid">
-		<Brand icon="vscode-icons:file-type-typescript-official" label={`JavaScript / TypeScript`} />
+		<Brand icon="vscode-icons:file-type-typescript-official" label={`JavaScript /`} label2="TypeScript" />
 		<Brand icon="vscode-icons:file-type-html" label="HTML" />
 		<Brand icon="vscode-icons:file-type-css2" label="CSS" />
 		<Brand icon="vscode-icons:file-type-light-astro" label="Astro" />
@@ -26,9 +26,9 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 
 	<h3>about</h3>
 	<p>
-		By the Sea, my most recent project, was an attempt to venture into the world of design. By no means would I consider
-		myself a designer! But at least I've always thought that I had a decent eye for aesthetics, at least when it came to
-		web design. I regularly peruse <ExternalLink link="https://www.awwwards.com" title="awwwards.com" />
+		By the Sea was an attempt to venture into the world of design. By no means would I consider myself a designer! But
+		at least I've always thought that I had a decent eye for aesthetics, at least when it came to web design. I
+		regularly peruse <ExternalLink link="https://www.awwwards.com" title="awwwards.com" />
 	</p>
 
 	<br />
@@ -56,7 +56,8 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 			color: var(--btsm-bg-800);
 
 			&:hover {
-				border: 2px solid var(--btsm-bg-200);
+				border: 2px solid var(--btsm-accent-300);
+				color: var(--btsm-accent-400);
 			}
 		}
 		.motivation {
@@ -66,7 +67,7 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 	@media screen and (max-width: 1023px) {
 		.proj {
 			.brands-grid {
-				margin-left: 50%;
+				padding-left: 35%;
 			}
 		}
 	}
@@ -74,9 +75,6 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 		.proj {
 			.brands-grid {
 				margin-left: 50vw;
-			}
-			.motivation {
-				/* width: 7000px; */
 			}
 		}
 	}

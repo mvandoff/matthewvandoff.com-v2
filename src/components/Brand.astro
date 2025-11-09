@@ -3,19 +3,27 @@ import { Icon } from 'astro-icon/components';
 
 interface Props {
 	label: string;
+	label2?: string;
 	icon?: string;
 	class?: string;
 }
 
-const { label, icon, class: className } = Astro.props as Props;
+const { label, icon, class: className, label2 } = Astro.props as Props;
 ---
 
 <span class={`brand${className ? ` ${className}` : ''}`}>
 	{icon ? <Icon name={icon} /> : null}
-	<span class="brand-name">{label}</span>
+	<div class="brand-label-container">
+		<span class="brand-name">{label}</span>
+		{label2 && <span class="label2 brand-name">{label2}</span>}
+	</div>
 </span>
 <style>
 	.brand {
 		font-weight: bold;
+		.brand-label-container {
+			display: flex;
+			flex-direction: column;
+		}
 	}
 </style>
