@@ -2,6 +2,9 @@
 import { Icon } from 'astro-icon/components';
 import Brand from '../../../components/Brand.astro';
 import ExternalLink from 'sections/work/component/ExternalLink.astro';
+import btsmFima from 'assets/images/btsm-figma.png';
+import designBooks from 'assets/images/design-books.png';
+import { Image } from 'astro:assets';
 ---
 
 <div class="proj" data-proj-id={'btsm'}>
@@ -22,30 +25,83 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 		<Brand icon="vscode-icons:file-type-html" label="HTML" />
 		<Brand icon="vscode-icons:file-type-css2" label="CSS" />
 		<Brand icon="vscode-icons:file-type-light-astro" label="Astro" />
+		<Brand icon="skill-icons:photoshop" label="Photoshop" />
+		<Brand icon="skill-icons:illustrator" label="Illustrator" />
+		<Brand icon="simple-icons:gsap" label="GSAP" class="gsap-logo" />
 	</div>
 
 	<h3>about</h3>
 	<p>
-		By the Sea was an attempt to venture into the world of design. By no means would I consider myself a designer! But
-		at least I've always thought that I had a decent eye for aesthetics, at least when it came to web design. I
-		regularly peruse <ExternalLink link="https://www.awwwards.com" title="awwwards.com" />
+		By the Sea was my attempt to foray into the world of design. As frontend developers, we're often called on to make
+		design decisions. But most of us don't have any training in design, so we do the best we can. Having designed
+		syfr.studio and being a regular peruser of <ExternalLink link="https://awwwards.com" title="awwwards.com" />, I
+		wasn't unfamiliar with design entirely but with this project I wanted to dive headfirst into the techniques and
+		mindsets of a real designer. The client was starting from scratch, and trusted me not just to create a functioning
+		website, but also create a brand identity, logo, and design aesthetic that would fit their business.
 	</p>
-
-	<br />
+	<p>
+		I immersed myself in beautiful designs in every way I could think of. I bought design books, renewed my long dormant
+		Adobe account, took an online Adobe Illustrator course, and even started learning how to draw! Once my environment
+		was tuned, and I was familiar with the basics, it was easy to get inspired and get started doing what I needed to
+		do.
+	</p>
+	<Image alt="" src={designBooks} loading="lazy" class="body-img" />
+	<p>
+		The design process varies from person to person, but usually they share these core processes:
+		<ol>
+			<li>
+				<b>Gather requirements:</b> Ascertain the vision of the client in as much detail as possible. In this case the client
+				very clearly wanted to evoke feelings of calmness and serenity and steer away from other businesses which are focused
+				on athletic injury recovery.
+			</li>
+			<li>
+				<b>Mood boards: </b> Learn how other desginers have appraoched these problems and get a feeling of what's possible,
+				what you like and what you don't like. I looked at websites for any kind of similar businesses like spas and anything
+				that evoked feelings of calm. I also started curating any stock photos that I might like to use, creating a color
+				palette and font pairings.
+			</li>
+			<li>
+				<b>Low fidelity mockups: </b>Make a rough sketch of what sections or pages you will need, what they might look
+				like in general and where they will go. In this case we just wanted a simple one pager, with an about section, a
+				section to list what services are offered and a contact section which might turn into a section for online
+				booking at some point.
+			</li>
+			<li>
+				<b>High fidelity mockups: </b>The hard part. Take the design out of the realm of the imagination and onto the
+				screen. For a website, you probably need separate layouts for desktop, tablet, and mobile. I went through many
+				different revisions, hashing out different ideas only to find they didn't work like I thought they would. I have
+				always found this process to be very time consuming and this time was no different, even armed with new
+				knowledge. Being the developer gives me some advantage here, I don't have to be quite as detailed since I know
+				that information won't be lost in the "handoff" from developer to designer.
+			</li>
+		</ol>
+	</p>
 	<div class="proj-footer-img">
-		<img
-			alt=""
-			src="https://cdn.prod.website-files.com/67698689512e0fc28ac45d04/67698a0416860b36f6dd7f89_eberhard-grossgasteiger-UclnVUmf5aQ-unsplash.jpg"
-			loading="lazy"
-			class="image"
-		/>
+		<Image alt="" src={btsmFima} loading="lazy" class="image" />
+		<span class="caption"
+			>Some early design iterations of the site in Figma. You can see how much work goes into designing for desktop,
+			tablet, and mobile!
+		</span>
 	</div>
+	<p>
+		As far as tech goes, I tried to keep it simple. Astro is my go to "framework" for building simple static sites. It
+		allows me to use basic HTML/CSS/JS but lets me break it up into components which allows for cleaner, structured
+		code. It also comes with built in optimizations and TypeScript support. The hard part was learning GSAP. GSAP is the
+		industry standard for building interactive animations on the web. Having the 3 slats in the hero swipe across the
+		screen, tied to the user's scroll, with a parallax effect was an idea I had early on. It wasn't easy but I was able
+		to get it done with GSAP's ScrollTrigger plugin.
+	</p>
+	<p>
+		I learned a ton from this project and am glad I had the opportunity to do it. I can say that I'm happy to leave the
+		desgining to the designers but won't be afraid to get my hands dirty when I need to!
+	</p>
 </div>
 
 <style>
 	.proj {
 		p,
-		.brand-name {
+		.brand-name,
+		li {
 			color: var(--btsm-bg-800);
 		}
 		h3 {
@@ -56,12 +112,40 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 			color: var(--btsm-bg-800);
 
 			&:hover {
-				border: 2px solid var(--btsm-accent-300);
-				color: var(--btsm-accent-400);
+				border: 2px solid var(--btsm-accent-400);
+				color: var(--btsm-accent-500);
 			}
 		}
 		.motivation {
 			width: 710px;
+		}
+		.proj-footer-img {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			gap: 1rem;
+
+			.caption {
+				color: var(--btsm-bg-800);
+				width: 550px;
+			}
+		}
+		img {
+			object-fit: scale-down;
+			height: auto;
+			max-width: 90%;
+		}
+		.brands-grid {
+			width: 1000px;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+			margin: 0 auto;
+			padding-left: 6rem;
+			gap: 2rem;
+		}
+		.body-img {
+			margin: 2rem 0;
 		}
 	}
 	@media screen and (max-width: 1023px) {
@@ -74,7 +158,7 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 	@media screen and (max-width: 767px) {
 		.proj {
 			.brands-grid {
-				margin-left: 50vw;
+				padding-left: 20%;
 			}
 		}
 	}
@@ -83,5 +167,8 @@ import ExternalLink from 'sections/work/component/ExternalLink.astro';
 	a {
 		color: var(--btsm-bg-700);
 		font-weight: 400;
+	}
+	.gsap-logo svg {
+		color: black;
 	}
 </style>

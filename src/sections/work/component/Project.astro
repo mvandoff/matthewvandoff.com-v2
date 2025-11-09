@@ -72,7 +72,9 @@ const { id, image, alt, projectId } = Astro.props;
 			font-size: 48px;
 			font-weight: bold;
 		}
-		p {
+		p,
+		.proj-footer-img .caption,
+		li {
 			font-size: 18px;
 			width: 700px;
 			max-width: 95%;
@@ -80,6 +82,10 @@ const { id, image, alt, projectId } = Astro.props;
 			font-family: 'Inter', sans-serif;
 			font-weight: 250;
 			margin: 0.5rem 0;
+		}
+		.proj-footer-img .caption {
+			text-align: center;
+			font-style: italic;
 		}
 		.motivation {
 			text-align: center;
