@@ -104,6 +104,9 @@ import { Image } from 'astro:assets';
 		li {
 			color: var(--btsm-bg-800);
 		}
+		p:last-child {
+			margin-bottom: 10rem;
+		}
 		h3 {
 			color: var(--btsm-bg-700);
 		}
@@ -151,14 +154,14 @@ import { Image } from 'astro:assets';
 	@media screen and (max-width: 1023px) {
 		.proj {
 			.brands-grid {
-				padding-left: 35%;
+				grid-template-columns: 1fr 1fr 1fr;
 			}
 		}
 	}
 	@media screen and (max-width: 767px) {
 		.proj {
 			.brands-grid {
-				padding-left: 20%;
+				grid-template-columns: 1fr 1fr;
 			}
 		}
 	}
