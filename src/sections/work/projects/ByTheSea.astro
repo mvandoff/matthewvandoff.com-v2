@@ -139,29 +139,31 @@ import { Image } from 'astro:assets';
 			height: auto;
 			max-width: 90%;
 		}
-		.brands-grid {
-			width: 1000px;
-			display: grid;
-			grid-template-columns: 1fr 1fr 1fr 1fr;
-			margin: 0 auto;
-			padding-left: 6rem;
-			gap: 2rem;
-		}
 		.body-img {
 			margin: 2rem 0;
+		}
+		ol {
+			width: 100%;
+		}
+		p a {
+			font-size: inherit;
 		}
 	}
 	@media screen and (max-width: 1023px) {
 		.proj {
 			.brands-grid {
-				grid-template-columns: 1fr 1fr 1fr;
+				/* padding-left: 20%; */
+				width: 600px;
 			}
 		}
 	}
 	@media screen and (max-width: 767px) {
 		.proj {
 			.brands-grid {
+				display: grid;
 				grid-template-columns: 1fr 1fr;
+				padding: 0 2rem;
+				gap: 1rem;
 			}
 		}
 	}

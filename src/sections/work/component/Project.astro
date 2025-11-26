@@ -97,7 +97,9 @@ const { id, image, alt } = Astro.props;
 		.brands-grid {
 			font-size: 18px;
 			display: flex;
-			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 3rem 5rem;
+			justify-content: center;
 			width: 800px;
 			max-width: 100%;
 			margin: 1rem;
@@ -143,7 +145,7 @@ const { id, image, alt } = Astro.props;
 				margin-top: 2rem;
 			}
 			.brands-grid {
-				flex-direction: column;
+				/* flex-direction: column; */
 				gap: 2rem;
 				width: 100%;
 

@@ -31,4 +31,24 @@ import Brand from 'components/Brand.astro';
 			margin-bottom: 10rem;
 		}
 	}
+	.brands-grid {
+		width: 600px !important;
+		display: grid;
+		margin: 0 auto;
+		gap: 2rem;
+	}
+	@media screen and (max-width: 1023px) {
+		.proj {
+			.brands-grid {
+				width: 500px !important;
+			}
+		}
+	}
+	@media screen and (max-width: 767px) {
+		.proj {
+			.brands-grid {
+				/* width: 400px !important; */
+			}
+		}
+	}
 </style>
