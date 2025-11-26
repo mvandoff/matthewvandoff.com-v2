@@ -9,7 +9,7 @@ interface Props {
 	projectId?: string;
 }
 
-const { id, image, alt, projectId } = Astro.props;
+const { id, image, alt } = Astro.props;
 ---
 
 <div class="overlay-item proj-container" id={id}>
@@ -171,9 +171,6 @@ const { id, image, alt, projectId } = Astro.props;
 					margin: 0 1rem;
 				}
 			}
-			p {
-				/* margin: 0; */
-			}
 			h3 {
 				font-size: 36px;
 			}
@@ -187,7 +184,6 @@ const { id, image, alt, projectId } = Astro.props;
 	.proj-container.active {
 		display: block;
 	}
-
 	.overlay-item {
 		z-index: 1;
 		display: none;

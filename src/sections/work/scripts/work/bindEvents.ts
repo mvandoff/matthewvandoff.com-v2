@@ -17,8 +17,8 @@ export function bindEvents(ctx: WorkContext) {
 
 			document.querySelector('html')!.setAttribute('active-proj', projId);
 
-			setProjectBackground(projId);
 			openOverlay(ctx, index);
+			setProjectBackground(projId);
 		});
 	});
 

@@ -1,18 +1,8 @@
-<div class="container">
-	<div class="inner"></div>
-</div>
-<style>
-	.container {
-		height: 700px;
-		width: 700px;
-		background-color: black;
-		position: relative;
-	}
-	.inner {
-		position: absolute;
-		background-color: blueviolet;
-		/* height: 200px; */
-		/* width: 200px; */
-		inset: 6rem;
-	}
-</style>
+---
+import MainLayout from 'layouts/MainLayout.astro';
+import About from 'sections/about/About.astro';
+---
+
+<MainLayout title="matthew van doff: about">
+	<About />
+</MainLayout>

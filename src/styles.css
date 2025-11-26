@@ -63,7 +63,7 @@
 	--scrollbar-track: rgba(255, 255, 255, 0.08);
 	--scrollbar-size: 10px;
 
-	transition: background 1s ease;
+	transition: background var(--overlay-transition-time) ease;
 	background-color: black;
 }
 * {

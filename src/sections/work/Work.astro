@@ -23,7 +23,7 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 
 <style>
 	#work {
-		transition: background 1s ease;
+		transition: background var(--overlay-transition-time) ease;
 		position: relative;
 	}
 	.overlay-open {
@@ -108,7 +108,7 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 
 		gsap.defaults({
 			ease: 'osmo-ease',
-			duration: 0.725,
+			duration: 1,
 		});
 
 		initWorkPage();
