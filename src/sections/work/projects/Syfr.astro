@@ -89,14 +89,38 @@ import Brand from '../../../components/Brand.astro';
 			}
 		}
 		.brands-grid {
+			display: flex;
+			flex-direction: column;
 			justify-content: space-between;
+
+			.brands-col {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 2rem;
+				justify-content: center;
+				border-top: 1px dotted grey;
+				padding: 2rem 20% 0 20%;
+				/* max-width: 600px; */
+				width: 100%;
+				margin: 0 auto;
+			}
 		}
 	}
 	@media screen and (max-width: 1023px) {
+		.brands-grid {
+			flex-direction: column;
+			.brands-col {
+			}
+		}
 	}
 	@media screen and (max-width: 767px) {
-		.motivation {
-			/* width: 7000px; */
+		.brands-grid {
+			flex-direction: column;
+			.brands-col {
+				display: grid !important;
+				grid-template-columns: 1fr;
+				padding: 2rem 15% 0 15% !important;
+			}
 		}
 	}
 </style>

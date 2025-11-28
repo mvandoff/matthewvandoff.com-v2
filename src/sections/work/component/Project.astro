@@ -103,12 +103,6 @@ const { id, image, alt } = Astro.props;
 			width: 800px;
 			max-width: 100%;
 			margin: 1rem;
-
-			.brands-col {
-				display: flex;
-				flex-direction: column;
-				gap: 1rem;
-			}
 		}
 		.brand {
 			display: flex;
@@ -144,37 +138,19 @@ const { id, image, alt } = Astro.props;
 			.live-site-btn {
 				margin-top: 2rem;
 			}
-			.brands-grid {
-				/* flex-direction: column; */
-				gap: 2rem;
-				width: 100%;
-
-				.brands-col {
-					display: grid;
-					grid-template-columns: 1fr 1fr;
-					row-gap: 1.75rem;
-					border-top: 1px dotted grey;
-					padding-top: 1.5rem;
-					margin: 0 5rem;
-
-					&:first-of-type {
-						border-top: 0;
-						padding-top: 0;
-					}
-				}
-			}
 		}
 	}
 	@media screen and (max-width: 767px) {
 		.proj {
-			.brands-grid {
-				.brands-col {
-					grid-template-columns: 1fr;
-					margin: 0 1rem;
-				}
-			}
 			h3 {
 				font-size: 36px;
+			}
+			.brands-grid {
+				gap: 1.5rem !important;
+				svg {
+					width: 2.75rem !important;
+					height: 2.75rem !important;
+				}
 			}
 		}
 	}
