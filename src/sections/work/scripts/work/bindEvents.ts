@@ -17,6 +17,10 @@ export function bindEvents(ctx: WorkContext) {
 
 			document.querySelector('html')!.setAttribute('active-proj', projId);
 
+			imageItems.forEach((imageItem) => {
+				imageItem.style.display = imageItem.dataset.projId === projId ? 'block' : 'none';
+			});
+
 			openOverlay(ctx, index);
 			setProjectBackground(projId);
 		});
