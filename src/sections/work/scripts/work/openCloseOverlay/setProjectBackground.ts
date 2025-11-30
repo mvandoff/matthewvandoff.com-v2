@@ -8,6 +8,8 @@ const PROJECT_BACKGROUNDS = {
 /** Sets the project's predefined color, or if no project is given, unsets the background color. */
 export function setProjectBackground(projId?: string) {
 	const section = document.getElementById('work');
+	const mainNav = document.getElementById('main-nav');
+	const mobileNav = document.getElementById('mobile-nav');
 	if (!section) throw Error();
 
 	const bgColor = projId
@@ -15,4 +17,6 @@ export function setProjectBackground(projId?: string) {
 		: PROJECT_BACKGROUNDS.default;
 
 	document.documentElement.style.background = bgColor;
+	if (mainNav) mainNav.style.background = bgColor;
+	if (mobileNav) mobileNav.style.background = bgColor;
 }
