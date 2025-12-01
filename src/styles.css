@@ -111,7 +111,7 @@ body {
 	font-style: normal;
 	position: relative;
 }
-main,
+section,
 #project-overlay,
 nav {
 	max-width: 1600px;
