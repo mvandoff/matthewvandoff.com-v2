@@ -1,3 +1,11 @@
+@font-face {
+	font-family: 'Gridular';
+	src: url('/fonts/Gridular-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
 :root {
 	/* Original main colors */
 	/* --main-50: #e1f3fe;
@@ -106,7 +114,8 @@ body {
 }
 body {
 	color: white;
-	font-family: 'DotGothic16', sans-serif;
+	/* font-family: 'DotGothic16', sans-serif; */
+	font-family: 'Gridular', sans-serif;
 	font-weight: 400;
 	font-style: normal;
 	position: relative;

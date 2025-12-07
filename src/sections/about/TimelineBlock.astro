@@ -34,7 +34,7 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 		display: flex;
 		gap: 2rem;
 		padding: 1rem;
-		border-radius: 0.5rem;
+		border-radius: 0.75rem;
 		transition: all 0.15s;
 		&:hover {
 			background: var(--slate-800);
@@ -45,6 +45,10 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 				color: var(--slate-400);
 			}
 		}
+		&:first-of-type {
+			/* padding-top: 0; */
+			margin-top: -0.75rem;
+		}
 	}
 	.tl-left {
 		color: var(--slate-500);
@@ -53,7 +57,7 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 		width: 150px;
 		flex-shrink: 0;
 		padding-top: 4px;
-		text-transform: uppercase;
+		/* text-transform: uppercase; */
 		transition: all 0.15s;
 	}
 	.tl-right {

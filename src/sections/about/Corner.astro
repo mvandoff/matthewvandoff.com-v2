@@ -1,0 +1,12 @@
+---
+type Props = {
+	className: string;
+};
+
+const { className } = Astro.props;
+---
+
+<svg class:list={['corner', className]} viewBox="0 0 81 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<rect x="81" y="17" width="63" height="24" rx="6" transform="rotate(90 81 17)" fill="#D9D9D9"></rect>
+	<rect width="63" height="24" rx="6" fill="#D9D9D9"></rect>
+</svg>
