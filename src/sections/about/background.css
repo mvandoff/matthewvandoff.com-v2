@@ -8,7 +8,7 @@
 	display: grid;
 	grid-template-columns: repeat(var(--block-cols), 1fr);
 	/* background-blend-mode: hue; */
-	--bg-lines-color: rgba(69, 69, 69, 0.1);
+	--bg-lines-color: rgba(69, 69, 69, 0.12);
 
 	background-image:
 		repeating-linear-gradient(

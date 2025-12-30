@@ -49,7 +49,7 @@ export function initAbout() {
 
 	blocks?.forEach((block) => {
 		block.addEventListener('mouseenter', () => {
-			block.style.backgroundColor = '#ff00008b';
+			block.style.backgroundColor = '#ff000030';
 			setTimeout(() => {
 				block.classList.add('fade-out');
 				block.style.background = 'transparent';
