@@ -1,5 +1,7 @@
 import { getBackgroundImage } from 'sections/about/scripts/getBackgroundImage';
 
+const BLOCK_COLOR = '#ff000030';
+
 export function initAbout() {
 	const bgContainer = document.getElementById('bg-container');
 	if (!bgContainer) return console.warn('bgContainer element not found');
@@ -47,16 +49,48 @@ export function initAbout() {
 
 	if (blocks.length) bgContainer.append(...blocks);
 
-	blocks?.forEach((block) => {
-		block.addEventListener('mouseenter', () => {
-			block.style.backgroundColor = '#ff000030';
-			setTimeout(() => {
-				block.classList.add('fade-out');
-				block.style.background = 'transparent';
-				setTimeout(() => block.classList.remove('fade-out'), 3000);
-			}, 1000);
+	// Original per-block mouseenter (works when blocks are reachable)
+	// blocks?.forEach((block) => block.addEventListener('mouseenter', () => triggerBlockHover(block)));
+
+	// Fallback: when the background container is behind interactive foreground elements
+	// we can't rely on native pointer events. Use mousemove -> block index mapping
+	// to simulate hover. Throttle with requestAnimationFrame for performance.
+	let lastIndex: number | null = null;
+	let raf = 0;
+	const rect = bgContainer.getBoundingClientRect();
+	const cols = columns;
+	const bSize = blockSize;
+
+	function handleMouseMove(e: MouseEvent) {
+		if (raf) return;
+		raf = requestAnimationFrame(() => {
+			raf = 0;
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+			if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+				if (lastIndex !== null) lastIndex = null;
+				return;
+			}
+			const col = Math.floor(x / bSize);
+			const row = Math.floor(y / bSize);
+			const idx = row * cols + col;
+			if (idx !== lastIndex && blocks[idx]) {
+				lastIndex = idx;
+				triggerBlockHover(blocks[idx]);
+			}
 		});
-	});
+	}
+
+	document.addEventListener('mousemove', handleMouseMove);
+}
+
+function triggerBlockHover(block: HTMLDivElement) {
+	block.style.backgroundColor = BLOCK_COLOR;
+	setTimeout(() => {
+		block.classList.add('fade-out');
+		block.style.background = 'transparent';
+		setTimeout(() => block.classList.remove('fade-out'), 3000);
+	}, 1000);
 }
 
 function getRandomColor() {

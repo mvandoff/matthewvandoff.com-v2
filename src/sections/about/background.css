@@ -1,10 +1,12 @@
 #about {
-	pointer-events: none;
+	position: relative;
+	z-index: 1;
 }
 #bg-container {
 	width: 100%;
 	height: 100%;
 	position: fixed;
+	pointer-events: none;
 	display: grid;
 	grid-template-columns: repeat(var(--block-cols), 1fr);
 	/* background-blend-mode: hue; */
@@ -65,4 +67,6 @@
 .bg-block {
 	transition: all 0.5s ease;
 	background-color: transparent;
+	/* allow individual blocks to receive pointer events even though the container is passthrough */
+	pointer-events: auto;
 }
