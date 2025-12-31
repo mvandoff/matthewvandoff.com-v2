@@ -11,7 +11,10 @@
 	grid-template-columns: repeat(var(--block-cols), 1fr);
 	/* background-blend-mode: hue; */
 	--bg-lines-color: rgba(69, 69, 69, 0.12);
-
+	--bg-block-color: #ff000030;
+	--bg-block-fade-in: 150ms;
+	--bg-block-fade-out: 1s;
+	--bg-block-hold: 1s;
 	background-image:
 		repeating-linear-gradient(
 			45deg,
@@ -62,33 +65,13 @@
 		radial-gradient(circle at 80% 80%, rgba(15, 19, 53, 0.8) 0%, hsla(233, 51%, 20%, 0.47) 26%, rgba(0, 0, 0, 0) 58%);
 }
 .bg-block {
-	transition: all 0.5s ease;
 	background-color: transparent;
+	transition: background-color var(--bg-block-fade-out) ease;
 	/* allow individual blocks to receive pointer events even though the container is passthrough */
 	pointer-events: auto;
 }
 
-.bg-block.fade-out {
-	transition: none;
-	animation:
-		bg-block-fade-in 150ms ease-out forwards,
-		bg-block-fade-out 3s ease 1s forwards;
-}
-
-@keyframes bg-block-fade-in {
-	from {
-		background-color: transparent;
-	}
-	to {
-		background-color: #ff000030;
-	}
-}
-
-@keyframes bg-block-fade-out {
-	from {
-		background-color: #ff000030;
-	}
-	to {
-		background-color: transparent;
-	}
+.bg-block.is-lit {
+	background-color: var(--bg-block-color);
+	transition: background-color var(--bg-block-fade-in) ease-out;
 }

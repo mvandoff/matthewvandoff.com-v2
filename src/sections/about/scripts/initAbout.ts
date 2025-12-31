@@ -1,5 +1,3 @@
-import { getBackgroundImage } from 'sections/about/scripts/getBackgroundImage';
-
 export function initAbout() {
 	const bgContainer = document.getElementById('bg-container');
 	if (!bgContainer) throw new Error('bgContainer element not found');
@@ -7,9 +5,51 @@ export function initAbout() {
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
 	let blockSize = 0;
+	const blockStates = new Map<HTMLDivElement, { holdTimeoutId: number | null; activatedAt: number }>();
+
+	function getBlockTimings() {
+		if (!bgContainer) throw new Error('bgContainer element not found');
+		const computedStyle = window.getComputedStyle(bgContainer);
+		const fadeInMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-in'), 150);
+		const fadeOutMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-out'), 3000);
+		const holdMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-hold'), 3000);
+		return { fadeInMs, fadeOutMs, holdMs };
+	}
+
+	function clearAllBlockTimers() {
+		for (const { holdTimeoutId } of blockStates.values()) {
+			if (holdTimeoutId) window.clearTimeout(holdTimeoutId);
+		}
+		blockStates.clear();
+	}
+
+	function triggerBlockHover(block: HTMLDivElement) {
+		const now = performance.now();
+		const timings = getBlockTimings();
+		const state = blockStates.get(block) ?? { holdTimeoutId: null, activatedAt: -Infinity };
+		blockStates.set(block, state);
+
+		const isLit = block.classList.contains('is-lit');
+		if (isLit) {
+			const isFadingIn = now - state.activatedAt < timings.fadeInMs;
+			if (isFadingIn) return;
+		}
+
+		if (!isLit) {
+			block.classList.add('is-lit');
+			state.activatedAt = now;
+		}
+
+		if (state.holdTimeoutId) window.clearTimeout(state.holdTimeoutId);
+		state.holdTimeoutId = window.setTimeout(() => {
+			state.holdTimeoutId = null;
+			block.classList.remove('is-lit');
+		}, timings.holdMs);
+	}
 
 	function rebuildGrid() {
 		if (!bgContainer) throw new Error('bgContainer element not found');
+		clearAllBlockTimers();
 
 		// Get computed style of the grid and extract the number of columns
 		const computedStyle = window.getComputedStyle(bgContainer);
@@ -87,10 +127,17 @@ export function initAbout() {
 	});
 }
 
-function triggerBlockHover(block: HTMLDivElement) {
-	// Restart the CSS keyframe animation on repeated hovers.
-	block.classList.remove('fade-out');
-	// Force reflow so the animation reliably restarts.
-	void block.offsetWidth;
-	block.classList.add('fade-out');
+function parseCssTimeToMs(value: string, fallbackMs: number) {
+	const trimmed = value.trim();
+	if (!trimmed) return fallbackMs;
+	const token = trimmed.split(/[,\s]/).find(Boolean);
+	if (!token) return fallbackMs;
+	const match = token.match(/^(-?\d*\.?\d+)(ms|s)$/);
+	if (match) {
+		const raw = Number(match[1]);
+		if (!Number.isFinite(raw)) return fallbackMs;
+		return Math.max(0, match[2] === 's' ? raw * 1000 : raw);
+	}
+	const raw = Number(token);
+	return Number.isFinite(raw) ? Math.max(0, raw) : fallbackMs;
 }
