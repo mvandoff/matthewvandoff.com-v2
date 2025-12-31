@@ -59,14 +59,36 @@
 		),
 		/* linear-gradient(50deg, rgba(15, 19, 53, 0.78), black); */
 		/* linear-gradient(-30deg, rgba(15, 19, 53, 0.8), transparent 80%); */
-		radial-gradient(circle at 70% 70%, rgba(15, 19, 53, 0.8) 0%, hsla(233, 51%, 20%, 0.47) 26%, rgba(0, 0, 0, 0) 58%);
-}
-.fade-out {
-	transition: all 3s ease !important;
+		radial-gradient(circle at 80% 80%, rgba(15, 19, 53, 0.8) 0%, hsla(233, 51%, 20%, 0.47) 26%, rgba(0, 0, 0, 0) 58%);
 }
 .bg-block {
 	transition: all 0.5s ease;
 	background-color: transparent;
 	/* allow individual blocks to receive pointer events even though the container is passthrough */
 	pointer-events: auto;
+}
+
+.bg-block.fade-out {
+	transition: none;
+	animation:
+		bg-block-fade-in 150ms ease-out forwards,
+		bg-block-fade-out 3s ease 1s forwards;
+}
+
+@keyframes bg-block-fade-in {
+	from {
+		background-color: transparent;
+	}
+	to {
+		background-color: #ff000030;
+	}
+}
+
+@keyframes bg-block-fade-out {
+	from {
+		background-color: #ff000030;
+	}
+	to {
+		background-color: transparent;
+	}
 }
