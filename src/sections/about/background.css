@@ -1,20 +1,21 @@
 #about {
 	position: relative;
-	z-index: 1;
 }
 #bg-container {
 	width: 100%;
 	height: 100%;
 	position: fixed;
+	inset: 0;
+	z-index: 0;
 	pointer-events: none;
 	display: grid;
 	grid-template-columns: repeat(var(--block-cols), 1fr);
 	/* background-blend-mode: hue; */
 	--bg-lines-color: rgba(69, 69, 69, 0.12);
-	--bg-block-color: #ff000030;
-	--bg-block-fade-in: 150ms;
+	--bg-block-color: hsla(239, 84%, 67%, 0.22);
+	--bg-block-fade-in: 300ms;
 	--bg-block-fade-out: 1s;
-	--bg-block-hold: 1s;
+	--bg-block-hold: 0.75s;
 	background-image:
 		repeating-linear-gradient(
 			45deg,

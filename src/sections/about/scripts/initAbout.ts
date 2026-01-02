@@ -84,9 +84,6 @@ export function initAbout() {
 
 	rebuildGrid();
 
-	// Original per-block mouseenter (works when blocks are reachable)
-	// blocks?.forEach((block) => block.addEventListener('mouseenter', () => triggerBlockHover(block)));
-
 	// Fallback: when the background container is behind interactive foreground elements
 	// we can't rely on native pointer events. Use mousemove -> block index mapping
 	// to simulate hover. Throttle with requestAnimationFrame for performance.
