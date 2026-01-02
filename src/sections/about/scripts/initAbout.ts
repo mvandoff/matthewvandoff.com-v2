@@ -1,6 +1,6 @@
 export function initAbout() {
-	const bgContainer = document.getElementById('bg-container');
-	if (!bgContainer) throw new Error('bgContainer element not found');
+	const blockContainer = document.getElementById('bg-blocks');
+	if (!blockContainer) throw new Error('bg-blocks element not found');
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
@@ -8,8 +8,8 @@ export function initAbout() {
 	const blockStates = new Map<HTMLDivElement, { holdTimeoutId: number | null; activatedAt: number }>();
 
 	function getBlockTimings() {
-		if (!bgContainer) throw new Error('bgContainer element not found');
-		const computedStyle = window.getComputedStyle(bgContainer);
+		if (!blockContainer) throw new Error('bg-blocks element not found');
+		const computedStyle = window.getComputedStyle(blockContainer);
 		const fadeInMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-in'), 150);
 		const fadeOutMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-out'), 3000);
 		const holdMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-hold'), 3000);
@@ -48,28 +48,31 @@ export function initAbout() {
 	}
 
 	function rebuildGrid() {
-		if (!bgContainer) throw new Error('bgContainer element not found');
+		if (!blockContainer) throw new Error('bg-blocks element not found');
 		clearAllBlockTimers();
 
 		// Get computed style of the grid and extract the number of columns
-		const computedStyle = window.getComputedStyle(bgContainer);
+		const computedStyle = window.getComputedStyle(blockContainer);
 		const gridTemplateColumns = computedStyle.getPropertyValue('grid-template-columns');
 
 		// Gets the number after 'repeat(' in the grid-template-columns string
 		// If it doesn't match, fallback to the number of space-separated values
 		columns = Number(gridTemplateColumns.match(/repeat\(\s*(\d+)\s*,/)?.[1]) || gridTemplateColumns.split(' ').length;
 
-		blockSize = window.innerWidth / columns;
-		const rowsNeeded = Math.ceil(window.innerHeight / blockSize);
+		const rect = blockContainer.getBoundingClientRect();
+		const containerWidth = rect.width || window.innerWidth;
+		const containerHeight = rect.height || window.innerHeight;
+		blockSize = containerWidth / columns;
+		const rowsNeeded = Math.ceil(containerHeight / blockSize);
 
 		// Update grid styles
-		bgContainer.style.gridTemplateRows = `repeat(${rowsNeeded}, ${blockSize}px)`;
+		blockContainer.style.gridTemplateRows = `repeat(${rowsNeeded}, ${blockSize}px)`;
 
 		// Calculate the total number of blocks needed
 		const totalBlocks = columns * rowsNeeded;
 
 		// Clear existing blocks
-		bgContainer.innerHTML = '';
+		blockContainer.innerHTML = '';
 
 		// Generate blocks dynamically using reduce and append them all at once
 		blocks = Array.from({ length: totalBlocks }).reduce<HTMLDivElement[]>((acc) => {
@@ -79,22 +82,22 @@ export function initAbout() {
 			return acc;
 		}, []);
 
-		if (blocks.length) bgContainer.append(...blocks);
+		if (blocks.length) blockContainer.append(...blocks);
 	}
 
 	rebuildGrid();
 
-	// Fallback: when the background container is behind interactive foreground elements
+	// Fallback: when the blocks overlay interactive content
 	// we can't rely on native pointer events. Use mousemove -> block index mapping
 	// to simulate hover. Throttle with requestAnimationFrame for performance.
 	let lastIndex: number | null = null;
 	let raf = 0;
 
 	function handleMouseMove(e: MouseEvent) {
-		if (raf || !bgContainer) return;
+		if (raf || !blockContainer) return;
 		raf = requestAnimationFrame(() => {
 			raf = 0;
-			const rect = bgContainer.getBoundingClientRect();
+			const rect = blockContainer.getBoundingClientRect();
 			const x = e.clientX - rect.left;
 			const y = e.clientY - rect.top;
 			if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
