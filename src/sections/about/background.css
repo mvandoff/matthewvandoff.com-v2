@@ -79,12 +79,13 @@
 	grid-template-columns: repeat(var(--block-cols), 1fr);
 }
 .bg-block {
-	background-color: transparent;
-	transition: background-color var(--bg-block-fade-out) ease-out;
+	background-color: var(--bg-block-color);
+	opacity: 0;
+	transition: opacity var(--bg-block-fade-out) ease-out;
 	pointer-events: none;
 }
 
 .bg-block.is-lit {
-	background-color: var(--bg-block-color);
-	transition: background-color var(--bg-block-fade-in) ease-out;
+	opacity: 1;
+	transition-duration: var(--bg-block-fade-in);
 }

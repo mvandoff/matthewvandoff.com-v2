@@ -1,5 +1,5 @@
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
-type BlockState = { holdTimeoutId: number | null; activatedAt: number };
+type BlockState = { holdTimeoutId: number | null; activatedAt: number; activationId: number };
 
 export function initAbout() {
 	const blockContainer = document.getElementById('bg-blocks');
@@ -115,32 +115,23 @@ function clearAllBlockTimers(blockStates: Map<HTMLDivElement, BlockState>) {
 
 function triggerBlockHover(block: HTMLDivElement, blockStates: Map<HTMLDivElement, BlockState>, timings: BlockTimings) {
 	const now = performance.now();
-	const state = blockStates.get(block) ?? { holdTimeoutId: null, activatedAt: -Infinity };
+	const state = blockStates.get(block) ?? { holdTimeoutId: null, activatedAt: -Infinity, activationId: 0 };
 	blockStates.set(block, state);
 
-	const isLit = block.classList.contains('is-lit');
-	if (isLit) {
-		const isFadingIn = now - state.activatedAt < timings.fadeInMs;
-		if (isFadingIn) {
-			if (state.holdTimeoutId) window.clearTimeout(state.holdTimeoutId);
-			state.holdTimeoutId = window.setTimeout(() => {
-				state.holdTimeoutId = null;
-				block.classList.remove('is-lit');
-			}, timings.holdMs);
-			return;
-		}
-	}
-
-	if (!isLit) {
+	if (!block.classList.contains('is-lit')) {
 		block.classList.add('is-lit');
 		state.activatedAt = now;
 	}
 
 	if (state.holdTimeoutId) window.clearTimeout(state.holdTimeoutId);
+	const fadeRemainingMs = Math.max(0, timings.fadeInMs - (now - state.activatedAt));
+	const holdDelayMs = fadeRemainingMs + timings.holdMs;
+	const activationId = ++state.activationId;
 	state.holdTimeoutId = window.setTimeout(() => {
+		if (state.activationId !== activationId) return;
 		state.holdTimeoutId = null;
 		block.classList.remove('is-lit');
-	}, timings.holdMs);
+	}, holdDelayMs);
 }
 
 function parseGridColumns(gridTemplateColumns: string) {

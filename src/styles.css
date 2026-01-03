@@ -71,7 +71,7 @@
 	--scrollbar-track: rgba(255, 255, 255, 0.08);
 	--scrollbar-size: 10px;
 
-	--block-cols: 24;
+	--block-cols: 26;
 
 	transition: background var(--overlay-transition-time) ease;
 	background-color: black;
