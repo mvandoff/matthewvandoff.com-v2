@@ -1,88 +1,45 @@
+type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
+type BlockState = { holdTimeoutId: number | null; activatedAt: number };
+
 export function initAbout() {
 	const blockContainer = document.getElementById('bg-blocks');
 	if (!blockContainer) throw new Error('bg-blocks element not found');
+	const blockContainerEl = blockContainer;
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
 	let blockSize = 0;
-	const blockStates = new Map<HTMLDivElement, { holdTimeoutId: number | null; activatedAt: number }>();
-
-	function getBlockTimings() {
-		if (!blockContainer) throw new Error('bg-blocks element not found');
-		const computedStyle = window.getComputedStyle(blockContainer);
-		const fadeInMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-in'), 150);
-		const fadeOutMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-out'), 3000);
-		const holdMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-hold'), 3000);
-		return { fadeInMs, fadeOutMs, holdMs };
-	}
-
-	function clearAllBlockTimers() {
-		for (const { holdTimeoutId } of blockStates.values()) {
-			if (holdTimeoutId) window.clearTimeout(holdTimeoutId);
-		}
-		blockStates.clear();
-	}
-
-	function triggerBlockHover(block: HTMLDivElement) {
-		const now = performance.now();
-		const timings = getBlockTimings();
-		const state = blockStates.get(block) ?? { holdTimeoutId: null, activatedAt: -Infinity };
-		blockStates.set(block, state);
-
-		const isLit = block.classList.contains('is-lit');
-		if (isLit) {
-			const isFadingIn = now - state.activatedAt < timings.fadeInMs;
-			if (isFadingIn) return;
-		}
-
-		if (!isLit) {
-			block.classList.add('is-lit');
-			state.activatedAt = now;
-		}
-
-		if (state.holdTimeoutId) window.clearTimeout(state.holdTimeoutId);
-		state.holdTimeoutId = window.setTimeout(() => {
-			state.holdTimeoutId = null;
-			block.classList.remove('is-lit');
-		}, timings.holdMs);
-	}
+	let containerRect: DOMRect | null = null;
+	const defaultTimings: BlockTimings = { fadeInMs: 150, fadeOutMs: 3000, holdMs: 3000 };
+	let timings = defaultTimings;
+	const blockStates = new Map<HTMLDivElement, BlockState>();
 
 	function rebuildGrid() {
-		if (!blockContainer) throw new Error('bg-blocks element not found');
-		clearAllBlockTimers();
+		clearAllBlockTimers(blockStates);
+		timings = getBlockTimingsFromCss(blockContainerEl, defaultTimings);
 
 		// Get computed style of the grid and extract the number of columns
-		const computedStyle = window.getComputedStyle(blockContainer);
+		const computedStyle = window.getComputedStyle(blockContainerEl);
 		const gridTemplateColumns = computedStyle.getPropertyValue('grid-template-columns');
+		columns = parseGridColumns(gridTemplateColumns);
 
-		// Gets the number after 'repeat(' in the grid-template-columns string
-		// If it doesn't match, fallback to the number of space-separated values
-		columns = Number(gridTemplateColumns.match(/repeat\(\s*(\d+)\s*,/)?.[1]) || gridTemplateColumns.split(' ').length;
-
-		const rect = blockContainer.getBoundingClientRect();
-		const containerWidth = rect.width || window.innerWidth;
-		const containerHeight = rect.height || window.innerHeight;
-		blockSize = containerWidth / columns;
-		const rowsNeeded = Math.ceil(containerHeight / blockSize);
+		containerRect = blockContainerEl.getBoundingClientRect();
+		const containerWidth = containerRect.width || window.innerWidth;
+		const containerHeight = containerRect.height || window.innerHeight;
+		blockSize = columns > 0 ? containerWidth / columns : 0;
+		const rowsNeeded = blockSize > 0 ? Math.ceil(containerHeight / blockSize) : 0;
 
 		// Update grid styles
-		blockContainer.style.gridTemplateRows = `repeat(${rowsNeeded}, ${blockSize}px)`;
+		blockContainerEl.style.gridTemplateRows = `repeat(${rowsNeeded}, ${blockSize}px)`;
 
 		// Calculate the total number of blocks needed
 		const totalBlocks = columns * rowsNeeded;
 
 		// Clear existing blocks
-		blockContainer.innerHTML = '';
+		blockContainerEl.innerHTML = '';
 
-		// Generate blocks dynamically using reduce and append them all at once
-		blocks = Array.from({ length: totalBlocks }).reduce<HTMLDivElement[]>((acc) => {
-			const block = document.createElement('div') as HTMLDivElement;
-			block.classList.add('bg-block');
-			acc.push(block);
-			return acc;
-		}, []);
-
-		if (blocks.length) blockContainer.append(...blocks);
+		blocks = createBlocks(totalBlocks);
+		if (blocks.length) blockContainerEl.append(...blocks);
 	}
 
 	rebuildGrid();
@@ -92,29 +49,43 @@ export function initAbout() {
 	// to simulate hover. Throttle with requestAnimationFrame for performance.
 	let lastIndex: number | null = null;
 	let raf = 0;
+	let pendingClientX = 0;
+	let pendingClientY = 0;
 
-	function handleMouseMove(e: MouseEvent) {
-		if (raf || !blockContainer) return;
+	function schedulePointerUpdate() {
+		if (raf) return;
 		raf = requestAnimationFrame(() => {
 			raf = 0;
-			const rect = blockContainer.getBoundingClientRect();
-			const x = e.clientX - rect.left;
-			const y = e.clientY - rect.top;
-			if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+			const rect = containerRect ?? blockContainerEl.getBoundingClientRect();
+			containerRect = rect;
+			const x = pendingClientX - rect.left;
+			const y = pendingClientY - rect.top;
+			if (x < 0 || y < 0 || x >= rect.width || y >= rect.height || blockSize <= 0 || columns <= 0) {
 				if (lastIndex !== null) lastIndex = null;
 				return;
 			}
-			const col = Math.floor(x / blockSize);
-			const row = Math.floor(y / blockSize);
+			const col = Math.min(columns - 1, Math.max(0, Math.floor(x / blockSize)));
+			const rows = Math.ceil(rect.height / blockSize);
+			const row = Math.min(rows - 1, Math.max(0, Math.floor(y / blockSize)));
 			const idx = row * columns + col;
 			if (idx !== lastIndex && blocks[idx]) {
 				lastIndex = idx;
-				triggerBlockHover(blocks[idx]);
+				triggerBlockHover(blocks[idx], blockStates, timings);
 			}
 		});
 	}
 
-	document.addEventListener('mousemove', handleMouseMove);
+	function handlePointerMove(e: PointerEvent | MouseEvent) {
+		pendingClientX = e.clientX;
+		pendingClientY = e.clientY;
+		schedulePointerUpdate();
+	}
+
+	if ('PointerEvent' in window) {
+		document.addEventListener('pointermove', handlePointerMove, { passive: true });
+	} else {
+		document.addEventListener('mousemove', handlePointerMove, { passive: true });
+	}
 
 	let resizeRaf = 0;
 	window.addEventListener('resize', () => {
@@ -125,6 +96,66 @@ export function initAbout() {
 			rebuildGrid();
 		});
 	});
+}
+
+function getBlockTimingsFromCss(blockContainer: HTMLElement, fallback: BlockTimings): BlockTimings {
+	const computedStyle = window.getComputedStyle(blockContainer);
+	const fadeInMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-in'), fallback.fadeInMs);
+	const fadeOutMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-out'), fallback.fadeOutMs);
+	const holdMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-hold'), fallback.holdMs);
+	return { fadeInMs, fadeOutMs, holdMs };
+}
+
+function clearAllBlockTimers(blockStates: Map<HTMLDivElement, BlockState>) {
+	for (const { holdTimeoutId } of blockStates.values()) {
+		if (holdTimeoutId) window.clearTimeout(holdTimeoutId);
+	}
+	blockStates.clear();
+}
+
+function triggerBlockHover(block: HTMLDivElement, blockStates: Map<HTMLDivElement, BlockState>, timings: BlockTimings) {
+	const now = performance.now();
+	const state = blockStates.get(block) ?? { holdTimeoutId: null, activatedAt: -Infinity };
+	blockStates.set(block, state);
+
+	const isLit = block.classList.contains('is-lit');
+	if (isLit) {
+		const isFadingIn = now - state.activatedAt < timings.fadeInMs;
+		if (isFadingIn) {
+			if (state.holdTimeoutId) window.clearTimeout(state.holdTimeoutId);
+			state.holdTimeoutId = window.setTimeout(() => {
+				state.holdTimeoutId = null;
+				block.classList.remove('is-lit');
+			}, timings.holdMs);
+			return;
+		}
+	}
+
+	if (!isLit) {
+		block.classList.add('is-lit');
+		state.activatedAt = now;
+	}
+
+	if (state.holdTimeoutId) window.clearTimeout(state.holdTimeoutId);
+	state.holdTimeoutId = window.setTimeout(() => {
+		state.holdTimeoutId = null;
+		block.classList.remove('is-lit');
+	}, timings.holdMs);
+}
+
+function parseGridColumns(gridTemplateColumns: string) {
+	const repeatCount = Number(gridTemplateColumns.match(/repeat\(\s*(\d+)\s*,/)?.[1]);
+	if (Number.isFinite(repeatCount) && repeatCount > 0) return repeatCount;
+	return gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function createBlocks(totalBlocks: number) {
+	return Array.from({ length: totalBlocks }).reduce<HTMLDivElement[]>((acc) => {
+		const block = document.createElement('div') as HTMLDivElement;
+		block.classList.add('bg-block');
+		acc.push(block);
+		return acc;
+	}, []);
 }
 
 function parseCssTimeToMs(value: string, fallbackMs: number) {
