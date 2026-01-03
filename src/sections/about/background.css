@@ -3,7 +3,7 @@
 	--bg-block-color: hsla(239, 85%, 67%, 0.308);
 	--bg-block-fade-in: 500ms;
 	--bg-block-fade-out: 1s;
-	--bg-block-hold: 0.75s;
+	--bg-block-hold: 0.25s;
 }
 
 #about {
