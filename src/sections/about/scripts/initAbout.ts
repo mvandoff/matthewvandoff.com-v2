@@ -1,5 +1,10 @@
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
 type BlockState = { holdTimeoutId: number | null; activatedAt: number };
+type WaveTimings = { fadeInMs: number; fadeOutMs: number; stepMs: number };
+type TimelineWaveState = { inTimeoutIds: number[]; outTimeoutIds: number[]; lastClientX: number; lastClientY: number };
+type BlockCoords = { index: number; row: number; col: number };
+type GridBounds = { rowStart: number; rowEnd: number; colStart: number; colEnd: number };
+type WaveItem = { block: HTMLDivElement; distance: number };
 
 export function initAbout() {
 	const blockContainer = document.getElementById('bg-blocks');
@@ -9,6 +14,7 @@ export function initAbout() {
 	const aboutRightEl = document.querySelector<HTMLElement>('#about .right');
 	const timelineHeadingEl = document.querySelector<HTMLElement>('#tl > h3');
 	const timelineFirstBlockEl = document.querySelector<HTMLElement>('#tl .tl-block');
+	const timelineBlocks = Array.from(document.querySelectorAll<HTMLElement>('#tl .tl-block'));
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
@@ -17,10 +23,16 @@ export function initAbout() {
 	const defaultTimings: BlockTimings = { fadeInMs: 150, fadeOutMs: 3000, holdMs: 3000 };
 	let timings = defaultTimings;
 	const blockStates = new Map<HTMLDivElement, BlockState>();
+	const defaultWaveTimings: WaveTimings = { fadeInMs: 250, fadeOutMs: 400, stepMs: 40 };
+	let waveTimings = defaultWaveTimings;
+	const timelineWaveStates = new Map<HTMLElement, TimelineWaveState>();
+	let timelineWaveBindingsReady = false;
 
 	function rebuildGrid() {
 		clearAllBlockTimers(blockStates);
+		clearAllTimelineWaveTimers(timelineWaveStates);
 		timings = getBlockTimingsFromCss(blockContainerEl, defaultTimings);
+		waveTimings = getWaveTimingsFromCss(blockContainerEl, defaultWaveTimings);
 		blockSizePx = getBlockSizePxFromCss(blockContainerEl, blockSizePx);
 
 		const targetWidth = Math.max(document.documentElement.clientWidth, document.body?.clientWidth ?? 0);
@@ -59,6 +71,12 @@ export function initAbout() {
 	}
 
 	rebuildGrid();
+	document.body?.classList.add('about-blocks-ready');
+
+	if (!timelineWaveBindingsReady && timelineBlocks.length > 0) {
+		bindTimelineWaveHandlers();
+		timelineWaveBindingsReady = true;
+	}
 
 	// The blocks overlay the page, but use `pointer-events: none` so all interactions
 	// hit the real content. That means we can't use `mouseenter` on blocks; we light
@@ -105,6 +123,126 @@ export function initAbout() {
 		document.addEventListener('mousemove', handlePointerMove, { passive: true });
 	}
 
+	function bindTimelineWaveHandlers() {
+		const enterEvent = 'PointerEvent' in window ? 'pointerenter' : 'mouseenter';
+		const moveEvent = 'PointerEvent' in window ? 'pointermove' : 'mousemove';
+		const leaveEvent = 'PointerEvent' in window ? 'pointerleave' : 'mouseleave';
+
+		for (const timelineBlock of timelineBlocks) {
+			timelineBlock.addEventListener(enterEvent, handleTimelineEnter);
+			timelineBlock.addEventListener(moveEvent, handleTimelineMove, { passive: true });
+			timelineBlock.addEventListener(leaveEvent, handleTimelineLeave);
+		}
+	}
+
+	function handleTimelineEnter(event: PointerEvent | MouseEvent) {
+		const target = event.currentTarget as HTMLElement | null;
+		if (!target) return;
+		const state = getTimelineWaveState(target);
+		state.lastClientX = event.clientX;
+		state.lastClientY = event.clientY;
+		clearTimelineWaveState(state);
+		runTimelineWave({ element: target, origin: getWaveOrigin(target, state.lastClientX, state.lastClientY), type: 'in', state });
+	}
+
+	function handleTimelineMove(event: PointerEvent | MouseEvent) {
+		const target = event.currentTarget as HTMLElement | null;
+		if (!target) return;
+		const state = getTimelineWaveState(target);
+		state.lastClientX = event.clientX;
+		state.lastClientY = event.clientY;
+	}
+
+	function handleTimelineLeave(event: PointerEvent | MouseEvent) {
+		const target = event.currentTarget as HTMLElement | null;
+		if (!target) return;
+		const state = getTimelineWaveState(target);
+		state.lastClientX = event.clientX;
+		state.lastClientY = event.clientY;
+		clearTimelineWaveState(state);
+		runTimelineWave({ element: target, origin: getWaveOrigin(target, state.lastClientX, state.lastClientY), type: 'out', state });
+	}
+
+	function getTimelineWaveState(element: HTMLElement) {
+		const existing = timelineWaveStates.get(element);
+		if (existing) return existing;
+		const state: TimelineWaveState = { inTimeoutIds: [], outTimeoutIds: [], lastClientX: 0, lastClientY: 0 };
+		timelineWaveStates.set(element, state);
+		return state;
+	}
+
+	function clearTimelineWaveState(state: TimelineWaveState) {
+		for (const timeoutId of state.inTimeoutIds) window.clearTimeout(timeoutId);
+		for (const timeoutId of state.outTimeoutIds) window.clearTimeout(timeoutId);
+		state.inTimeoutIds = [];
+		state.outTimeoutIds = [];
+	}
+
+	function getWaveOrigin(element: HTMLElement, clientX: number, clientY: number) {
+		const containerRect = blockContainerEl.getBoundingClientRect();
+		const origin = getBlockCoordsFromClient({
+			clientX,
+			clientY,
+			containerRect,
+			blockSizePx,
+			columns,
+			rows,
+		});
+		if (origin) return origin;
+
+		const rect = element.getBoundingClientRect();
+		return getBlockCoordsFromClient({
+			clientX: rect.left + rect.width / 2,
+			clientY: rect.top + rect.height / 2,
+			containerRect,
+			blockSizePx,
+			columns,
+			rows,
+		});
+	}
+
+	function runTimelineWave(params: { element: HTMLElement; origin: BlockCoords | null; type: 'in' | 'out'; state: TimelineWaveState }) {
+		if (!params.origin) return;
+		const containerRect = blockContainerEl.getBoundingClientRect();
+		const bounds = getGridBoundsForElement({
+			element: params.element,
+			containerRect,
+			blockSizePx,
+			columns,
+			rows,
+		});
+		if (!bounds) return;
+		const items = buildWaveItems(bounds, params.origin);
+		if (!items.length) return;
+
+		items.sort((a, b) => a.distance - b.distance);
+		const targetTimeouts = params.type === 'in' ? params.state.inTimeoutIds : params.state.outTimeoutIds;
+		for (const item of items) {
+			const delay = Math.round(item.distance * waveTimings.stepMs);
+			const timeoutId = window.setTimeout(() => {
+				if (params.type === 'in') {
+					item.block.classList.add('is-tl-lit');
+				} else {
+					item.block.classList.remove('is-tl-lit');
+				}
+			}, delay);
+			targetTimeouts.push(timeoutId);
+		}
+	}
+
+	function buildWaveItems(bounds: GridBounds, origin: BlockCoords): WaveItem[] {
+		const items: WaveItem[] = [];
+		for (let row = bounds.rowStart; row <= bounds.rowEnd; row += 1) {
+			for (let col = bounds.colStart; col <= bounds.colEnd; col += 1) {
+				const idx = row * columns + col;
+				const block = blocks[idx];
+				if (!block) continue;
+				items.push({ block, distance: Math.hypot(col - origin.col, row - origin.row) });
+			}
+		}
+		return items;
+	}
+
 	let resizeRaf = 0;
 	window.addEventListener('resize', () => {
 		if (resizeRaf) return;
@@ -124,6 +262,14 @@ function getBlockTimingsFromCss(blockContainer: HTMLElement, fallback: BlockTimi
 	return { fadeInMs, fadeOutMs, holdMs };
 }
 
+function getWaveTimingsFromCss(blockContainer: HTMLElement, fallback: WaveTimings): WaveTimings {
+	const computedStyle = window.getComputedStyle(blockContainer);
+	const fadeInMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-wave-fade-in'), fallback.fadeInMs);
+	const fadeOutMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-wave-fade-out'), fallback.fadeOutMs);
+	const stepMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-wave-step'), fallback.stepMs);
+	return { fadeInMs, fadeOutMs, stepMs };
+}
+
 function getBlockSizePxFromCss(blockContainer: HTMLElement, fallbackPx: number): number {
 	const computedStyle = window.getComputedStyle(blockContainer);
 	const raw = computedStyle.getPropertyValue('--bg-block-size').trim();
@@ -139,6 +285,15 @@ function clearAllBlockTimers(blockStates: Map<HTMLDivElement, BlockState>) {
 		if (holdTimeoutId) window.clearTimeout(holdTimeoutId);
 	}
 	blockStates.clear();
+}
+
+function clearAllTimelineWaveTimers(timelineStates: Map<HTMLElement, TimelineWaveState>) {
+	for (const state of timelineStates.values()) {
+		for (const timeoutId of state.inTimeoutIds) window.clearTimeout(timeoutId);
+		for (const timeoutId of state.outTimeoutIds) window.clearTimeout(timeoutId);
+		state.inTimeoutIds = [];
+		state.outTimeoutIds = [];
+	}
 }
 
 function triggerBlockHover(block: HTMLDivElement, blockStates: Map<HTMLDivElement, BlockState>, timings: BlockTimings) {
@@ -181,6 +336,57 @@ function parseCssTimeToMs(value: string, fallbackMs: number) {
 	}
 	const raw = Number(token);
 	return Number.isFinite(raw) ? Math.max(0, raw) : fallbackMs;
+}
+
+function getBlockCoordsFromClient(params: {
+	clientX: number;
+	clientY: number;
+	containerRect: DOMRect;
+	blockSizePx: number;
+	columns: number;
+	rows: number;
+}): BlockCoords | null {
+	const { clientX, clientY, containerRect, blockSizePx, columns, rows } = params;
+	const x = clientX - containerRect.left;
+	const y = clientY - containerRect.top;
+	if (x < 0 || y < 0) return null;
+	const col = Math.floor(x / blockSizePx);
+	const row = Math.floor(y / blockSizePx);
+	if (col < 0 || row < 0 || col >= columns || row >= rows) return null;
+	return { index: row * columns + col, row, col };
+}
+
+function getGridBoundsForElement(params: {
+	element: HTMLElement;
+	containerRect: DOMRect;
+	blockSizePx: number;
+	columns: number;
+	rows: number;
+}): GridBounds | null {
+	const { element, containerRect, blockSizePx, columns, rows } = params;
+	const rect = element.getBoundingClientRect();
+	const left = rect.left - containerRect.left;
+	const right = rect.right - containerRect.left;
+	const top = rect.top - containerRect.top;
+	const bottom = rect.bottom - containerRect.top;
+	const endOffset = 1;
+	const rawColStart = Math.floor(left / blockSizePx);
+	const rawColEnd = Math.floor((right - endOffset) / blockSizePx);
+	const rawRowStart = Math.round(top / blockSizePx);
+	const rawRowEnd = Math.floor((bottom - endOffset) / blockSizePx);
+
+	if (rawColEnd < 0 || rawRowEnd < 0 || rawColStart >= columns || rawRowStart >= rows) return null;
+
+	return {
+		colStart: clamp(rawColStart, 0, columns - 1),
+		colEnd: clamp(rawColEnd, 0, columns - 1),
+		rowStart: clamp(rawRowStart, 0, rows - 1),
+		rowEnd: clamp(rawRowEnd, 0, rows - 1),
+	};
+}
+
+function clamp(value: number, min: number, max: number) {
+	return Math.min(max, Math.max(min, value));
 }
 
 function snapElementLeftToGrid(params: { gridSizePx: number; element: HTMLElement }) {

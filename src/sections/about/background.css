@@ -1,16 +1,20 @@
 :root {
-	--bg-lines-color: rgba(69, 69, 69, 0.12);
-	--bg-block-color: hsla(239, 85%, 67%, 0.308);
+	--bg-lines-color: rgba(69, 69, 69, 0.05);
+	--bg-block-color: hsla(239, 85%, 67%, 0.3);
 	--bg-block-fade-in: 500ms;
 	--bg-block-fade-out: 1s;
 	--bg-block-hold: 0.25s;
 	--bg-block-size: 64px;
+	--bg-block-wave-color: var(--main-900);
+	--bg-block-wave-fade-in: 250ms;
+	--bg-block-wave-fade-out: 400ms;
+	--bg-block-wave-step: 40ms;
 }
 
 #about {
 	position: relative;
-	z-index: 0;
 }
+
 #bg-container {
 	width: 100%;
 	height: 100%;
@@ -74,19 +78,40 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 2;
+	z-index: 120;
 	pointer-events: none;
 	display: grid;
 	overflow: hidden;
 }
 .bg-block {
-	background-color: var(--bg-block-color);
-	opacity: 0;
-	transition: opacity var(--bg-block-fade-out) ease-out;
+	position: relative;
 	pointer-events: none;
 }
 
-.bg-block.is-lit {
+.bg-block::before,
+.bg-block::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity var(--bg-block-fade-out) ease-out;
+}
+
+.bg-block::before {
+	background-color: var(--bg-block-wave-color);
+	transition-duration: var(--bg-block-wave-fade-out);
+}
+
+.bg-block::after {
+	background-color: var(--bg-block-color);
+}
+
+.bg-block.is-tl-lit::before {
+	opacity: 1;
+	transition-duration: var(--bg-block-wave-fade-in);
+}
+
+.bg-block.is-lit::after {
 	opacity: 1;
 	transition-duration: var(--bg-block-fade-in);
 }
