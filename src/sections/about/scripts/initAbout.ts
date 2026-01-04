@@ -1,15 +1,19 @@
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
-type BlockState = { holdTimeoutId: number | null; activatedAt: number; activationId: number };
+type BlockState = { holdTimeoutId: number | null; activatedAt: number };
 
 export function initAbout() {
 	const blockContainer = document.getElementById('bg-blocks');
 	if (!blockContainer) throw new Error('bg-blocks element not found');
 	const blockContainerEl = blockContainer;
+	const aboutLeftEl = document.querySelector<HTMLElement>('#about .left');
+	const aboutRightEl = document.querySelector<HTMLElement>('#about .right');
+	const timelineHeadingEl = document.querySelector<HTMLElement>('#tl > h3');
+	const timelineFirstBlockEl = document.querySelector<HTMLElement>('#tl .tl-block');
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
 	let rows = 0;
-	let blockSize = 0;
+	let blockSizePx = 70;
 	const defaultTimings: BlockTimings = { fadeInMs: 150, fadeOutMs: 3000, holdMs: 3000 };
 	let timings = defaultTimings;
 	const blockStates = new Map<HTMLDivElement, BlockState>();
@@ -17,25 +21,41 @@ export function initAbout() {
 	function rebuildGrid() {
 		clearAllBlockTimers(blockStates);
 		timings = getBlockTimingsFromCss(blockContainerEl, defaultTimings);
+		blockSizePx = getBlockSizePxFromCss(blockContainerEl, blockSizePx);
 
-		const computedStyle = window.getComputedStyle(blockContainerEl);
-		columns = getColumnsFromCss(computedStyle);
-		const viewportWidth = window.innerWidth;
-		const viewportHeight = window.innerHeight;
-		blockSize = columns > 0 ? viewportWidth / columns : 0;
-		rows = blockSize > 0 ? Math.ceil(viewportHeight / blockSize) : 0;
+		const targetWidth = Math.max(document.documentElement.clientWidth, document.body?.clientWidth ?? 0);
+		const targetHeight = Math.max(
+			document.documentElement.scrollHeight,
+			document.body?.scrollHeight ?? 0,
+			document.documentElement.clientHeight
+		);
+		columns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
+		rows = Math.max(1, Math.ceil(targetHeight / blockSizePx));
 
-		// Update grid styles
-		blockContainerEl.style.gridTemplateRows = `repeat(${rows}, ${blockSize}px)`;
+		blockContainerEl.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
+		blockContainerEl.style.gridTemplateRows = `repeat(${rows}, ${blockSizePx}px)`;
 
 		// Calculate the total number of blocks needed
 		const totalBlocks = columns * rows;
 
-		// Clear existing blocks
-		blockContainerEl.innerHTML = '';
-
 		blocks = createBlocks(totalBlocks);
-		if (blocks.length) blockContainerEl.append(...blocks);
+		blockContainerEl.replaceChildren(...blocks);
+
+		if (aboutLeftEl) {
+			snapElementLeftToGrid({ gridSizePx: blockSizePx, element: aboutLeftEl });
+		}
+		if (aboutRightEl) {
+			snapElementRightToGrid({ gridSizePx: blockSizePx, element: aboutRightEl });
+		}
+		if (timelineHeadingEl && timelineFirstBlockEl) {
+			snapTimelineHeadingToGrid({
+				gridSizePx: blockSizePx,
+				heading: timelineHeadingEl,
+				block: timelineFirstBlockEl,
+			});
+		} else if (timelineFirstBlockEl) {
+			snapElementTopToGrid({ gridSizePx: blockSizePx, element: timelineFirstBlockEl });
+		}
 	}
 
 	rebuildGrid();
@@ -52,22 +72,19 @@ export function initAbout() {
 		if (raf) return;
 		raf = requestAnimationFrame(() => {
 			raf = 0;
-			const x = pendingClientX;
-			const y = pendingClientY;
-			if (
-				x < 0 ||
-				y < 0 ||
-				x >= window.innerWidth ||
-				y >= window.innerHeight ||
-				blockSize <= 0 ||
-				columns <= 0 ||
-				rows <= 0
-			) {
+			const { left, top } = blockContainerEl.getBoundingClientRect();
+			const x = pendingClientX - left;
+			const y = pendingClientY - top;
+			if (x < 0 || y < 0) {
 				if (lastIndex !== null) lastIndex = null;
 				return;
 			}
-			const col = Math.min(columns - 1, Math.max(0, Math.floor(x / blockSize)));
-			const row = Math.min(rows - 1, Math.max(0, Math.floor(y / blockSize)));
+			const col = Math.floor(x / blockSizePx);
+			const row = Math.floor(y / blockSizePx);
+			if (col < 0 || row < 0 || col >= columns || row >= rows) {
+				if (lastIndex !== null) lastIndex = null;
+				return;
+			}
 			const idx = row * columns + col;
 			if (idx !== lastIndex && blocks[idx]) {
 				lastIndex = idx;
@@ -99,20 +116,22 @@ export function initAbout() {
 	});
 }
 
-function getColumnsFromCss(computedStyle: CSSStyleDeclaration) {
-	const fromVar = Number(computedStyle.getPropertyValue('--block-cols').trim());
-	if (Number.isFinite(fromVar) && fromVar > 0) return fromVar;
-
-	const gridTemplateColumns = computedStyle.getPropertyValue('grid-template-columns');
-	return parseGridColumns(gridTemplateColumns);
-}
-
 function getBlockTimingsFromCss(blockContainer: HTMLElement, fallback: BlockTimings): BlockTimings {
 	const computedStyle = window.getComputedStyle(blockContainer);
 	const fadeInMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-in'), fallback.fadeInMs);
 	const fadeOutMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-fade-out'), fallback.fadeOutMs);
 	const holdMs = parseCssTimeToMs(computedStyle.getPropertyValue('--bg-block-hold'), fallback.holdMs);
 	return { fadeInMs, fadeOutMs, holdMs };
+}
+
+function getBlockSizePxFromCss(blockContainer: HTMLElement, fallbackPx: number): number {
+	const computedStyle = window.getComputedStyle(blockContainer);
+	const raw = computedStyle.getPropertyValue('--bg-block-size').trim();
+	if (!raw) return fallbackPx;
+	const match = raw.match(/^(-?\d*\.?\d+)px$/);
+	if (!match) return fallbackPx;
+	const value = Number(match[1]);
+	return Number.isFinite(value) && value > 0 ? value : fallbackPx;
 }
 
 function clearAllBlockTimers(blockStates: Map<HTMLDivElement, BlockState>) {
@@ -124,7 +143,7 @@ function clearAllBlockTimers(blockStates: Map<HTMLDivElement, BlockState>) {
 
 function triggerBlockHover(block: HTMLDivElement, blockStates: Map<HTMLDivElement, BlockState>, timings: BlockTimings) {
 	const now = performance.now();
-	const state = blockStates.get(block) ?? { holdTimeoutId: null, activatedAt: -Infinity, activationId: 0 };
+	const state = blockStates.get(block) ?? { holdTimeoutId: null, activatedAt: -Infinity };
 	blockStates.set(block, state);
 
 	if (!block.classList.contains('is-lit')) {
@@ -135,18 +154,10 @@ function triggerBlockHover(block: HTMLDivElement, blockStates: Map<HTMLDivElemen
 	if (state.holdTimeoutId) window.clearTimeout(state.holdTimeoutId);
 	const fadeRemainingMs = Math.max(0, timings.fadeInMs - (now - state.activatedAt));
 	const holdDelayMs = fadeRemainingMs + timings.holdMs;
-	const activationId = ++state.activationId;
 	state.holdTimeoutId = window.setTimeout(() => {
-		if (state.activationId !== activationId) return;
 		state.holdTimeoutId = null;
 		block.classList.remove('is-lit');
 	}, holdDelayMs);
-}
-
-function parseGridColumns(gridTemplateColumns: string) {
-	const repeatCount = Number(gridTemplateColumns.match(/repeat\(\s*(\d+)\s*,/)?.[1]);
-	if (Number.isFinite(repeatCount) && repeatCount > 0) return repeatCount;
-	return gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length;
 }
 
 function createBlocks(totalBlocks: number) {
@@ -170,4 +181,72 @@ function parseCssTimeToMs(value: string, fallbackMs: number) {
 	}
 	const raw = Number(token);
 	return Number.isFinite(raw) ? Math.max(0, raw) : fallbackMs;
+}
+
+function snapElementLeftToGrid(params: { gridSizePx: number; element: HTMLElement }) {
+	const { gridSizePx, element } = params;
+	if (!Number.isFinite(gridSizePx) || gridSizePx <= 0) return;
+
+	const elementLeft = element.getBoundingClientRect().left;
+	const currentMarginLeftPx = parsePx(window.getComputedStyle(element).marginLeft, 0);
+
+	const snappedElementLeft = Math.round(elementLeft / gridSizePx) * gridSizePx;
+	const snappedMarginLeft = currentMarginLeftPx + (snappedElementLeft - elementLeft);
+	element.style.setProperty('--about-left-start', `${Math.round(snappedMarginLeft)}px`);
+}
+
+function snapElementRightToGrid(params: { gridSizePx: number; element: HTMLElement }) {
+	const { gridSizePx, element } = params;
+	if (!Number.isFinite(gridSizePx) || gridSizePx <= 0) return;
+
+	const elementLeft = element.getBoundingClientRect().left;
+	const computedStyle = window.getComputedStyle(element);
+	const currentStartOffsetPx = parsePx(computedStyle.getPropertyValue('--about-right-start'), 0);
+
+	const snappedElementLeft = Math.round(elementLeft / gridSizePx) * gridSizePx;
+	const snappedStartOffset = currentStartOffsetPx + (snappedElementLeft - elementLeft);
+	element.style.setProperty('--about-right-start', `${Math.round(snappedStartOffset)}px`);
+}
+
+function snapElementTopToGrid(params: { gridSizePx: number; element: HTMLElement }) {
+	const { gridSizePx, element } = params;
+	if (!Number.isFinite(gridSizePx) || gridSizePx <= 0) return;
+
+	const elementTop = element.getBoundingClientRect().top + window.scrollY;
+	const currentMarginTopPx = parsePx(window.getComputedStyle(element).marginTop, 0);
+
+	const snappedElementTop = Math.ceil(elementTop / gridSizePx) * gridSizePx;
+	const snappedMarginTop = currentMarginTopPx + (snappedElementTop - elementTop);
+	element.style.marginTop = `${Math.round(snappedMarginTop)}px`;
+}
+
+function snapTimelineHeadingToGrid(params: { gridSizePx: number; heading: HTMLElement; block: HTMLElement }) {
+	const { gridSizePx, heading, block } = params;
+	if (!Number.isFinite(gridSizePx) || gridSizePx <= 0) return;
+
+	const headingRect = heading.getBoundingClientRect();
+	const blockRect = block.getBoundingClientRect();
+	const headingMarginTopPx = parsePx(window.getComputedStyle(heading).marginTop, 0);
+	const blockMarginTopPx = parsePx(window.getComputedStyle(block).marginTop, 0);
+
+	const headingTop = headingRect.top + window.scrollY;
+	const blockTop = blockRect.top + window.scrollY;
+	const desiredBlockTop = Math.ceil(blockTop / gridSizePx) * gridSizePx;
+	const headingRowTop = desiredBlockTop - gridSizePx;
+	const desiredHeadingTop = headingRowTop + (gridSizePx - headingRect.height) / 2;
+
+	const headingDelta = desiredHeadingTop - headingTop;
+	const blockDelta = desiredBlockTop - blockTop - headingDelta;
+
+	heading.style.marginTop = `${Math.round(headingMarginTopPx + headingDelta)}px`;
+	block.style.marginTop = `${Math.round(blockMarginTopPx + blockDelta)}px`;
+}
+
+function parsePx(value: string, fallbackPx: number): number {
+	const trimmed = value.trim();
+	if (!trimmed) return fallbackPx;
+	const match = trimmed.match(/^(-?\d*\.?\d+)px$/);
+	if (!match) return fallbackPx;
+	const raw = Number(match[1]);
+	return Number.isFinite(raw) ? raw : fallbackPx;
 }

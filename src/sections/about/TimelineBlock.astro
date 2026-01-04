@@ -32,10 +32,13 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 	.tl-block {
 		font-family: 'Inter', sans-serif;
 		display: flex;
-		gap: 2rem;
-		padding: 1.25rem;
-		border-radius: 0.25rem;
+		gap: 3rem;
+		padding: 1.5rem 2.5rem 1.5rem 1rem;
+		width: var(--about-right-width, auto);
+		box-sizing: border-box;
+		/* border-radius: 0.25rem; */
 		transition: all 0.25s;
+		height: calc(var(--bg-block-size) * 3);
 		&:hover {
 			background: var(--main-900);
 			.tl-description {
@@ -54,11 +57,12 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 		color: var(--slate-500);
 		font-family: monospace;
 		letter-spacing: 0.15rem;
-		width: 150px;
+		width: calc(var(--bg-block-size) * 2);
 		flex-shrink: 0;
 		padding-top: 4px;
 		/* text-transform: uppercase; */
 		transition: all 0.15s;
+		text-wrap: nowrap;
 	}
 	.tl-right {
 		display: flex;
