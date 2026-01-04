@@ -8,8 +8,8 @@ export function initAbout() {
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
+	let rows = 0;
 	let blockSize = 0;
-	let containerRect: DOMRect | null = null;
 	const defaultTimings: BlockTimings = { fadeInMs: 150, fadeOutMs: 3000, holdMs: 3000 };
 	let timings = defaultTimings;
 	const blockStates = new Map<HTMLDivElement, BlockState>();
@@ -18,22 +18,18 @@ export function initAbout() {
 		clearAllBlockTimers(blockStates);
 		timings = getBlockTimingsFromCss(blockContainerEl, defaultTimings);
 
-		// Get computed style of the grid and extract the number of columns
 		const computedStyle = window.getComputedStyle(blockContainerEl);
-		const gridTemplateColumns = computedStyle.getPropertyValue('grid-template-columns');
-		columns = parseGridColumns(gridTemplateColumns);
-
-		containerRect = blockContainerEl.getBoundingClientRect();
-		const containerWidth = containerRect.width || window.innerWidth;
-		const containerHeight = containerRect.height || window.innerHeight;
-		blockSize = columns > 0 ? containerWidth / columns : 0;
-		const rowsNeeded = blockSize > 0 ? Math.ceil(containerHeight / blockSize) : 0;
+		columns = getColumnsFromCss(computedStyle);
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+		blockSize = columns > 0 ? viewportWidth / columns : 0;
+		rows = blockSize > 0 ? Math.ceil(viewportHeight / blockSize) : 0;
 
 		// Update grid styles
-		blockContainerEl.style.gridTemplateRows = `repeat(${rowsNeeded}, ${blockSize}px)`;
+		blockContainerEl.style.gridTemplateRows = `repeat(${rows}, ${blockSize}px)`;
 
 		// Calculate the total number of blocks needed
-		const totalBlocks = columns * rowsNeeded;
+		const totalBlocks = columns * rows;
 
 		// Clear existing blocks
 		blockContainerEl.innerHTML = '';
@@ -44,9 +40,9 @@ export function initAbout() {
 
 	rebuildGrid();
 
-	// Fallback: when the blocks overlay interactive content
-	// we can't rely on native pointer events. Use mousemove -> block index mapping
-	// to simulate hover. Throttle with requestAnimationFrame for performance.
+	// The blocks overlay the page, but use `pointer-events: none` so all interactions
+	// hit the real content. That means we can't use `mouseenter` on blocks; we light
+	// a block by mapping pointer coordinates -> block index (throttled via rAF).
 	let lastIndex: number | null = null;
 	let raf = 0;
 	let pendingClientX = 0;
@@ -56,16 +52,21 @@ export function initAbout() {
 		if (raf) return;
 		raf = requestAnimationFrame(() => {
 			raf = 0;
-			const rect = containerRect ?? blockContainerEl.getBoundingClientRect();
-			containerRect = rect;
-			const x = pendingClientX - rect.left;
-			const y = pendingClientY - rect.top;
-			if (x < 0 || y < 0 || x >= rect.width || y >= rect.height || blockSize <= 0 || columns <= 0) {
+			const x = pendingClientX;
+			const y = pendingClientY;
+			if (
+				x < 0 ||
+				y < 0 ||
+				x >= window.innerWidth ||
+				y >= window.innerHeight ||
+				blockSize <= 0 ||
+				columns <= 0 ||
+				rows <= 0
+			) {
 				if (lastIndex !== null) lastIndex = null;
 				return;
 			}
 			const col = Math.min(columns - 1, Math.max(0, Math.floor(x / blockSize)));
-			const rows = Math.ceil(rect.height / blockSize);
 			const row = Math.min(rows - 1, Math.max(0, Math.floor(y / blockSize)));
 			const idx = row * columns + col;
 			if (idx !== lastIndex && blocks[idx]) {
@@ -96,6 +97,14 @@ export function initAbout() {
 			rebuildGrid();
 		});
 	});
+}
+
+function getColumnsFromCss(computedStyle: CSSStyleDeclaration) {
+	const fromVar = Number(computedStyle.getPropertyValue('--block-cols').trim());
+	if (Number.isFinite(fromVar) && fromVar > 0) return fromVar;
+
+	const gridTemplateColumns = computedStyle.getPropertyValue('grid-template-columns');
+	return parseGridColumns(gridTemplateColumns);
 }
 
 function getBlockTimingsFromCss(blockContainer: HTMLElement, fallback: BlockTimings): BlockTimings {
@@ -141,12 +150,11 @@ function parseGridColumns(gridTemplateColumns: string) {
 }
 
 function createBlocks(totalBlocks: number) {
-	return Array.from({ length: totalBlocks }).reduce<HTMLDivElement[]>((acc) => {
+	return Array.from({ length: totalBlocks }, () => {
 		const block = document.createElement('div') as HTMLDivElement;
 		block.classList.add('bg-block');
-		acc.push(block);
-		return acc;
-	}, []);
+		return block;
+	});
 }
 
 function parseCssTimeToMs(value: string, fallbackMs: number) {
