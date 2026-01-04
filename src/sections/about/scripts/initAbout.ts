@@ -1,10 +1,13 @@
+import {
+	createTimelineWaveController,
+	type BlockCoords,
+	type GridBounds,
+	type PointerEventNames,
+	type WaveTimings,
+} from './timelineWave';
+
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
 type BlockState = { holdTimeoutId: number | null; activatedAt: number };
-type WaveTimings = { fadeInMs: number; fadeOutMs: number; stepMs: number };
-type TimelineWaveState = { inTimeoutIds: number[]; outTimeoutIds: number[]; lastClientX: number; lastClientY: number };
-type BlockCoords = { index: number; row: number; col: number };
-type GridBounds = { rowStart: number; rowEnd: number; colStart: number; colEnd: number };
-type WaveItem = { block: HTMLDivElement; distance: number };
 
 export function initAbout() {
 	const blockContainer = document.getElementById('bg-blocks');
@@ -15,6 +18,7 @@ export function initAbout() {
 	const timelineHeadingEl = document.querySelector<HTMLElement>('#tl > h3');
 	const timelineFirstBlockEl = document.querySelector<HTMLElement>('#tl .tl-block');
 	const timelineBlocks = Array.from(document.querySelectorAll<HTMLElement>('#tl .tl-block'));
+	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
@@ -25,12 +29,19 @@ export function initAbout() {
 	const blockStates = new Map<HTMLDivElement, BlockState>();
 	const defaultWaveTimings: WaveTimings = { fadeInMs: 250, fadeOutMs: 400, stepMs: 40 };
 	let waveTimings = defaultWaveTimings;
-	const timelineWaveStates = new Map<HTMLElement, TimelineWaveState>();
-	let timelineWaveBindingsReady = false;
+	const timelineWave = createTimelineWaveController({
+		blockContainerEl,
+		timelineBlocks,
+		getBlocks: () => blocks,
+		getGridMetrics: () => ({ blockSizePx, columns, rows }),
+		getBlockCoordsFromClient,
+		getGridBoundsForElement,
+		getWaveTimings: () => waveTimings,
+	});
 
 	function rebuildGrid() {
 		clearAllBlockTimers(blockStates);
-		clearAllTimelineWaveTimers(timelineWaveStates);
+		timelineWave.clearAllTimers();
 		timings = getBlockTimingsFromCss(blockContainerEl, defaultTimings);
 		waveTimings = getWaveTimingsFromCss(blockContainerEl, defaultWaveTimings);
 		blockSizePx = getBlockSizePxFromCss(blockContainerEl, blockSizePx);
@@ -73,9 +84,8 @@ export function initAbout() {
 	rebuildGrid();
 	document.body?.classList.add('about-blocks-ready');
 
-	if (!timelineWaveBindingsReady && timelineBlocks.length > 0) {
-		bindTimelineWaveHandlers();
-		timelineWaveBindingsReady = true;
+	if (timelineBlocks.length > 0) {
+		timelineWave.bindHandlers(pointerEvents);
 	}
 
 	// The blocks overlay the page, but use `pointer-events: none` so all interactions
@@ -90,23 +100,22 @@ export function initAbout() {
 		if (raf) return;
 		raf = requestAnimationFrame(() => {
 			raf = 0;
-			const { left, top } = blockContainerEl.getBoundingClientRect();
-			const x = pendingClientX - left;
-			const y = pendingClientY - top;
-			if (x < 0 || y < 0) {
+			const coords = getBlockCoordsFromClient({
+				clientX: pendingClientX,
+				clientY: pendingClientY,
+				containerRect: blockContainerEl.getBoundingClientRect(),
+				blockSizePx,
+				columns,
+				rows,
+			});
+			if (!coords) {
 				if (lastIndex !== null) lastIndex = null;
 				return;
 			}
-			const col = Math.floor(x / blockSizePx);
-			const row = Math.floor(y / blockSizePx);
-			if (col < 0 || row < 0 || col >= columns || row >= rows) {
-				if (lastIndex !== null) lastIndex = null;
-				return;
-			}
-			const idx = row * columns + col;
-			if (idx !== lastIndex && blocks[idx]) {
-				lastIndex = idx;
-				triggerBlockHover(blocks[idx], blockStates, timings);
+			if (coords.index !== lastIndex) {
+				lastIndex = coords.index;
+				const block = blocks[coords.index];
+				if (block) triggerBlockHover(block, blockStates, timings);
 			}
 		});
 	}
@@ -117,131 +126,7 @@ export function initAbout() {
 		schedulePointerUpdate();
 	}
 
-	if ('PointerEvent' in window) {
-		document.addEventListener('pointermove', handlePointerMove, { passive: true });
-	} else {
-		document.addEventListener('mousemove', handlePointerMove, { passive: true });
-	}
-
-	function bindTimelineWaveHandlers() {
-		const enterEvent = 'PointerEvent' in window ? 'pointerenter' : 'mouseenter';
-		const moveEvent = 'PointerEvent' in window ? 'pointermove' : 'mousemove';
-		const leaveEvent = 'PointerEvent' in window ? 'pointerleave' : 'mouseleave';
-
-		for (const timelineBlock of timelineBlocks) {
-			timelineBlock.addEventListener(enterEvent, handleTimelineEnter);
-			timelineBlock.addEventListener(moveEvent, handleTimelineMove, { passive: true });
-			timelineBlock.addEventListener(leaveEvent, handleTimelineLeave);
-		}
-	}
-
-	function handleTimelineEnter(event: PointerEvent | MouseEvent) {
-		const target = event.currentTarget as HTMLElement | null;
-		if (!target) return;
-		const state = getTimelineWaveState(target);
-		state.lastClientX = event.clientX;
-		state.lastClientY = event.clientY;
-		clearTimelineWaveState(state);
-		runTimelineWave({ element: target, origin: getWaveOrigin(target, state.lastClientX, state.lastClientY), type: 'in', state });
-	}
-
-	function handleTimelineMove(event: PointerEvent | MouseEvent) {
-		const target = event.currentTarget as HTMLElement | null;
-		if (!target) return;
-		const state = getTimelineWaveState(target);
-		state.lastClientX = event.clientX;
-		state.lastClientY = event.clientY;
-	}
-
-	function handleTimelineLeave(event: PointerEvent | MouseEvent) {
-		const target = event.currentTarget as HTMLElement | null;
-		if (!target) return;
-		const state = getTimelineWaveState(target);
-		state.lastClientX = event.clientX;
-		state.lastClientY = event.clientY;
-		clearTimelineWaveState(state);
-		runTimelineWave({ element: target, origin: getWaveOrigin(target, state.lastClientX, state.lastClientY), type: 'out', state });
-	}
-
-	function getTimelineWaveState(element: HTMLElement) {
-		const existing = timelineWaveStates.get(element);
-		if (existing) return existing;
-		const state: TimelineWaveState = { inTimeoutIds: [], outTimeoutIds: [], lastClientX: 0, lastClientY: 0 };
-		timelineWaveStates.set(element, state);
-		return state;
-	}
-
-	function clearTimelineWaveState(state: TimelineWaveState) {
-		for (const timeoutId of state.inTimeoutIds) window.clearTimeout(timeoutId);
-		for (const timeoutId of state.outTimeoutIds) window.clearTimeout(timeoutId);
-		state.inTimeoutIds = [];
-		state.outTimeoutIds = [];
-	}
-
-	function getWaveOrigin(element: HTMLElement, clientX: number, clientY: number) {
-		const containerRect = blockContainerEl.getBoundingClientRect();
-		const origin = getBlockCoordsFromClient({
-			clientX,
-			clientY,
-			containerRect,
-			blockSizePx,
-			columns,
-			rows,
-		});
-		if (origin) return origin;
-
-		const rect = element.getBoundingClientRect();
-		return getBlockCoordsFromClient({
-			clientX: rect.left + rect.width / 2,
-			clientY: rect.top + rect.height / 2,
-			containerRect,
-			blockSizePx,
-			columns,
-			rows,
-		});
-	}
-
-	function runTimelineWave(params: { element: HTMLElement; origin: BlockCoords | null; type: 'in' | 'out'; state: TimelineWaveState }) {
-		if (!params.origin) return;
-		const containerRect = blockContainerEl.getBoundingClientRect();
-		const bounds = getGridBoundsForElement({
-			element: params.element,
-			containerRect,
-			blockSizePx,
-			columns,
-			rows,
-		});
-		if (!bounds) return;
-		const items = buildWaveItems(bounds, params.origin);
-		if (!items.length) return;
-
-		items.sort((a, b) => a.distance - b.distance);
-		const targetTimeouts = params.type === 'in' ? params.state.inTimeoutIds : params.state.outTimeoutIds;
-		for (const item of items) {
-			const delay = Math.round(item.distance * waveTimings.stepMs);
-			const timeoutId = window.setTimeout(() => {
-				if (params.type === 'in') {
-					item.block.classList.add('is-tl-lit');
-				} else {
-					item.block.classList.remove('is-tl-lit');
-				}
-			}, delay);
-			targetTimeouts.push(timeoutId);
-		}
-	}
-
-	function buildWaveItems(bounds: GridBounds, origin: BlockCoords): WaveItem[] {
-		const items: WaveItem[] = [];
-		for (let row = bounds.rowStart; row <= bounds.rowEnd; row += 1) {
-			for (let col = bounds.colStart; col <= bounds.colEnd; col += 1) {
-				const idx = row * columns + col;
-				const block = blocks[idx];
-				if (!block) continue;
-				items.push({ block, distance: Math.hypot(col - origin.col, row - origin.row) });
-			}
-		}
-		return items;
-	}
+	document.addEventListener(pointerEvents.move, handlePointerMove, { passive: true });
 
 	let resizeRaf = 0;
 	window.addEventListener('resize', () => {
@@ -287,15 +172,6 @@ function clearAllBlockTimers(blockStates: Map<HTMLDivElement, BlockState>) {
 	blockStates.clear();
 }
 
-function clearAllTimelineWaveTimers(timelineStates: Map<HTMLElement, TimelineWaveState>) {
-	for (const state of timelineStates.values()) {
-		for (const timeoutId of state.inTimeoutIds) window.clearTimeout(timeoutId);
-		for (const timeoutId of state.outTimeoutIds) window.clearTimeout(timeoutId);
-		state.inTimeoutIds = [];
-		state.outTimeoutIds = [];
-	}
-}
-
 function triggerBlockHover(block: HTMLDivElement, blockStates: Map<HTMLDivElement, BlockState>, timings: BlockTimings) {
 	const now = performance.now();
 	const state = blockStates.get(block) ?? { holdTimeoutId: null, activatedAt: -Infinity };
@@ -336,6 +212,12 @@ function parseCssTimeToMs(value: string, fallbackMs: number) {
 	}
 	const raw = Number(token);
 	return Number.isFinite(raw) ? Math.max(0, raw) : fallbackMs;
+}
+
+function getPointerEventNames(usePointerEvents: boolean): PointerEventNames {
+	return usePointerEvents
+		? { enter: 'pointerenter', move: 'pointermove', leave: 'pointerleave' }
+		: { enter: 'mouseenter', move: 'mousemove', leave: 'mouseleave' };
 }
 
 function getBlockCoordsFromClient(params: {
