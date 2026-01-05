@@ -41,13 +41,22 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 		/* border-radius: 0.25rem; */
 		transition: all 0.25s;
 		height: calc(var(--bg-block-size) * 3);
+		.tl-left,
+		b,
+		.tl-company {
+			transition: all 0.5s;
+		}
 		&:hover {
 			/* background: var(--main-900); */
 			.tl-description {
-				color: var(--main-300);
+				/* color: var(--main-300); */
 			}
 			.tl-left {
 				color: var(--main-400);
+			}
+			b,
+			.tl-company {
+				color: var(--main-200);
 			}
 		}
 		&:first-of-type {
