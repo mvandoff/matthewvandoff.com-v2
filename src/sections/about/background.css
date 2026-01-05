@@ -6,6 +6,9 @@
 	--bg-block-hold: 0.25s;
 	--bg-block-size: 64px;
 	--bg-block-wave-color: var(--main-900);
+	--bg-block-wave-border-color: hsla(45, 100%, 50%, 0.1);
+	--bg-block-wave-border-width: 1px;
+	--bg-block-wave-border-perimeter-width: 2px;
 	--bg-block-wave-fade-in: 250ms;
 	--bg-block-wave-fade-out: 400ms;
 	--bg-block-wave-step: 40ms;
@@ -86,6 +89,23 @@
 .bg-block {
 	position: relative;
 	pointer-events: none;
+	--bg-block-border-top-width: var(--bg-block-wave-border-width);
+	--bg-block-border-right-width: var(--bg-block-wave-border-width);
+	--bg-block-border-bottom-width: var(--bg-block-wave-border-width);
+	--bg-block-border-left-width: var(--bg-block-wave-border-width);
+}
+
+.bg-block.is-tl-edge-top {
+	--bg-block-border-top-width: var(--bg-block-wave-border-perimeter-width);
+}
+.bg-block.is-tl-edge-right {
+	--bg-block-border-right-width: var(--bg-block-wave-border-perimeter-width);
+}
+.bg-block.is-tl-edge-bottom {
+	--bg-block-border-bottom-width: var(--bg-block-wave-border-perimeter-width);
+}
+.bg-block.is-tl-edge-left {
+	--bg-block-border-left-width: var(--bg-block-wave-border-perimeter-width);
 }
 
 .bg-block::before,
@@ -100,6 +120,11 @@
 .bg-block::before {
 	background-color: var(--bg-block-wave-color);
 	transition-duration: var(--bg-block-wave-fade-out);
+	box-sizing: border-box;
+	border-style: solid;
+	border-color: var(--bg-block-wave-border-color);
+	border-width: var(--bg-block-border-top-width) var(--bg-block-border-right-width) var(--bg-block-border-bottom-width)
+		var(--bg-block-border-left-width);
 }
 
 .bg-block::after {
@@ -114,4 +139,16 @@
 .bg-block.is-lit::after {
 	opacity: 1;
 	transition-duration: var(--bg-block-fade-in);
+}
+
+.bg-block.is-tl-lit.is-lit::before {
+	border-color: transparent;
+}
+
+.bg-block.is-tl-lit.is-lit::after {
+	box-sizing: border-box;
+	border-style: solid;
+	border-color: var(--bg-block-wave-border-color);
+	border-width: var(--bg-block-border-top-width) var(--bg-block-border-right-width) var(--bg-block-border-bottom-width)
+		var(--bg-block-border-left-width);
 }

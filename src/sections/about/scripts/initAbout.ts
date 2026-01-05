@@ -61,7 +61,7 @@ export function initAbout() {
 		// Calculate the total number of blocks needed
 		const totalBlocks = columns * rows;
 
-		blocks = createBlocks(totalBlocks);
+		blocks = createBlocks({ totalBlocks, columns, rows });
 		blockContainerEl.replaceChildren(...blocks);
 
 		if (aboutLeftEl) {
@@ -191,7 +191,8 @@ function triggerBlockHover(block: HTMLDivElement, blockStates: Map<HTMLDivElemen
 	}, holdDelayMs);
 }
 
-function createBlocks(totalBlocks: number) {
+function createBlocks(params: { totalBlocks: number; columns: number; rows: number }) {
+	const { totalBlocks } = params;
 	return Array.from({ length: totalBlocks }, () => {
 		const block = document.createElement('div') as HTMLDivElement;
 		block.classList.add('bg-block');

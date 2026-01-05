@@ -8,7 +8,14 @@ export type PointerEventNames = {
 };
 
 type TimelineWaveState = { inTimeoutIds: number[]; outTimeoutIds: number[]; lastClientX: number; lastClientY: number };
-type WaveItem = { block: HTMLDivElement; distance: number };
+type WaveItem = {
+	block: HTMLDivElement;
+	distance: number;
+	isEdgeTop: boolean;
+	isEdgeRight: boolean;
+	isEdgeBottom: boolean;
+	isEdgeLeft: boolean;
+};
 type GridMetrics = { blockSizePx: number; columns: number; rows: number };
 type BlockCoordsFromClientParams = {
 	clientX: number;
@@ -136,7 +143,15 @@ export function createTimelineWaveController(deps: TimelineWaveDeps) {
 		for (const item of items) {
 			const delay = Math.round(item.distance * stepMs);
 			const timeoutId = window.setTimeout(() => {
-				item.block.classList.toggle('is-tl-lit', shouldLight);
+				if (shouldLight) {
+					item.block.classList.add('is-tl-lit');
+					item.block.classList.toggle('is-tl-edge-top', item.isEdgeTop);
+					item.block.classList.toggle('is-tl-edge-right', item.isEdgeRight);
+					item.block.classList.toggle('is-tl-edge-bottom', item.isEdgeBottom);
+					item.block.classList.toggle('is-tl-edge-left', item.isEdgeLeft);
+				} else {
+					item.block.classList.remove('is-tl-lit', 'is-tl-edge-top', 'is-tl-edge-right', 'is-tl-edge-bottom', 'is-tl-edge-left');
+				}
 			}, delay);
 			targetTimeouts.push(timeoutId);
 		}
@@ -149,7 +164,14 @@ export function createTimelineWaveController(deps: TimelineWaveDeps) {
 				const idx = row * columns + col;
 				const block = blocks[idx];
 				if (!block) continue;
-				items.push({ block, distance: Math.hypot(col - origin.col, row - origin.row) });
+				items.push({
+					block,
+					distance: Math.hypot(col - origin.col, row - origin.row),
+					isEdgeTop: row === bounds.rowStart,
+					isEdgeRight: col === bounds.colEnd,
+					isEdgeBottom: row === bounds.rowEnd,
+					isEdgeLeft: col === bounds.colStart,
+				});
 			}
 		}
 		return items;
