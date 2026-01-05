@@ -1,0 +1,44 @@
+<div id="custom-cursor" aria-hidden="true"></div>
+
+<script is:inline>
+	const cursor = document.getElementById('custom-cursor');
+
+	if (cursor) {
+		const prefersFinePointer = window.matchMedia?.('(pointer: fine)')?.matches ?? true;
+		if (!prefersFinePointer) {
+			cursor.remove();
+		} else {
+			document.documentElement.classList.add('has-custom-cursor');
+
+			const cursorRadius = cursor.getBoundingClientRect().width / 2 || 6;
+			let targetX = -100;
+			let targetY = -100;
+			let isTicking = false;
+
+			const render = () => {
+				isTicking = false;
+				cursor.style.transform = `translate3d(${targetX - cursorRadius}px, ${targetY - cursorRadius}px, 0)`;
+			};
+
+			const onMove = (event) => {
+				targetX = event.clientX;
+				targetY = event.clientY;
+
+				if (!isTicking) {
+					isTicking = true;
+					requestAnimationFrame(render);
+				}
+			};
+
+			const onLeave = () => {
+				targetX = -100;
+				targetY = -100;
+				cursor.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+			};
+
+			window.addEventListener('pointermove', onMove, { passive: true });
+			window.addEventListener('blur', onLeave);
+			document.addEventListener('mouseleave', onLeave);
+		}
+	}
+</script>

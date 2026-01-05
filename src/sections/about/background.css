@@ -6,7 +6,7 @@
 	--bg-block-hold: 0.25s;
 	--bg-block-size: 64px;
 	--bg-block-wave-color: var(--main-900);
-	--bg-block-wave-border-color: hsla(45, 100%, 50%, 0.1);
+	--bg-block-wave-border-color: hsla(45, 100%, 50%, 0.05);
 	--bg-block-wave-border-width: 1px;
 	--bg-block-wave-border-perimeter-width: 2px;
 	--bg-block-wave-fade-in: 250ms;

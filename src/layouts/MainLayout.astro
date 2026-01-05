@@ -5,6 +5,7 @@ import 'my-reset.css';
 
 import Nav from 'components/Nav.astro';
 import Transition from 'components/Transition.astro';
+import CustomCursor from 'components/CustomCursor.astro';
 import MobileNav from 'components/MobileNav/MobileNav.astro';
 
 const { title } = Astro.props;
@@ -30,6 +31,7 @@ const { title } = Astro.props;
 	<div id="bg-blocks" aria-hidden="true"></div>
 	<body>
 		<Transition />
+		<CustomCursor />
 
 		<Nav />
 		<MobileNav />
