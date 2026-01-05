@@ -5,11 +5,23 @@ import {
 	type PointerEventNames,
 	type WaveTimings,
 } from './timelineWave';
+import { markAboutLayoutReadyAfterPaint } from 'scripts/global/aboutLayoutReady';
 
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
 type BlockState = { holdTimeoutId: number | null; activatedAt: number };
 
 export function initAbout() {
+	/**
+	 * About background blocks:
+	 * - The About page creates a fixed “block grid” overlay used for the mouse trail effect.
+	 * - It also snaps key layout elements to that same grid so the design aligns to block edges.
+	 *
+	 * Important interaction with the global Transition:
+	 * - The Transition overlay starts fully covering the screen on page load, then animates away.
+	 * - The About grid + snapping work can cause layout shift while it runs.
+	 * - To keep that shift from being visible, the Transition waits to start revealing the About
+	 *   page until this script signals that layout is ready (see `markAboutLayoutReadyAfterPaint`).
+	 */
 	const blockContainer = document.getElementById('bg-blocks');
 	if (!blockContainer) throw new Error('bg-blocks element not found');
 	const blockContainerEl = blockContainer;
@@ -40,6 +52,13 @@ export function initAbout() {
 	});
 
 	function rebuildGrid() {
+		/**
+		 * Rebuild responsibilities:
+		 * - Re-read CSS custom properties (block sizing + animation timings).
+		 * - Calculate grid columns/rows from current document dimensions.
+		 * - Replace all block elements (mouse trail + wave propagation targets).
+		 * - Snap layout elements to the nearest grid line.
+		 */
 		clearAllBlockTimers(blockStates);
 		timelineWave.clearAllTimers();
 		timings = getBlockTimingsFromCss(blockContainerEl, defaultTimings);
@@ -81,8 +100,18 @@ export function initAbout() {
 		}
 	}
 
+	/**
+	 * Initial build:
+	 * - We do this immediately on DOMContentLoaded (see About.astro).
+	 * - The Transition overlay is still covering the page at this moment, which is what we want.
+	 */
 	rebuildGrid();
-	document.body?.classList.add('about-blocks-ready');
+
+	/**
+	 * Signal “layout ready” only after the snapped layout has been painted at least once.
+	 * This ensures the transition reveal won't expose intermediate layout shifts.
+	 */
+	markAboutLayoutReadyAfterPaint();
 
 	if (timelineBlocks.length > 0) {
 		timelineWave.bindHandlers(pointerEvents);
@@ -130,6 +159,11 @@ export function initAbout() {
 
 	let resizeRaf = 0;
 	window.addEventListener('resize', () => {
+		/**
+		 * Resize handling:
+		 * - Rebuilds the grid and re-snaps content.
+		 * - Throttled via rAF to avoid doing work on every resize event tick.
+		 */
 		if (resizeRaf) return;
 		resizeRaf = requestAnimationFrame(() => {
 			resizeRaf = 0;

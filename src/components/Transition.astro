@@ -8,11 +8,13 @@
 	}
 	.transition {
 		display: grid;
-		z-index: 100;
+		/* Must sit above all page overlays (e.g. About `#bg-blocks` and `.tl-block` z-indexes). */
+		z-index: 10000;
 		background-color: var(--transition-bg);
 		width: 100%;
 		min-height: 100vh;
 		position: fixed;
+		inset: 0;
 		grid-template-columns: repeat(var(--block-cols), 1fr);
 	}
 

@@ -1,5 +1,7 @@
 import gsap from 'gsap';
 
+import { waitForAboutLayoutReady } from './aboutLayoutReady';
+
 function adjustGrid() {
 	const transition = document.getElementById('transition');
 	if (!transition) return console.warn('Transition element not found');
@@ -36,10 +38,37 @@ function adjustGrid() {
 	gsap.set('.transition-block', { opacity: 1 });
 }
 
+/**
+ * Transition lifecycle overview:
+ *
+ * 1) Page load:
+ *    - Transition overlay starts fully opaque (blocks cover the screen).
+ *    - We animate blocks out (opacity -> 0) to reveal the page.
+ *
+ * 2) In-app navigation:
+ *    - Intercept same-origin links.
+ *    - Animate blocks in (autoAlpha -> 1) to cover the screen.
+ *    - Only once the screen is covered do we navigate to the destination URL.
+ *
+ * Special case (About page):
+ * - About runs DOM-driven layout snapping on load (`initAbout()`), which can cause layout shift.
+ * - To prevent that shift from being visible, we delay the page-load “reveal” animation on the
+ *   About route until the About script signals that layout is ready.
+ */
+
 export async function initTransition() {
+	/**
+	 * The transition overlay is a CSS grid whose row count depends on viewport dimensions.
+	 * We build the grid dynamically to ensure full coverage across responsive breakpoints.
+	 */
 	adjustGrid();
 
+	/**
+	 * Page-load reveal timeline.
+	 * We build the timeline first, but keep it paused until any required “readiness” gates resolve.
+	 */
 	const pageLoadTimeline = gsap.timeline({
+		paused: true,
 		onStart: () => {
 			gsap.set('#transition', { background: 'transparent' });
 		},
@@ -51,6 +80,12 @@ export async function initTransition() {
 		},
 	});
 
+	/**
+	 * Gate the reveal on About's layout being settled.
+	 * On non-About routes this returns immediately.
+	 */
+	await waitForAboutLayoutReady({ timeoutMs: 3000 });
+
 	// Animate blocks out on page load
 	pageLoadTimeline.to(
 		'.transition-block',
@@ -61,8 +96,17 @@ export async function initTransition() {
 		},
 		0.1,
 	);
+	pageLoadTimeline.play(0);
 
-	// Pre-process all valid links
+	/**
+	 * In-app navigation interception.
+	 *
+	 * We only intercept:
+	 * - Same-origin links
+	 * - Non-anchor links
+	 * - Non-_blank targets
+	 * - Links not explicitly opting out via `data-transition-prevent`
+	 */
 	const validLinks: HTMLAnchorElement[] = Array.from(document.querySelectorAll('a')).filter(
 		(link: HTMLAnchorElement) => {
 			const href: string = link.getAttribute('href') || '';
@@ -97,7 +141,10 @@ export async function initTransition() {
 
 			const destination: string = link.href;
 
-			// Show loading grid with animation
+			/**
+			 * Cover the current page before navigation.
+			 * The destination load happens only once the overlay fully covers the viewport.
+			 */
 			gsap.set('#transition', { display: 'grid' });
 			gsap.fromTo(
 				'.transition-block',
@@ -115,11 +162,18 @@ export async function initTransition() {
 		});
 	});
 
+	/**
+	 * If the page is restored from bfcache (back/forward cache), our one-shot transition state
+	 * and listeners can be stale. For consistency, we hard-reload on persisted pageshow.
+	 */
 	window.addEventListener('pageshow', (event: PageTransitionEvent) => {
 		if (event.persisted) {
 			window.location.reload();
 		}
 	});
 
+	/**
+	 * Rebuild the transition grid on resize so it always covers the viewport.
+	 */
 	window.addEventListener('resize', adjustGrid);
 }
