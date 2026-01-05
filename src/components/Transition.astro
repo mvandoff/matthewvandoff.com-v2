@@ -4,6 +4,7 @@
 	:root {
 		/* --transition-bg: var(--main-950); */
 		--transition-bg: black;
+		--transition-block-size: var(--bg-block-size, 64px);
 		/* --transition-bg: rgb(30, 30, 77); */
 	}
 	.transition {
@@ -15,25 +16,14 @@
 		min-height: 100vh;
 		position: fixed;
 		inset: 0;
-		grid-template-columns: repeat(var(--block-cols), 1fr);
+		grid-auto-columns: var(--transition-block-size);
+		grid-auto-rows: var(--transition-block-size);
 	}
 
 	.transition-block {
 		background-color: var(--transition-bg);
 		width: 100%;
 		height: 100%;
-	}
-
-	@media screen and (max-width: 767px) {
-		.transition {
-			grid-template-columns: repeat(8, 1fr);
-		}
-	}
-
-	@media screen and (max-width: 479px) {
-		.transition {
-			grid-template-columns: repeat(6, 1fr);
-		}
 	}
 </style>
 <script>

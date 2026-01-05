@@ -6,20 +6,15 @@ function adjustGrid() {
 	const transition = document.getElementById('transition');
 	if (!transition) return console.warn('Transition element not found');
 
-	// Get computed style of the grid and extract the number of columns
-	const computedStyle = window.getComputedStyle(transition);
-	const gridTemplateColumns = computedStyle.getPropertyValue('grid-template-columns');
-
-	// Gets the number after 'repeat(' in the grid-template-columns string
-	// If it doesn't match, fallback to the number of space-separated values
-	const columns =
-		Number(gridTemplateColumns.match(/repeat\(\s*(\d+)\s*,/)?.[1]) || gridTemplateColumns.split(' ').length;
-
-	const blockSize = window.innerWidth / columns;
-	const rowsNeeded = Math.ceil(window.innerHeight / blockSize);
+	const blockSizePx = getBlockSizePxFromCss(transition, 64);
+	const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+	const columns = Math.max(1, Math.ceil(viewportWidth / blockSizePx));
+	const rowsNeeded = Math.max(1, Math.ceil(viewportHeight / blockSizePx));
 
 	// Update grid styles
-	transition.style.gridTemplateRows = `repeat(${rowsNeeded}, ${blockSize}px)`;
+	transition.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
+	transition.style.gridTemplateRows = `repeat(${rowsNeeded}, ${blockSizePx}px)`;
 
 	// Calculate the total number of blocks needed
 	const totalBlocks = columns * rowsNeeded;
@@ -36,6 +31,16 @@ function adjustGrid() {
 
 	// Set initial state for page load animation - blocks start visible
 	gsap.set('.transition-block', { opacity: 1 });
+}
+
+function getBlockSizePxFromCss(transition: HTMLElement, fallbackPx: number): number {
+	const computedStyle = window.getComputedStyle(transition);
+	const raw = computedStyle.getPropertyValue('grid-auto-columns').trim();
+	if (!raw) return fallbackPx;
+	const match = raw.match(/^(-?\d*\.?\d+)px$/);
+	if (!match) return fallbackPx;
+	const value = Number(match[1]);
+	return Number.isFinite(value) && value > 0 ? value : fallbackPx;
 }
 
 /**
