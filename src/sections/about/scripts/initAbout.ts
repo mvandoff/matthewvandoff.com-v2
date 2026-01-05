@@ -6,6 +6,7 @@ import {
 	type WaveTimings,
 } from './timelineWave';
 import { markAboutLayoutReadyAfterPaint } from 'scripts/global/aboutLayoutReady';
+import { initAboutScrollDistortion } from './aboutScrollDistortion';
 
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
 type BlockState = { holdTimeoutId: number | null; activatedAt: number };
@@ -22,11 +23,15 @@ export function initAbout() {
 	 * - To keep that shift from being visible, the Transition waits to start revealing the About
 	 *   page until this script signals that layout is ready (see `markAboutLayoutReadyAfterPaint`).
 	 */
-	const blockContainer = document.getElementById('bg-blocks');
-	if (!blockContainer) throw new Error('bg-blocks element not found');
-	const blockContainerEl = blockContainer;
+	const blockContainerEl = document.getElementById('bg-blocks');
+	if (!blockContainerEl) throw new Error('bg-blocks element not found');
+	// Capture non-null ref for use inside callbacks (TS won’t narrow captured variables).
+	const blockContainer = blockContainerEl;
 	const aboutLeftEl = document.querySelector<HTMLElement>('#about .left');
 	const aboutRightEl = document.querySelector<HTMLElement>('#about .right');
+	const aboutMeDistortEl = document.querySelector<HTMLElement>('#about [data-scroll-distort="me"]');
+	const aboutScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#about-scroll-turbulence');
+	const aboutScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#about-scroll-displacement');
 	const timelineHeadingEl = document.querySelector<HTMLElement>('#tl > h3');
 	const timelineFirstBlockEl = document.querySelector<HTMLElement>('#tl .tl-block');
 	const timelineBlocks = Array.from(document.querySelectorAll<HTMLElement>('#tl .tl-block'));
@@ -41,8 +46,12 @@ export function initAbout() {
 	const blockStates = new Map<HTMLDivElement, BlockState>();
 	const defaultWaveTimings: WaveTimings = { fadeInMs: 250, fadeOutMs: 400, stepMs: 40 };
 	let waveTimings = defaultWaveTimings;
+
+	// Timeline hover effect:
+	// When hovering a `.tl-block`, we light up the background grid blocks underneath it,
+	// propagating outward from the pointer location as a “wave”.
 	const timelineWave = createTimelineWaveController({
-		blockContainerEl,
+		blockContainerEl: blockContainer,
 		timelineBlocks,
 		getBlocks: () => blocks,
 		getGridMetrics: () => ({ blockSizePx, columns, rows }),
@@ -61,27 +70,27 @@ export function initAbout() {
 		 */
 		clearAllBlockTimers(blockStates);
 		timelineWave.clearAllTimers();
-		timings = getBlockTimingsFromCss(blockContainerEl, defaultTimings);
-		waveTimings = getWaveTimingsFromCss(blockContainerEl, defaultWaveTimings);
-		blockSizePx = getBlockSizePxFromCss(blockContainerEl, blockSizePx);
+			timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
+			waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
+			blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
 
 		const targetWidth = Math.max(document.documentElement.clientWidth, document.body?.clientWidth ?? 0);
 		const targetHeight = Math.max(
 			document.documentElement.scrollHeight,
 			document.body?.scrollHeight ?? 0,
-			document.documentElement.clientHeight
+			document.documentElement.clientHeight,
 		);
 		columns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
 		rows = Math.max(1, Math.ceil(targetHeight / blockSizePx));
 
-		blockContainerEl.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
-		blockContainerEl.style.gridTemplateRows = `repeat(${rows}, ${blockSizePx}px)`;
+			blockContainer.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
+			blockContainer.style.gridTemplateRows = `repeat(${rows}, ${blockSizePx}px)`;
 
 		// Calculate the total number of blocks needed
 		const totalBlocks = columns * rows;
 
-		blocks = createBlocks({ totalBlocks, columns, rows });
-		blockContainerEl.replaceChildren(...blocks);
+			blocks = createBlocks(totalBlocks);
+			blockContainer.replaceChildren(...blocks);
 
 		if (aboutLeftEl) {
 			snapElementLeftToGrid({ gridSizePx: blockSizePx, element: aboutLeftEl });
@@ -113,6 +122,14 @@ export function initAbout() {
 	 */
 	markAboutLayoutReadyAfterPaint();
 
+	// Scroll-driven image distortion (SVG filter + CSS blur) for the headshot.
+	initAboutScrollDistortion({
+		meDistortEl: aboutMeDistortEl,
+		turbulenceEl: aboutScrollTurbulenceEl,
+		displacementEl: aboutScrollDisplacementEl,
+		getBlockSizePx: () => blockSizePx,
+	});
+
 	if (timelineBlocks.length > 0) {
 		timelineWave.bindHandlers(pointerEvents);
 	}
@@ -129,14 +146,14 @@ export function initAbout() {
 		if (raf) return;
 		raf = requestAnimationFrame(() => {
 			raf = 0;
-			const coords = getBlockCoordsFromClient({
-				clientX: pendingClientX,
-				clientY: pendingClientY,
-				containerRect: blockContainerEl.getBoundingClientRect(),
-				blockSizePx,
-				columns,
-				rows,
-			});
+				const coords = getBlockCoordsFromClient({
+					clientX: pendingClientX,
+					clientY: pendingClientY,
+					containerRect: blockContainer.getBoundingClientRect(),
+					blockSizePx,
+					columns,
+					rows,
+				});
 			if (!coords) {
 				if (lastIndex !== null) lastIndex = null;
 				return;
@@ -225,8 +242,7 @@ function triggerBlockHover(block: HTMLDivElement, blockStates: Map<HTMLDivElemen
 	}, holdDelayMs);
 }
 
-function createBlocks(params: { totalBlocks: number; columns: number; rows: number }) {
-	const { totalBlocks } = params;
+function createBlocks(totalBlocks: number) {
 	return Array.from({ length: totalBlocks }, () => {
 		const block = document.createElement('div') as HTMLDivElement;
 		block.classList.add('bg-block');
