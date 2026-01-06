@@ -73,7 +73,7 @@
 		),
 		/* linear-gradient(50deg, rgba(15, 19, 53, 0.78), black); */
 		/* linear-gradient(-30deg, rgba(15, 19, 53, 0.8), transparent 80%); */
-		radial-gradient(circle at 80% 80%, rgba(15, 19, 53, 0.8) 0%, hsla(233, 51%, 20%, 0.47) 26%, rgba(0, 0, 0, 0) 58%);
+		radial-gradient(circle at 80% 80%, rgba(15, 19, 53, 0.6) 0%, hsla(233, 51%, 20%, 0.4) 26%, rgba(0, 0, 0, 0) 58%);
 }
 
 #bg-blocks {
