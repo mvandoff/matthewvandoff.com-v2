@@ -12,7 +12,12 @@ type Props = {
 const { start, end, title, company, description, link, icon } = Astro.props;
 ---
 
-<a class="tl-block" href={link} target="_blank">
+<a
+	class="tl-block"
+	href={link}
+	target={link ? '_blank' : undefined}
+	rel={link ? 'noreferrer' : undefined}
+>
 	<div class="tl-left">
 		{start} – {end}
 	</div>

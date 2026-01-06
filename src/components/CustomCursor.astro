@@ -1,78 +1,25 @@
-<div id="custom-cursor" aria-hidden="true"></div>
-
-<script is:inline>
-	const cursor = document.getElementById('custom-cursor');
-
-	if (cursor) {
-		const prefersFinePointer = window.matchMedia?.('(pointer: fine)')?.matches ?? true;
-		if (!prefersFinePointer) {
-			cursor.remove();
-		} else {
-			document.documentElement.classList.add('has-custom-cursor');
-
-			const cursorRadius = cursor.getBoundingClientRect().width / 2 || 6;
-			let targetX = -100;
-			let targetY = -100;
-			let isTicking = false;
-
-			const render = () => {
-				isTicking = false;
-				cursor.style.transform = `translate3d(${targetX - cursorRadius}px, ${targetY - cursorRadius}px, 0)`;
-			};
-
-			const onMove = (event) => {
-				targetX = event.clientX;
-				targetY = event.clientY;
-
-				if (!isTicking) {
-					isTicking = true;
-					requestAnimationFrame(render);
-				}
-			};
-
-			const onLeave = () => {
-				targetX = -100;
-				targetY = -100;
-				cursor.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
-			};
-
-			window.addEventListener('pointermove', onMove, { passive: true });
-			window.addEventListener('blur', onLeave);
-			document.addEventListener('mouseleave', onLeave);
-		}
-	}
-</script>
-
 <style is:global>
-	:root {
-		--cursor-color: var(--main-500);
-		--cursor-opacity: 0.5;
-		--cursor-size: 18px;
-	}
+	@media (hover: hover) and (pointer: fine) {
+		:root {
+			--cursor-default: url('/cursor-circle.svg') 9 9, auto;
+			--cursor-external: url('/cursor-external-link.svg') 9 9, auto;
+		}
 
-	#custom-cursor {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: var(--cursor-size);
-		height: var(--cursor-size);
-		border-radius: 9999px;
-		background: var(--cursor-color);
-		opacity: var(--cursor-opacity);
-		pointer-events: none;
-		z-index: 20000;
-		transform: translate3d(-100px, -100px, 0);
-		will-change: transform;
-	}
+		html,
+		html * {
+			cursor: var(--cursor-default) !important;
+		}
 
-	html.has-custom-cursor,
-	html.has-custom-cursor * {
-		cursor: none !important;
-	}
-	html.has-custom-cursor input,
-	html.has-custom-cursor textarea,
-	html.has-custom-cursor select,
-	html.has-custom-cursor [contenteditable='true'] {
-		cursor: text !important;
+		html a[target='_blank'],
+		html a[target='_blank'] * {
+			cursor: var(--cursor-external) !important;
+		}
+
+		html input,
+		html textarea,
+		html select,
+		html [contenteditable='true'] {
+			cursor: text !important;
+		}
 	}
 </style>
