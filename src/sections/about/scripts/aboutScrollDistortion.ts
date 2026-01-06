@@ -39,7 +39,7 @@ export function initAboutScrollDistortion(params: {
 	let velocityPxPerMs = 0;
 	let lastFrameTs = performance.now();
 	let lastScrollTs = lastFrameTs;
-	let lastSeed = -1;
+	let lastDirection: 1 | -1 = 1;
 
 	function quantize(value: number, step: number) {
 		if (!Number.isFinite(value) || !Number.isFinite(step) || step <= 0) return value;
@@ -64,14 +64,6 @@ export function initAboutScrollDistortion(params: {
 		const baseFreqX = quantize(freq, baseFreq / 4);
 		const baseFreqY = quantize(freq * 1.8, baseFreq / 4);
 
-		// Change the distortion pattern in block-sized scroll steps (prevents “swimming” noise).
-		const seedStepPx = Math.max(1, Math.round(blockSizePx / 2));
-		const seed = Math.abs(Math.floor(latestScrollY / seedStepPx)) % 4096;
-		if (seed !== lastSeed) {
-			lastSeed = seed;
-			turbulence.setAttribute('seed', String(seed));
-		}
-
 		// `scale` supports negative values; we flip it based on scroll direction to make the
 		// distortion feel “dragged” by the scroll.
 		const signedScale = displacementScale * direction;
@@ -94,11 +86,14 @@ export function initAboutScrollDistortion(params: {
 		const idleMs = ts - lastScrollTs;
 		if (idleMs > 80) velocityPxPerMs *= 0.85;
 
-		const direction = velocityPxPerMs >= 0 ? (1 as const) : (-1 as const);
 		const speed = Math.abs(velocityPxPerMs); // px/ms
 		const intensity01 = Math.min(1, speed / 1.5); // ~1500px/s maps to 1.0
 
-		applyIntensity(intensity01, direction);
+		// Avoid rapid direction flipping around 0 velocity (reads as "shaking").
+		// Only update direction once the scroll is meaningfully moving.
+		if (speed > 0.05) lastDirection = velocityPxPerMs >= 0 ? (1 as const) : (-1 as const);
+
+		applyIntensity(intensity01, lastDirection);
 
 		// Keep animating while the user is still scrolling / decelerating.
 		if (intensity01 > 0.001 || idleMs < 200) {
@@ -120,4 +115,3 @@ export function initAboutScrollDistortion(params: {
 
 	window.addEventListener('scroll', handleScroll, { passive: true });
 }
-
