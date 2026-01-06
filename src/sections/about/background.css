@@ -12,6 +12,8 @@
 	--bg-block-wave-fade-in: 250ms;
 	--bg-block-wave-fade-out: 400ms;
 	--bg-block-wave-step: 40ms;
+	/* Keep the fixed nav exactly one background grid row tall on the About page. */
+	--about-nav-height: var(--bg-block-size);
 }
 
 #about {
@@ -81,10 +83,19 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 120;
+	/* Must sit below the nav so the nav doesn't visually inherit the block trail. */
+	z-index: 5;
 	pointer-events: none;
 	display: grid;
 	overflow: hidden;
+}
+
+/* About page: keep the nav above the grid + align it to a single block row. */
+#main-nav {
+	z-index: 10;
+	height: var(--about-nav-height);
+	padding-top: 0;
+	padding-bottom: 0;
 }
 .bg-block {
 	position: relative;

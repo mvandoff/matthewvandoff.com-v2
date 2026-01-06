@@ -167,6 +167,13 @@ export function initAbout() {
 	}
 
 	function handlePointerMove(e: PointerEvent | MouseEvent) {
+		// Don't trigger the About block trail while interacting with the fixed nav.
+		// This prevents “block trails” showing behind nav items.
+		const targetEl = e.target instanceof Element ? e.target : null;
+		if (targetEl?.closest('#main-nav')) {
+			lastIndex = null;
+			return;
+		}
 		pendingClientX = e.clientX;
 		pendingClientY = e.clientY;
 		schedulePointerUpdate();
