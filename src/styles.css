@@ -73,10 +73,6 @@
 
 	--block-cols: 26;
 
-	--cursor-color: var(--main-500);
-	--cursor-opacity: 0.5;
-	--cursor-size: 16px;
-
 	transition: background var(--overlay-transition-time) ease;
 	background-color: black;
 }
@@ -127,32 +123,6 @@ body {
 	position: relative;
 }
 
-#custom-cursor {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: var(--cursor-size);
-	height: var(--cursor-size);
-	border-radius: 9999px;
-	background: var(--cursor-color);
-	opacity: var(--cursor-opacity);
-	pointer-events: none;
-	z-index: 20000;
-	transform: translate3d(-100px, -100px, 0);
-	will-change: transform;
-}
-
-html.has-custom-cursor,
-html.has-custom-cursor * {
-	cursor: none !important;
-}
-
-html.has-custom-cursor input,
-html.has-custom-cursor textarea,
-html.has-custom-cursor select,
-html.has-custom-cursor [contenteditable='true'] {
-	cursor: text !important;
-}
 section,
 #project-overlay,
 nav {
