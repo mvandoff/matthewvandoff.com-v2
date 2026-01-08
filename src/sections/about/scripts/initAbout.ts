@@ -35,12 +35,15 @@ export function initAbout() {
 	const timelineHeadingEl = document.querySelector<HTMLElement>('#tl > h3');
 	const timelineFirstBlockEl = document.querySelector<HTMLElement>('#tl .tl-block');
 	const timelineBlocks = Array.from(document.querySelectorAll<HTMLElement>('#tl .tl-block'));
+	const mainNavEl = document.querySelector<HTMLElement>('#main-nav');
+	const mobileNavEl = document.querySelector<HTMLElement>('#mobile-nav');
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
 	let rows = 0;
 	let blockSizePx = 70;
+	let navRowHeightPx = blockSizePx;
 	const defaultTimings: BlockTimings = { fadeInMs: 150, fadeOutMs: 3000, holdMs: 3000 };
 	let timings = defaultTimings;
 	const blockStates = new Map<HTMLDivElement, BlockState>();
@@ -60,6 +63,13 @@ export function initAbout() {
 		getWaveTimings: () => waveTimings,
 	});
 
+	function updateNavRowHeight() {
+		const mainNavHeight = mainNavEl?.offsetHeight ?? 0;
+		const mobileNavHeight = mobileNavEl?.offsetHeight ?? 0;
+		const measuredHeight = Math.max(mainNavHeight, mobileNavHeight);
+		navRowHeightPx = measuredHeight > 0 ? measuredHeight : blockSizePx;
+	}
+
 	function rebuildGrid() {
 		/**
 		 * Rebuild responsibilities:
@@ -73,6 +83,7 @@ export function initAbout() {
 			timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
 			waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
 			blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
+			updateNavRowHeight();
 
 		const targetWidth = Math.max(document.documentElement.clientWidth, document.body?.clientWidth ?? 0);
 		const targetHeight = Math.max(
@@ -168,9 +179,9 @@ export function initAbout() {
 
 	function handlePointerMove(e: PointerEvent | MouseEvent) {
 		// Don't trigger the About block trail while interacting with the fixed nav.
-		// This prevents “block trails” showing behind nav items.
+		// Block the entire nav row so trails don't appear in the nav gutters.
 		const targetEl = e.target instanceof Element ? e.target : null;
-		if (targetEl?.closest('#main-nav')) {
+		if (e.clientY <= navRowHeightPx || targetEl?.closest('#main-nav, #mobile-nav')) {
 			lastIndex = null;
 			return;
 		}
