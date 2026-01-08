@@ -2,17 +2,11 @@
 	@media (hover: hover) and (pointer: fine) {
 		:root {
 			--cursor-default: url('/cursor-circle.svg') 9 9, auto;
-			--cursor-external: url('/cursor-external-link.svg') 9 9, auto;
 		}
 
 		html,
 		html * {
 			cursor: var(--cursor-default) !important;
-		}
-
-		html a[target='_blank'],
-		html a[target='_blank'] * {
-			cursor: var(--cursor-external) !important;
 		}
 
 		html input,
@@ -21,5 +15,147 @@
 		html [contenteditable='true'] {
 			cursor: text !important;
 		}
+
+		#cursor-newtab-badge {
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 99999;
+			pointer-events: none;
+			user-select: none;
+			transform: translate3d(var(--cursor-x, -999px), var(--cursor-y, -999px), 0);
+			will-change: transform;
+		}
+
+		#cursor-newtab-badge__inner {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.45rem;
+
+			padding: 0.35rem 0.55rem;
+			border-radius: 8px;
+			border: 1px solid rgb(255 255 255 / 0.16);
+			background: rgb(0 0 0 / 0.62);
+			box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+			backdrop-filter: blur(8px);
+
+			transform: translate3d(16px, 18px, 0) scale(0.96);
+			transform-origin: left center;
+
+			opacity: 0;
+			filter: blur(0px);
+			transition:
+				opacity 120ms ease,
+				transform 120ms ease,
+				filter 120ms ease;
+		}
+
+		#cursor-newtab-badge.is-visible #cursor-newtab-badge__inner {
+			opacity: 1;
+			transform: translate3d(16px, 18px, 0) scale(1);
+		}
+
+		#cursor-newtab-badge .cursor-newtab-badge__icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 1.15rem;
+			height: 1.15rem;
+			border-radius: 0.35rem;
+			background: rgb(99 102 241 / 0.22);
+			color: var(--main-200);
+			font-size: 0.85rem;
+			line-height: 1;
+			transform: rotate(90deg);
+		}
+
+		#cursor-newtab-badge .cursor-newtab-badge__label {
+			font-family: Inter, sans-serif;
+			font-weight: 650;
+			font-size: 0.7rem;
+			letter-spacing: 0.1em;
+			color: rgb(255 255 255 / 0.92);
+			white-space: nowrap;
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			#cursor-newtab-badge__inner {
+				transition: none;
+			}
+		}
 	}
 </style>
+
+<div id="cursor-newtab-badge" aria-hidden="true">
+	<div id="cursor-newtab-badge__inner">
+		<span class="cursor-newtab-badge__icon">⇱</span>
+		<span class="cursor-newtab-badge__label">new tab</span>
+	</div>
+</div>
+
+<script>
+	const badge = document.getElementById('cursor-newtab-badge');
+	if (badge) {
+		const finePointer = window.matchMedia?.('(hover: hover) and (pointer: fine)')?.matches ?? false;
+		if (!finePointer) {
+			badge.remove();
+		} else {
+			let isVisible = false;
+
+			const setVisible = (next: boolean) => {
+				if (next === isVisible) return;
+				isVisible = next;
+				badge.classList.toggle('is-visible', next);
+			};
+
+			const moveEventName = 'onpointermove' in window ? 'pointermove' : 'mousemove';
+			const overEventName = 'onpointerover' in window ? 'pointerover' : 'mouseover';
+			const outEventName = 'onpointerout' in window ? 'pointerout' : 'mouseout';
+
+			let lastX = -999;
+			let lastY = -999;
+			let rafId = 0;
+
+			const schedulePositionWrite = () => {
+				if (rafId) return;
+				rafId = window.requestAnimationFrame(() => {
+					rafId = 0;
+					badge.style.setProperty('--cursor-x', `${lastX}px`);
+					badge.style.setProperty('--cursor-y', `${lastY}px`);
+				});
+			};
+
+			const handleMove = (event: PointerEvent | MouseEvent) => {
+				if (!event) return;
+				if (typeof event.clientX === 'number') lastX = event.clientX;
+				if (typeof event.clientY === 'number') lastY = event.clientY;
+				schedulePositionWrite();
+			};
+
+			const isNewTabTarget = (eventTarget: EventTarget | null) => {
+				const target = eventTarget instanceof Element ? eventTarget : null;
+				return Boolean(target?.closest?.('a[target="_blank"]'));
+			};
+
+			document.addEventListener(moveEventName, handleMove, { passive: true });
+
+			document.addEventListener(
+				overEventName,
+				(event) => {
+					handleMove(event);
+					setVisible(isNewTabTarget(event.target));
+				},
+				{ passive: true },
+			);
+
+			document.addEventListener(
+				outEventName,
+				(event) => {
+					if (event.relatedTarget == null) return setVisible(false);
+					setVisible(isNewTabTarget(event.relatedTarget));
+				},
+				{ passive: true },
+			);
+		}
+	}
+</script>
