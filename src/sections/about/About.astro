@@ -108,12 +108,15 @@ import Corner from 'sections/about/Corner.astro';
 
 <style>
 	#about {
-		padding: 0 2rem 0 0;
+		margin: 0;
+		padding: 0;
 		display: flex;
 		flex-direction: row;
 		width: 100%;
+		max-width: none;
 		justify-content: space-between;
 		height: auto;
+		min-height: 100vh;
 		gap: var(--bg-block-size);
 	}
 	.left,
@@ -164,7 +167,7 @@ import Corner from 'sections/about/Corner.astro';
 		max-width: var(--about-right-width);
 		flex: 1 1 0;
 		margin-right: var(--about-right-end);
-		margin-left: calc(55% + var(--about-right-start));
+		margin-left: calc(50% + var(--about-right-start));
 
 		.blurb {
 			/* width: 625px; */
