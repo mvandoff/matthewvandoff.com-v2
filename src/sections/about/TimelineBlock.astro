@@ -45,6 +45,11 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 		.tl-company {
 			transition: all 0.5s;
 		}
+
+		&.is-distorting {
+			will-change: filter;
+		}
+
 		&:hover {
 			/* background: var(--main-900); */
 			.tl-description {

@@ -101,20 +101,24 @@ export function initTransition() {
 	 */
 	const validLinks: HTMLAnchorElement[] = Array.from(document.querySelectorAll('a')).filter(
 		(link: HTMLAnchorElement) => {
-			const href: string = link.getAttribute('href') || '';
+			const rawHref = link.getAttribute('href');
+			const href = rawHref?.trim() ?? '';
+
+			// Ignore "dead" anchors or placeholders (no href / empty href).
+			if (!href) return false;
 
 			try {
-				const hostname: string = new URL(link.href, window.location.origin).hostname;
+				const url = new URL(href, window.location.origin);
 
 				return (
-					hostname === window.location.hostname && // Same domain
 					!href.startsWith('#') && // Not an anchor link
+					url.origin === window.location.origin && // Same origin
 					link.getAttribute('target') !== '_blank' && // Not opening in a new tab
 					!link.hasAttribute('data-transition-prevent') // No 'data-transition-prevent' attribute
 				);
 			} catch (error) {
 				// Invalid URL, exclude from valid links
-				console.warn('Invalid URL found:', link.href, error);
+				console.warn('Invalid URL found:', href, error);
 				return false;
 			}
 		},

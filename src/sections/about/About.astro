@@ -1,10 +1,10 @@
 ---
 import './about-background.css';
 import './blocks.css';
-import { Icon } from 'astro-icon/components';
 import Timeline from 'sections/about/Timeline.astro';
 import AboutSvgFilters from 'sections/about/AboutSvgFilters.astro';
 import AboutImage from 'sections/about/AboutImage.astro';
+import SocialLink from 'sections/about/SocialLink.astro';
 ---
 
 <section id="about">
@@ -14,12 +14,8 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		<p id="headline">Proin quis sem lacus. Vivamus non lorem nulla. Nam vel molestie est.</p>
 
 		<div class="links">
-			<a href="https://www.linkedin.com/in/matthew-vandoff/" target="_blank" rel="noreferrer">
-				<Icon name="fa7-brands:linkedin" />
-			</a>
-			<a href="https://github.com/mvandoff" target="_blank" rel="noreferrer">
-				<Icon name="fa7-brands:github" />
-			</a>
+			<SocialLink href="https://www.linkedin.com/in/matthew-vandoff/" icon="fa7-brands:linkedin" label="linkedin" />
+			<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="github" />
 		</div>
 
 		<AboutImage />
@@ -83,28 +79,37 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		top: 0;
 		padding: 8rem 0;
 
+		h1,
+		h2 {
+			background: transparent;
+		}
+		h1 {
+			font-size: 48px;
+			color: var(--slate-200);
+			margin-bottom: 0;
+			padding: 0;
+		}
+		h2 {
+			color: var(--slate-200);
+			font-size: 22px;
+			text-align: left;
+			padding: 0;
+			margin-top: 10px;
+			align-self: baseline;
+			user-select: auto;
+		}
 		#headline {
 			font-family: 'Inter', sans-serif;
 			font-size: 16px;
 			color: var(--slate-400);
 			width: 350px;
 			line-height: 24px;
+			margin-top: 20px;
+			margin-bottom: 0;
 		}
-
 		.links {
-			margin-top: 1.5rem;
-			display: flex;
-			gap: 0.5rem;
-
-			svg {
-				height: 2.5rem;
-				width: 2.5rem;
-				color: #a4a4a4;
-				transition: all 0.25s ease;
-				&:hover {
-					color: white;
-				}
-			}
+			margin-top: 8px;
+			/* border: 1px solid red; */
 		}
 	}
 	.right {
@@ -124,7 +129,6 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		grid-template-columns: repeat(var(--right-col-span), var(--bg-block-size));
 		grid-auto-rows: var(--bg-block-size);
 		/* background: rgb(111, 32, 3); */
-		/* top: calc(2 * var(--bg-block-size)); */
 		/* border: 5px solid red; */
 
 		h3 {
@@ -162,26 +166,6 @@ import AboutImage from 'sections/about/AboutImage.astro';
 			grid-column: 1 / -1;
 			grid-row: var(--right-row-timeline) / span var(--right-row-timeline-span);
 		}
-	}
-	h1,
-	h2,
-	h3 {
-		background: transparent;
-	}
-	h1 {
-		font-size: 48px;
-		color: var(--slate-200);
-		margin-bottom: 0;
-		padding: 0;
-	}
-	h2 {
-		color: var(--slate-200);
-		font-size: 22px;
-		text-align: left;
-		padding: 0;
-		margin-top: 0.65rem;
-		align-self: baseline;
-		user-select: auto;
 	}
 
 	@media screen and (max-width: 1740px) {

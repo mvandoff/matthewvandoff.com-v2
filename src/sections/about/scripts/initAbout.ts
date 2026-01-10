@@ -7,6 +7,7 @@ import {
 } from './timelineWave';
 import { initAboutScrollDistortion } from './aboutScrollDistortion';
 import { initDebugGridToggle } from './debugGridToggle';
+import { initTimelineEnterDistortion } from './timelineEnterDistortion';
 
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
 type BlockState = { holdTimeoutId: number | null; activatedAt: number };
@@ -136,6 +137,13 @@ export function initAbout() {
 	if (timelineBlocks.length > 0) {
 		timelineWave.bindHandlers(pointerEvents);
 	}
+
+	initTimelineEnterDistortion({
+		timelineBlocks,
+		enterEventName: pointerEvents.enter,
+		getBlockSizePx: () => blockSizePx,
+		durationMs: 1000,
+	});
 
 	// The blocks overlay the page, but use `pointer-events: none` so all interactions
 	// hit the real content. That means we can't use `mouseenter` on blocks; we light
