@@ -2,45 +2,57 @@
 import TimelineBlock from 'sections/about/TimelineBlock.astro';
 ---
 
-<div id="tl">
-	<h3>experience</h3>
-	<TimelineBlock
-		company="Cyncly"
-		title="Web Developer"
-		start="2024"
-		end="present"
-		description="Worked on the frontend team for Insight, a full scale ERP solution for manufacturers, migrating a monolithic legacy application to a modern React web app as well as developing new cutting-edge features."
-		link="https://www.cyncly.com/"
-	/>
-	<TimelineBlock
-		company="Game Builds"
-		icon="🪦"
-		title="Full Stack Developer"
-		start="2023"
-		end="2024"
-		description="Helped build, launch and maintain www.diablobuilds.com which was an online resource and community for the popular online video game Diablo IV, featuring an advanced character builder with in depth analytics and customization."
-	/>
-	<TimelineBlock
-		company="Applied Visions"
-		title="Software Engineer"
-		start="2021"
-		end="2023"
-		description="Developed two key enterprise applications: a professional networking platform for the insurance industry and an AI-powered project management tool for government clients, as well as mentoring junior developers for the client."
-		link="https://avi.com"
-	/>
+<div class="timeline">
+	<div class="exp-container">
+		<h3>experience</h3>
+	</div>
+	<div class="tl-blocks">
+		<TimelineBlock
+			company="Cyncly"
+			title="Web Developer"
+			start="2024"
+			end="present"
+			description="Worked on the frontend team for Insight, a full scale ERP solution for manufacturers, migrating a monolithic legacy application to a modern React web app as well as developing new cutting-edge features."
+			link="https://www.cyncly.com/"
+		/>
+		<TimelineBlock
+			company="Game Builds"
+			icon="🪦"
+			title="Full Stack Developer"
+			start="2023"
+			end="2024"
+			description="Helped build, launch and maintain www.diablobuilds.com which was an online resource and community for the popular online video game Diablo IV, featuring an advanced character builder with in depth analytics and customization."
+		/>
+		<TimelineBlock
+			company="Applied Visions"
+			title="Software Engineer"
+			start="2021"
+			end="2023"
+			description="Developed two key enterprise applications: a professional networking platform for the insurance industry and an AI-powered project management tool for government clients, as well as mentoring junior developers for the client."
+			link="https://avi.com"
+		/>
+	</div>
 </div>
 
 <style>
-	#tl {
+	.timeline {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 	}
-
-	h3 {
+	.exp-container {
+		height: var(--bg-block-size);
+		/* background: sandybrown; */
+		display: flex;
+		align-items: center;
+		width: 100%;
 		color: var(--slate-200);
 		margin: 0;
-		padding-left: 1rem;
-		margin: 1rem 0;
 		font-size: 22px;
+	}
+	.tl-blocks {
+		/* background-color: goldenrod; */
+		display: flex;
+		flex-direction: column;
 	}
 </style>

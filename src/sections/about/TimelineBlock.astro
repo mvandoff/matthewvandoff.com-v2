@@ -12,12 +12,7 @@ type Props = {
 const { start, end, title, company, description, link, icon } = Astro.props;
 ---
 
-<a
-	class="tl-block"
-	href={link}
-	target={link ? '_blank' : undefined}
-	rel={link ? 'noreferrer' : undefined}
->
+<a class="tl-block" href={link} target={link ? '_blank' : undefined} rel={link ? 'noreferrer' : undefined}>
 	<div class="tl-left">
 		{start} – {end}
 	</div>
@@ -35,17 +30,16 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 
 <style>
 	.tl-block {
+		/* border: 1px solid red; */
+		height: calc(var(--bg-block-size) * 3);
 		font-family: 'Inter', sans-serif;
 		display: flex;
 		gap: 3rem;
 		position: relative;
 		z-index: 130;
-		padding: 1.5rem 2.5rem 1.5rem 1rem;
-		width: var(--about-right-width, auto);
-		box-sizing: border-box;
-		/* border-radius: 0.25rem; */
+		padding: 1.5rem 1.5rem 0rem 1rem;
 		transition: all 0.25s;
-		height: calc(var(--bg-block-size) * 3);
+
 		.tl-left,
 		b,
 		.tl-company {
@@ -63,10 +57,6 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 			.tl-company {
 				color: var(--main-200);
 			}
-		}
-		&:first-of-type {
-			/* padding-top: 0; */
-			margin-top: -0.75rem;
 		}
 	}
 	.tl-left {

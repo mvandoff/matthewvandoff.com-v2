@@ -25,21 +25,27 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		<AboutImage />
 	</div>
 	<div class="right">
-		<h3 class="about">about</h3>
-		<p class="blurb">
-			Hey what's up? I'm a human software developer, one of the last of my kind. I'm based in the Raleigh-Durham area in
-			North Carolina, USA and have been developing professionally for well over 4 years. I like working with all kinds
-			of software, but I specialize in full stack web development.
-		</p>
-		<p class="blurb">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit fringilla lacus id sagittis. Duis
-			aliquam, odio vel fermentum iaculis, metus ligula ultricies risus, et sodales metus augue eget nibh. Donec dapibus
-			at est ac auctor. Phasellus rutrum scelerisque luctus. Orci varius natoque penatibus et magnis dis parturient
-			montes, nascetur ridiculus mus. Cras eu risus eu eros sagittis feugiat a eget metus. Praesent neque ex, efficitur
-			at libero aliquet, interdum venenatis nisi.
-		</p>
+		<div class="about-h3-container">
+			<h3 class="about">about</h3>
+		</div>
+		<div class="blurbs">
+			<p class="blurb">
+				Hey what's up? I'm a human software developer, one of the last of my kind. I'm based in the Raleigh-Durham area
+				in North Carolina, USA and have been developing professionally for well over 4 years. I like working with all
+				kinds of software, but I specialize in full stack web development.
+			</p>
+			<p class="blurb">
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit fringilla lacus id sagittis. Duis
+				aliquam, odio vel fermentum iaculis, metus ligula ultricies risus, et sodales metus augue eget nibh. Donec
+				dapibus at est ac auctor. Phasellus rutrum scelerisque luctus. Orci varius natoque penatibus et magnis dis
+				parturient montes, nascetur ridiculus mus. Cras eu risus eu eros sagittis feugiat a eget metus. Praesent neque
+				ex, efficitur at libero aliquet, interdum venenatis nisi.
+			</p>
+		</div>
 
-		<Timeline />
+		<div class="timeline-slot">
+			<Timeline />
+		</div>
 	</div>
 
 	<AboutSvgFilters />
@@ -60,16 +66,13 @@ import AboutImage from 'sections/about/AboutImage.astro';
 </style>
 <style>
 	#about {
+		position: relative;
 		margin: 0 auto;
 		padding: 0;
 		justify-content: space-between;
 		height: auto;
 		min-height: 100vh;
 		/* border: 2px solid red; */
-	}
-	.left,
-	.right {
-		padding: 8rem 0;
 	}
 	.left {
 		width: calc(8 * var(--bg-block-size));
@@ -78,6 +81,7 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		/* background: var(--main-900); */
 		position: fixed;
 		top: 0;
+		padding: 8rem 0;
 
 		#headline {
 			font-family: 'Inter', sans-serif;
@@ -104,19 +108,59 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		}
 	}
 	.right {
-		margin-left: calc(15 * var(--bg-block-size));
-		/* background: rgb(111, 32, 3); */
-		width: calc(12 * var(--bg-block-size));
-		height: 100vh;
+		--right-col-start: 15;
+		--right-col-span: 11;
+		--right-row-about: 3;
+		--right-row-blurbs: 4;
+		--right-row-blurbs-span: 5;
+		--right-row-timeline: 9;
+		--right-row-timeline-span: 10;
 
-		.blurb {
-			/* width: 625px; */
-			font-size: 16px;
-			border-radius: 0.5rem;
-			line-height: 26px;
-			font-family: 'Inter', sans-serif;
-			color: var(--slate-400);
+		position: absolute;
+		top: 0;
+		left: calc(var(--right-col-start) * var(--bg-block-size));
+		width: calc(var(--right-col-span) * var(--bg-block-size));
+		display: grid;
+		grid-template-columns: repeat(var(--right-col-span), var(--bg-block-size));
+		grid-auto-rows: var(--bg-block-size);
+		/* background: rgb(111, 32, 3); */
+		/* top: calc(2 * var(--bg-block-size)); */
+		/* border: 5px solid red; */
+
+		h3 {
+			color: var(--slate-200);
+			margin: 0;
 			padding-left: 1rem;
+			font-size: 22px;
+		}
+		.about-h3-container {
+			/* background: green; */
+			grid-column: 1 / -1;
+			grid-row: var(--right-row-about) / span 1;
+			height: var(--bg-block-size);
+			width: 100%;
+			display: flex;
+			align-items: center;
+		}
+
+		.blurbs {
+			/* background: red; */
+			grid-column: 1 / -1;
+			grid-row: var(--right-row-blurbs) / span var(--right-row-blurbs-span);
+			height: calc(var(--right-row-blurbs-span) * var(--bg-block-size));
+			.blurb {
+				font-size: 16px;
+				border-radius: 0.5rem;
+				line-height: 26px;
+				font-family: 'Inter', sans-serif;
+				color: var(--slate-400);
+				padding-left: 1rem;
+			}
+		}
+
+		.timeline-slot {
+			grid-column: 1 / -1;
+			grid-row: var(--right-row-timeline) / span var(--right-row-timeline-span);
 		}
 	}
 	h1,
@@ -138,13 +182,6 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		margin-top: 0.65rem;
 		align-self: baseline;
 		user-select: auto;
-	}
-	h3 {
-		color: var(--slate-200);
-		margin: 0;
-		padding-left: 1rem;
-		margin: 1rem 0;
-		font-size: 22px;
 	}
 
 	@media screen and (max-width: 1740px) {
