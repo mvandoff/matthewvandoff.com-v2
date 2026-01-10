@@ -28,7 +28,7 @@ export function initAbout() {
 	const aboutMeDistortEl = document.querySelector<HTMLElement>('#about [data-scroll-distort="me"]');
 	const aboutScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#about-scroll-turbulence');
 	const aboutScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#about-scroll-displacement');
-	const timelineBlocks = Array.from(document.querySelectorAll<HTMLElement>('#tl .tl-block'));
+	const timelineBlocks = Array.from(aboutSectionEl.querySelectorAll<HTMLElement>('.tl-block'));
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
 	let blocks: HTMLDivElement[] = [];
