@@ -69,11 +69,32 @@ export function initAbout() {
 		const aboutRect = aboutSection.getBoundingClientRect();
 		const targetWidth = Math.max(aboutSection.scrollWidth, aboutSection.clientWidth, aboutRect.width);
 		const targetHeight = Math.max(aboutSection.scrollHeight, aboutSection.clientHeight, aboutRect.height);
-		columns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
+		const baseColumns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
 		rows = Math.max(1, Math.ceil(targetHeight / blockSizePx));
 
-		const widthPx = Math.round(targetWidth);
+		const baseWidthPx = Math.round(targetWidth);
 		const heightPx = Math.round(targetHeight);
+
+		let extraColumns = 0;
+		let widthPx = baseWidthPx;
+		let leftPx = aboutRect.left;
+		const viewportWidth = document.documentElement.clientWidth;
+		const spaceLeft = aboutRect.left;
+		const spaceRight = viewportWidth - aboutRect.right;
+
+		// When the About section hits its max width, it is centered and leaves extra room on both sides.
+		// Add full block columns to each side (same count) so the grid expands outward while the About
+		// content stays aligned to grid lines. Any leftover pixels become equal gaps at the edges.
+		if (spaceLeft > 0 && spaceRight > 0) {
+			const extraColumnsPerSide = Math.floor(Math.min(spaceLeft, spaceRight) / blockSizePx);
+			if (extraColumnsPerSide > 0) {
+				extraColumns = extraColumnsPerSide;
+				widthPx = baseWidthPx + extraColumns * blockSizePx * 2;
+				leftPx = aboutRect.left - extraColumns * blockSizePx;
+			}
+		}
+
+		columns = baseColumns + extraColumns * 2;
 
 		blockContainer.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
 		blockContainer.style.gridTemplateRows = `repeat(${rows}, ${blockSizePx}px)`;
@@ -82,7 +103,7 @@ export function initAbout() {
 
 		if (!aboutSection.contains(blockContainer)) {
 			const top = aboutRect.top + window.scrollY;
-			const left = aboutRect.left + window.scrollX;
+			const left = leftPx + window.scrollX;
 			blockContainer.style.top = `${Math.round(top)}px`;
 			blockContainer.style.left = `${Math.round(left)}px`;
 		}
@@ -148,8 +169,10 @@ export function initAbout() {
 	}
 
 	function handlePointerMove(e: PointerEvent | MouseEvent) {
-		const targetEl = e.target instanceof Element ? e.target : null;
-		if (!targetEl || !aboutSection.contains(targetEl)) {
+		// Use the block grid bounds (not just #about) so the trail works in the extra columns
+		// that extend into the left/right gutters on wide viewports.
+		const rect = blockContainer.getBoundingClientRect();
+		if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
 			lastIndex = null;
 			return;
 		}
