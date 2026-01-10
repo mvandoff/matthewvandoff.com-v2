@@ -54,7 +54,6 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		justify-content: space-between;
 		height: auto;
 		min-height: 100vh;
-		gap: var(--bg-block-size);
 		/* border: 2px solid red; */
 	}
 	.left,
@@ -66,7 +65,8 @@ import AboutImage from 'sections/about/AboutImage.astro';
 
 		width: var(--about-left-width);
 		margin-left: calc(4 * var(--bg-block-size));
-		/* height: 100vh; */
+		height: calc(16 * var(--bg-block-size));
+		/* background: var(--main-900); */
 		position: fixed;
 		top: 0;
 
@@ -95,14 +95,10 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		}
 	}
 	.right {
-		--about-right-end: 0px;
-		--about-right-start: 0px;
-		--about-right-width: calc(12 * var(--bg-block-size));
-
-		max-width: var(--about-right-width);
-		flex: 1 1 0;
-		margin-right: var(--about-right-end);
-		margin-left: calc(50% + var(--about-right-start));
+		margin-left: calc(14 * var(--bg-block-size));
+		/* background: rgb(111, 32, 3); */
+		width: calc(12 * var(--bg-block-size));
+		height: 100vh;
 
 		.blurb {
 			/* width: 625px; */
@@ -113,6 +109,11 @@ import AboutImage from 'sections/about/AboutImage.astro';
 			color: var(--slate-400);
 			padding-left: 1rem;
 		}
+	}
+	h1,
+	h2,
+	h3 {
+		background: transparent;
 	}
 	h1 {
 		font-size: 48px;

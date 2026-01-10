@@ -72,10 +72,13 @@ export function initAbout() {
 		columns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
 		rows = Math.max(1, Math.ceil(targetHeight / blockSizePx));
 
+		const widthPx = Math.round(targetWidth);
+		const heightPx = Math.round(targetHeight);
+
 		blockContainer.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
 		blockContainer.style.gridTemplateRows = `repeat(${rows}, ${blockSizePx}px)`;
-		blockContainer.style.width = `${Math.round(targetWidth)}px`;
-		blockContainer.style.height = `${Math.round(targetHeight)}px`;
+		blockContainer.style.width = `${widthPx}px`;
+		blockContainer.style.height = `${heightPx}px`;
 
 		if (!aboutSection.contains(blockContainer)) {
 			const top = aboutRect.top + window.scrollY;
@@ -88,7 +91,8 @@ export function initAbout() {
 		const totalBlocks = columns * rows;
 
 		blocks = createBlocks(totalBlocks);
-		blockContainer.replaceChildren(...blocks);
+		const debugLabels = createDebugLabelOverlay({ columns, rows, blockSizePx, widthPx, heightPx });
+		blockContainer.replaceChildren(...blocks, debugLabels);
 	}
 
 	/**
@@ -156,19 +160,20 @@ export function initAbout() {
 
 	document.addEventListener(pointerEvents.move, handlePointerMove, { passive: true });
 
-	let resizeRaf = 0;
+	const resizeDebounceMs = 150;
+	let resizeTimeoutId: number | null = null;
 	window.addEventListener('resize', () => {
 		/**
 		 * Resize handling:
 		 * - Rebuilds the grid for the new size.
-		 * - Throttled via rAF to avoid doing work on every resize event tick.
+		 * - Debounced to avoid doing work on every resize event tick.
 		 */
-		if (resizeRaf) return;
-		resizeRaf = requestAnimationFrame(() => {
-			resizeRaf = 0;
+		if (resizeTimeoutId) window.clearTimeout(resizeTimeoutId);
+		resizeTimeoutId = window.setTimeout(() => {
+			resizeTimeoutId = null;
 			lastIndex = null;
 			rebuildGrid();
-		});
+		}, resizeDebounceMs);
 	});
 }
 
@@ -230,6 +235,50 @@ function createBlocks(totalBlocks: number) {
 		block.classList.add('bg-block');
 		return block;
 	});
+}
+
+function createDebugLabelOverlay(params: {
+	columns: number;
+	rows: number;
+	blockSizePx: number;
+	widthPx: number;
+	heightPx: number;
+}) {
+	const { columns, rows, blockSizePx, widthPx, heightPx } = params;
+	const overlay = document.createElement('div');
+	overlay.className = 'bg-grid-debug';
+
+	const colLabels = document.createElement('div');
+	colLabels.className = 'bg-grid-debug-cols';
+	colLabels.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
+	colLabels.style.gridTemplateRows = `${blockSizePx}px`;
+	colLabels.style.top = `${blockSizePx}px`;
+	colLabels.style.width = `${widthPx}px`;
+	colLabels.style.height = `${blockSizePx}px`;
+
+	for (let col = 0; col < columns; col += 1) {
+		const label = document.createElement('div');
+		label.className = 'bg-grid-debug-label';
+		label.textContent = String(col);
+		colLabels.append(label);
+	}
+
+	const rowLabels = document.createElement('div');
+	rowLabels.className = 'bg-grid-debug-rows';
+	rowLabels.style.gridTemplateColumns = `${blockSizePx}px`;
+	rowLabels.style.gridTemplateRows = `repeat(${rows}, ${blockSizePx}px)`;
+	rowLabels.style.width = `${blockSizePx}px`;
+	rowLabels.style.height = `${heightPx}px`;
+
+	for (let row = 0; row < rows; row += 1) {
+		const label = document.createElement('div');
+		label.className = 'bg-grid-debug-label';
+		label.textContent = String(row);
+		rowLabels.append(label);
+	}
+
+	overlay.append(colLabels, rowLabels);
+	return overlay;
 }
 
 function parseCssTimeToMs(value: string, fallbackMs: number) {

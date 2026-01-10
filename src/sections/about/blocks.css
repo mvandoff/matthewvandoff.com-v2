@@ -15,6 +15,7 @@
 
 	--bg-block-grid-line-color: hsla(45, 100%, 50%, 0.25);
 	--bg-block-grid-line-width: 1px;
+	--bg-block-grid-label-color: hsla(45, 100%, 50%, 0.7);
 }
 
 #block-grid {
@@ -40,6 +41,59 @@
 
 #block-grid.is-debug-grid .bg-block {
 	box-shadow: inset 0 0 0 var(--bg-block-grid-line-width) var(--bg-block-grid-line-color);
+}
+
+#block-grid .bg-grid-debug {
+	position: absolute;
+	inset: 0;
+	display: none;
+	pointer-events: none;
+	z-index: 6;
+	font-family: 'DotGothic16', monospace;
+	font-variant-numeric: tabular-nums;
+	color: var(--bg-block-grid-label-color);
+}
+
+#block-grid.is-debug-grid .bg-grid-debug {
+	display: block;
+}
+
+.bg-grid-debug-cols,
+.bg-grid-debug-rows {
+	position: absolute;
+	display: grid;
+	font-size: 11px;
+	line-height: 1;
+	color: var(--bg-block-grid-label-color);
+}
+
+.bg-grid-debug-cols {
+	top: 0;
+	left: 0;
+	align-items: center;
+	justify-items: center;
+	text-align: center;
+}
+
+.bg-grid-debug-rows {
+	top: 0;
+	left: 0;
+	align-items: center;
+	justify-items: start;
+	text-align: left;
+}
+
+.bg-grid-debug-label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+}
+
+.bg-grid-debug-rows .bg-grid-debug-label {
+	justify-content: flex-start;
+	padding-left: 0.35rem;
 }
 
 .bg-block.is-tl-edge-top {
