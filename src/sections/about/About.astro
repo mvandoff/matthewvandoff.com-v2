@@ -141,6 +141,8 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		grid-column: 1 / -1;
 		grid-row: var(--left-row-links) / span var(--left-row-links-span);
 		display: grid;
+		position: relative;
+		z-index: 6;
 		grid-template-columns: repeat(var(--left-col-span), var(--block-size));
 		grid-template-rows: var(--block-size);
 		align-items: center;

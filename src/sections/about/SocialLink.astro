@@ -12,7 +12,7 @@ type Props = {
 const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props as Props;
 ---
 
-<a class="social-link" href={href} target={target} rel={rel} aria-label={label}>
+<a class="social-link" href={href} target={target} rel={rel} aria-label={label} data-block-trail="ignore">
 	<div class="social-link-icon-container">
 		<Icon name={icon} />
 	</div>

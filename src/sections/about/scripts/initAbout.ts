@@ -152,6 +152,35 @@ export function initAbout() {
 	let raf = 0;
 	let pendingClientX = 0;
 	let pendingClientY = 0;
+	const blockTrailIgnoreSelector = '[data-block-trail="ignore"]';
+	const blockTrailIgnorePaddingPx = 8;
+	const blockTrailIgnoreEls = Array.from(document.querySelectorAll<HTMLElement>(blockTrailIgnoreSelector));
+	let blockTrailIgnoreRects: Array<{ left: number; right: number; top: number; bottom: number }> = [];
+
+	// Cache ignore layer bounds once; they don't move in this layout.
+	function refreshIgnoreRects() {
+		blockTrailIgnoreRects = blockTrailIgnoreEls.map((ignoreEl) => {
+			const rect = ignoreEl.getBoundingClientRect();
+			return {
+				left: rect.left - blockTrailIgnorePaddingPx,
+				right: rect.right + blockTrailIgnorePaddingPx,
+				top: rect.top - blockTrailIgnorePaddingPx,
+				bottom: rect.bottom + blockTrailIgnorePaddingPx,
+			};
+		});
+	}
+
+	function isPointerOverIgnoredLayer(target: EventTarget | null, clientX: number, clientY: number) {
+		const targetEl = target instanceof Element ? target : null;
+		if (targetEl?.closest(blockTrailIgnoreSelector) !== null) return true;
+		// Fall back to cached bounds for a padded hitbox without per-move layout reads.
+		for (const rect of blockTrailIgnoreRects) {
+			if (clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	function schedulePointerUpdate() {
 		if (raf) return;
@@ -175,8 +204,14 @@ export function initAbout() {
 		});
 	}
 
+	refreshIgnoreRects();
+
 	const navRect = mainNav.getBoundingClientRect();
 	function handlePointerMove(e: PointerEvent | MouseEvent) {
+		if (isPointerOverIgnoredLayer(e.target, e.clientX, e.clientY)) {
+			lastIndex = null;
+			return;
+		}
 		if (navRect.height > 0 && e.clientY >= navRect.top && e.clientY <= navRect.bottom) {
 			lastIndex = null;
 			return;
@@ -208,6 +243,7 @@ export function initAbout() {
 			resizeTimeoutId = null;
 			lastIndex = null;
 			rebuildGrid();
+			refreshIgnoreRects();
 		}, resizeDebounceMs);
 	});
 }
