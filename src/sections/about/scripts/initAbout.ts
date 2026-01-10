@@ -161,11 +161,9 @@ export function initAbout() {
 				if (lastIndex !== null) lastIndex = null;
 				return;
 			}
-			if (coords.index !== lastIndex) {
-				lastIndex = coords.index;
-				const block = blocks[coords.index];
-				if (block) triggerBlockHover(block, blockStates, timings);
-			}
+			const block = blocks[coords.index];
+			if (block) triggerBlockHover(block, blockStates, timings);
+			lastIndex = coords.index;
 		});
 	}
 
