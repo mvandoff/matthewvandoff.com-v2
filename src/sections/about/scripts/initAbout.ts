@@ -6,6 +6,7 @@ import {
 	type WaveTimings,
 } from './timelineWave';
 import { initAboutScrollDistortion } from './aboutScrollDistortion';
+import { initDebugGridToggle } from './debugGridToggle';
 
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
 type BlockState = { holdTimeoutId: number | null; activatedAt: number };
@@ -95,6 +96,7 @@ export function initAbout() {
 	 * - We do this immediately on DOMContentLoaded (see About.astro).
 	 * - The Transition overlay is still covering the page at this moment, which is what we want.
 	 */
+	initDebugGridToggle({ container: blockContainer });
 	rebuildGrid();
 
 	// Scroll-driven image distortion (SVG filter + CSS blur) for the headshot.
