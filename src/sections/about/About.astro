@@ -1,5 +1,6 @@
 ---
-import './background.css';
+import './about-background.css';
+import './blocks.css';
 import { Icon } from 'astro-icon/components';
 import Timeline from 'sections/about/Timeline.astro';
 import AboutSvgFilters from 'sections/about/AboutSvgFilters.astro';
@@ -46,30 +47,29 @@ import AboutImage from 'sections/about/AboutImage.astro';
 
 <style>
 	#about {
-		margin: 0;
+		margin: 0 auto;
 		padding: 0;
 		display: flex;
 		flex-direction: row;
-		width: 100%;
+		width: calc(32 * var(--bg-block-size));
 		max-width: none;
 		justify-content: space-between;
 		height: auto;
 		min-height: 100vh;
 		gap: var(--bg-block-size);
+		/* border: 2px solid red; */
 	}
 	.left,
 	.right {
 		padding: 8rem 0;
 	}
 	.left {
-		--about-left-start: calc(6 * var(--bg-block-size));
 		--about-left-width: calc(8 * var(--bg-block-size));
 
 		flex: 0 0 var(--about-left-width);
 		width: var(--about-left-width);
 		/* max-width: 510px; */
 		height: 100vh;
-		margin-left: var(--about-left-start);
 		position: fixed;
 		top: 0;
 
@@ -151,10 +151,11 @@ import AboutImage from 'sections/about/AboutImage.astro';
 	}
 </style>
 <style is:global>
-	nav,
-	h1,
-	h2 {
-		background: transparent !important;
+	#main-nav {
+		z-index: 10;
+		height: var(--bg-block-size);
+		padding-top: 0;
+		padding-bottom: 0;
 	}
 </style>
 <script>

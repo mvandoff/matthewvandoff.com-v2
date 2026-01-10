@@ -16,8 +16,8 @@ export function initAbout() {
 	 * - The About page creates a block grid overlay used for the mouse trail effect.
 	 * - The grid is sized to the About section instead of the full document.
 	 */
-	const blockContainerEl = document.getElementById('bg-blocks');
-	if (!blockContainerEl) throw new Error('bg-blocks element not found');
+	const blockContainerEl = document.getElementById('block-grid');
+	if (!blockContainerEl) throw new Error('#block-grid element not found');
 	// Capture non-null ref for use inside callbacks (TS won’t narrow captured variables).
 	const blockContainer = blockContainerEl;
 	const aboutSectionEl = document.querySelector<HTMLElement>('#about');

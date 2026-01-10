@@ -1,10 +1,10 @@
 :root {
-	--bg-lines-color: rgba(69, 69, 69, 0.05);
+	--bg-block-size: 64px;
+
 	--bg-block-color: hsla(239, 85%, 67%, 0.3);
 	--bg-block-fade-in: 500ms;
 	--bg-block-fade-out: 1s;
 	--bg-block-hold: 0.25s;
-	--bg-block-size: 64px;
 	--bg-block-wave-color: var(--main-950);
 	--bg-block-wave-border-color: hsla(45, 100%, 50%, 0.04);
 	--bg-block-wave-border-width: 1px;
@@ -12,62 +12,9 @@
 	--bg-block-wave-fade-in: 250ms;
 	--bg-block-wave-fade-out: 400ms;
 	--bg-block-wave-step: 40ms;
-	/* Keep the fixed nav exactly one background grid row tall on the About page. */
-	--about-nav-height: var(--bg-block-size);
 }
 
-#about {
-	position: relative;
-	background-image:
-		repeating-linear-gradient(
-			45deg,
-			var(--bg-lines-color) 0px,
-			var(--bg-lines-color) 1px,
-			transparent 1px,
-			transparent 11px,
-			var(--bg-lines-color) 11px,
-			var(--bg-lines-color) 12px,
-			transparent 12px,
-			transparent 32px
-		),
-		repeating-linear-gradient(
-			0deg,
-			var(--bg-lines-color) 0px,
-			var(--bg-lines-color) 1px,
-			transparent 1px,
-			transparent 11px,
-			var(--bg-lines-color) 11px,
-			var(--bg-lines-color) 12px,
-			transparent 12px,
-			transparent 32px
-		),
-		repeating-linear-gradient(
-			135deg,
-			var(--bg-lines-color) 0px,
-			var(--bg-lines-color) 1px,
-			transparent 1px,
-			transparent 11px,
-			var(--bg-lines-color) 11px,
-			var(--bg-lines-color) 12px,
-			transparent 12px,
-			transparent 32px
-		),
-		repeating-linear-gradient(
-			90deg,
-			var(--bg-lines-color) 0px,
-			var(--bg-lines-color) 1px,
-			transparent 1px,
-			transparent 11px,
-			var(--bg-lines-color) 11px,
-			var(--bg-lines-color) 12px,
-			transparent 12px,
-			transparent 32px
-		),
-		radial-gradient(circle at 80% 80%, rgba(15, 19, 53, 0.6) 0%, hsla(233, 51%, 20%, 0.4) 26%, rgba(0, 0, 0, 0) 58%);
-	background-attachment: scroll;
-}
-
-#bg-blocks {
+#block-grid {
 	width: 100%;
 	position: absolute;
 	top: 0;
@@ -79,13 +26,6 @@
 	overflow: hidden;
 }
 
-/* About page: keep the nav above the grid + align it to a single block row. */
-#main-nav {
-	z-index: 10;
-	height: var(--about-nav-height);
-	padding-top: 0;
-	padding-bottom: 0;
-}
 .bg-block {
 	position: relative;
 	pointer-events: none;
