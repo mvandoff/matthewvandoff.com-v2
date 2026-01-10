@@ -24,6 +24,7 @@ export function initAbout() {
 	const aboutSectionEl = document.querySelector<HTMLElement>('#about');
 	if (!aboutSectionEl) throw new Error('#about element not found');
 	const aboutSection = aboutSectionEl;
+	const mainNav = document.querySelector<HTMLElement>('#main-nav')!;
 	const aboutMeDistortEl = document.querySelector<HTMLElement>('#about [data-scroll-distort="me"]');
 	const aboutScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#about-scroll-turbulence');
 	const aboutScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#about-scroll-displacement');
@@ -168,7 +169,12 @@ export function initAbout() {
 		});
 	}
 
+	const navRect = mainNav.getBoundingClientRect();
 	function handlePointerMove(e: PointerEvent | MouseEvent) {
+		if (navRect.height > 0 && e.clientY >= navRect.top && e.clientY <= navRect.bottom) {
+			lastIndex = null;
+			return;
+		}
 		// Use the block grid bounds (not just #about) so the trail works in the extra columns
 		// that extend into the left/right gutters on wide viewports.
 		const rect = blockContainer.getBoundingClientRect();
