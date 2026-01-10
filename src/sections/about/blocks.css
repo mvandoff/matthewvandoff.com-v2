@@ -16,6 +16,8 @@
 	--bg-block-grid-line-color: hsla(45, 100%, 50%, 0.25);
 	--bg-block-grid-line-width: 1px;
 	--bg-block-grid-label-color: hsla(45, 100%, 50%, 0.7);
+	--bg-block-gutter-border-color: hsla(45, 100%, 50%, 0.1);
+	--bg-block-gutter-border-width: 1px;
 }
 
 #block-grid {
@@ -28,6 +30,26 @@
 	pointer-events: none;
 	display: grid;
 	overflow: hidden;
+}
+
+#block-grid::before,
+#block-grid::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: var(--bg-block-gutter-border-width);
+	background: var(--bg-block-gutter-border-color);
+	pointer-events: none;
+	z-index: 1;
+}
+
+#block-grid::before {
+	left: 0;
+}
+
+#block-grid::after {
+	right: 0;
 }
 
 .bg-block {
