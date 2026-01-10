@@ -230,7 +230,7 @@ function getWaveTimingsFromCss(blockContainer: HTMLElement, fallback: WaveTiming
 
 function getBlockSizePxFromCss(blockContainer: HTMLElement, fallbackPx: number): number {
 	const computedStyle = window.getComputedStyle(blockContainer);
-	const raw = computedStyle.getPropertyValue('--bg-block-size').trim();
+	const raw = computedStyle.getPropertyValue('--block-size').trim();
 	if (!raw) return fallbackPx;
 	const match = raw.match(/^(-?\d*\.?\d+)px$/);
 	if (!match) return fallbackPx;

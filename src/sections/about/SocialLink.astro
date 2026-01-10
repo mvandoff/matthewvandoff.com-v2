@@ -24,8 +24,8 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 <style>
 	.social-link {
 		/* border: 1px solid var(--bg-block-grid-line-color); */
-		width: calc(3 * var(--bg-block-size));
-		height: var(--bg-block-size);
+		width: calc(3 * var(--block-size));
+		height: var(--block-size);
 		display: flex;
 		align-items: center;
 		color: var(--slate-400);
@@ -33,7 +33,7 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 	}
 	.social-link-icon-container {
 		height: 100%;
-		flex-basis: var(--bg-block-size);
+		flex-basis: var(--block-size);
 		display: flex;
 		justify-content: center;
 		align-items: center;

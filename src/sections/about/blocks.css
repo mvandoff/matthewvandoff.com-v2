@@ -1,5 +1,5 @@
 :root {
-	--bg-block-size: 64px;
+	--block-size: 64px;
 
 	--bg-block-color: hsla(239, 85%, 67%, 0.3);
 	--bg-block-fade-in: 500ms;

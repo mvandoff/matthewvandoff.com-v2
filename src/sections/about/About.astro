@@ -54,14 +54,14 @@ import SocialLink from 'sections/about/SocialLink.astro';
 <style is:global>
 	#main-nav {
 		z-index: 10;
-		height: var(--bg-block-size);
+		height: var(--block-size);
 		padding-top: 0;
 		padding-bottom: 0;
 	}
 	#about,
 	#main-nav {
-		/* width: calc(32 * var(--bg-block-size)); */
-		max-width: calc(32 * var(--bg-block-size));
+		/* width: calc(32 * var(--block-size)); */
+		max-width: calc(32 * var(--block-size));
 	}
 </style>
 <style>
@@ -83,13 +83,13 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		--left-row-links: 14;
 		--left-row-links-span: 1;
 
-		width: calc(var(--left-col-span) * var(--bg-block-size));
-		margin-left: calc(4 * var(--bg-block-size));
+		width: calc(var(--left-col-span) * var(--block-size));
+		margin-left: calc(4 * var(--block-size));
 		position: fixed;
 		top: 0;
 		display: grid;
-		grid-template-columns: repeat(var(--left-col-span), var(--bg-block-size));
-		grid-auto-rows: var(--bg-block-size);
+		grid-template-columns: repeat(var(--left-col-span), var(--block-size));
+		grid-auto-rows: var(--block-size);
 
 		h1,
 		h2 {
@@ -146,8 +146,8 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		grid-column: 1 / -1;
 		grid-row: var(--left-row-links) / span var(--left-row-links-span);
 		display: grid;
-		grid-template-columns: repeat(var(--left-col-span), var(--bg-block-size));
-		grid-template-rows: var(--bg-block-size);
+		grid-template-columns: repeat(var(--left-col-span), var(--block-size));
+		grid-template-rows: var(--block-size);
 		align-items: center;
 	}
 
@@ -174,11 +174,12 @@ import SocialLink from 'sections/about/SocialLink.astro';
 
 		position: absolute;
 		top: 0;
-		left: calc(var(--right-col-start) * var(--bg-block-size));
-		width: calc(var(--right-col-span) * var(--bg-block-size));
+		left: calc(var(--right-col-start) * var(--block-size));
+		width: calc(var(--right-col-span) * var(--block-size));
 		display: grid;
-		grid-template-columns: repeat(var(--right-col-span), var(--bg-block-size));
-		grid-auto-rows: var(--bg-block-size);
+		grid-template-columns: repeat(var(--right-col-span), var(--block-size));
+		grid-auto-rows: var(--block-size);
+		padding-bottom: 8rem;
 		/* background: rgb(111, 32, 3); */
 		/* border: 5px solid red; */
 
@@ -192,7 +193,7 @@ import SocialLink from 'sections/about/SocialLink.astro';
 			/* background: green; */
 			grid-column: 1 / -1;
 			grid-row: var(--right-row-about) / span 1;
-			height: var(--bg-block-size);
+			height: var(--block-size);
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -202,7 +203,7 @@ import SocialLink from 'sections/about/SocialLink.astro';
 			/* background: red; */
 			grid-column: 1 / -1;
 			grid-row: var(--right-row-blurbs) / span var(--right-row-blurbs-span);
-			height: calc(var(--right-row-blurbs-span) * var(--bg-block-size));
+			height: calc(var(--right-row-blurbs-span) * var(--block-size));
 			.blurb {
 				font-size: 16px;
 				border-radius: 0.5rem;
