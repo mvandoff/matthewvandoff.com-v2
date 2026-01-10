@@ -18,6 +18,8 @@
  *   distortion cells line up with the background block grid.
  */
 
+const SCROLL_DISTORTION_SENSITIVITY = 3;
+
 export function initAboutScrollDistortion(params: {
 	meDistortEl: HTMLElement | null;
 	turbulenceEl: SVGFETurbulenceElement | null;
@@ -87,7 +89,7 @@ export function initAboutScrollDistortion(params: {
 		if (idleMs > 80) velocityPxPerMs *= 0.85;
 
 		const speed = Math.abs(velocityPxPerMs); // px/ms
-		const intensity01 = Math.min(1, speed / 1.5); // ~1500px/s maps to 1.0
+		const intensity01 = Math.min(1, (speed * SCROLL_DISTORTION_SENSITIVITY) / 1.5); // ~1500px/s maps to 1.0
 
 		// Avoid rapid direction flipping around 0 velocity (reads as "shaking").
 		// Only update direction once the scroll is meaningfully moving.
