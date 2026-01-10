@@ -5,7 +5,6 @@ import {
 	type PointerEventNames,
 	type WaveTimings,
 } from './timelineWave';
-import { markAboutLayoutReadyAfterPaint } from 'scripts/global/aboutLayoutReady';
 import { initAboutScrollDistortion } from './aboutScrollDistortion';
 
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
@@ -14,36 +13,26 @@ type BlockState = { holdTimeoutId: number | null; activatedAt: number };
 export function initAbout() {
 	/**
 	 * About background blocks:
-	 * - The About page creates a fixed “block grid” overlay used for the mouse trail effect.
-	 * - It also snaps key layout elements to that same grid so the design aligns to block edges.
-	 *
-	 * Important interaction with the global Transition:
-	 * - The Transition overlay starts fully covering the screen on page load, then animates away.
-	 * - The About grid + snapping work can cause layout shift while it runs.
-	 * - To keep that shift from being visible, the Transition waits to start revealing the About
-	 *   page until this script signals that layout is ready (see `markAboutLayoutReadyAfterPaint`).
+	 * - The About page creates a block grid overlay used for the mouse trail effect.
+	 * - The grid is sized to the About section instead of the full document.
 	 */
 	const blockContainerEl = document.getElementById('bg-blocks');
 	if (!blockContainerEl) throw new Error('bg-blocks element not found');
 	// Capture non-null ref for use inside callbacks (TS won’t narrow captured variables).
 	const blockContainer = blockContainerEl;
-	const aboutLeftEl = document.querySelector<HTMLElement>('#about .left');
-	const aboutRightEl = document.querySelector<HTMLElement>('#about .right');
+	const aboutSectionEl = document.querySelector<HTMLElement>('#about');
+	if (!aboutSectionEl) throw new Error('#about element not found');
+	const aboutSection = aboutSectionEl;
 	const aboutMeDistortEl = document.querySelector<HTMLElement>('#about [data-scroll-distort="me"]');
 	const aboutScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#about-scroll-turbulence');
 	const aboutScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#about-scroll-displacement');
-	const timelineHeadingEl = document.querySelector<HTMLElement>('#tl > h3');
-	const timelineFirstBlockEl = document.querySelector<HTMLElement>('#tl .tl-block');
 	const timelineBlocks = Array.from(document.querySelectorAll<HTMLElement>('#tl .tl-block'));
-	const mainNavEl = document.querySelector<HTMLElement>('#main-nav');
-	const mobileNavEl = document.querySelector<HTMLElement>('#mobile-nav');
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
 	let rows = 0;
 	let blockSizePx = 70;
-	let navRowHeightPx = blockSizePx;
 	const defaultTimings: BlockTimings = { fadeInMs: 150, fadeOutMs: 3000, holdMs: 3000 };
 	let timings = defaultTimings;
 	const blockStates = new Map<HTMLDivElement, BlockState>();
@@ -63,61 +52,42 @@ export function initAbout() {
 		getWaveTimings: () => waveTimings,
 	});
 
-	function updateNavRowHeight() {
-		const mainNavHeight = mainNavEl?.offsetHeight ?? 0;
-		const mobileNavHeight = mobileNavEl?.offsetHeight ?? 0;
-		const measuredHeight = Math.max(mainNavHeight, mobileNavHeight);
-		navRowHeightPx = measuredHeight > 0 ? measuredHeight : blockSizePx;
-	}
-
 	function rebuildGrid() {
 		/**
 		 * Rebuild responsibilities:
 		 * - Re-read CSS custom properties (block sizing + animation timings).
-		 * - Calculate grid columns/rows from current document dimensions.
+		 * - Calculate grid columns/rows from the About section dimensions.
 		 * - Replace all block elements (mouse trail + wave propagation targets).
-		 * - Snap layout elements to the nearest grid line.
 		 */
 		clearAllBlockTimers(blockStates);
 		timelineWave.clearAllTimers();
-			timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
-			waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
-			blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
-			updateNavRowHeight();
+		timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
+		waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
+		blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
 
-		const targetWidth = Math.max(document.documentElement.clientWidth, document.body?.clientWidth ?? 0);
-		const targetHeight = Math.max(
-			document.documentElement.scrollHeight,
-			document.body?.scrollHeight ?? 0,
-			document.documentElement.clientHeight,
-		);
+		const aboutRect = aboutSection.getBoundingClientRect();
+		const targetWidth = Math.max(aboutSection.scrollWidth, aboutSection.clientWidth, aboutRect.width);
+		const targetHeight = Math.max(aboutSection.scrollHeight, aboutSection.clientHeight, aboutRect.height);
 		columns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
 		rows = Math.max(1, Math.ceil(targetHeight / blockSizePx));
 
-			blockContainer.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
-			blockContainer.style.gridTemplateRows = `repeat(${rows}, ${blockSizePx}px)`;
+		blockContainer.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
+		blockContainer.style.gridTemplateRows = `repeat(${rows}, ${blockSizePx}px)`;
+		blockContainer.style.width = `${Math.round(targetWidth)}px`;
+		blockContainer.style.height = `${Math.round(targetHeight)}px`;
+
+		if (!aboutSection.contains(blockContainer)) {
+			const top = aboutRect.top + window.scrollY;
+			const left = aboutRect.left + window.scrollX;
+			blockContainer.style.top = `${Math.round(top)}px`;
+			blockContainer.style.left = `${Math.round(left)}px`;
+		}
 
 		// Calculate the total number of blocks needed
 		const totalBlocks = columns * rows;
 
-			blocks = createBlocks(totalBlocks);
-			blockContainer.replaceChildren(...blocks);
-
-		if (aboutLeftEl) {
-			snapElementLeftToGrid({ gridSizePx: blockSizePx, element: aboutLeftEl });
-		}
-		if (aboutRightEl) {
-			snapElementRightToGrid({ gridSizePx: blockSizePx, element: aboutRightEl });
-		}
-		if (timelineHeadingEl && timelineFirstBlockEl) {
-			snapTimelineHeadingToGrid({
-				gridSizePx: blockSizePx,
-				heading: timelineHeadingEl,
-				block: timelineFirstBlockEl,
-			});
-		} else if (timelineFirstBlockEl) {
-			snapElementTopToGrid({ gridSizePx: blockSizePx, element: timelineFirstBlockEl });
-		}
+		blocks = createBlocks(totalBlocks);
+		blockContainer.replaceChildren(...blocks);
 	}
 
 	/**
@@ -126,12 +96,6 @@ export function initAbout() {
 	 * - The Transition overlay is still covering the page at this moment, which is what we want.
 	 */
 	rebuildGrid();
-
-	/**
-	 * Signal “layout ready” only after the snapped layout has been painted at least once.
-	 * This ensures the transition reveal won't expose intermediate layout shifts.
-	 */
-	markAboutLayoutReadyAfterPaint();
 
 	// Scroll-driven image distortion (SVG filter + CSS blur) for the headshot.
 	initAboutScrollDistortion({
@@ -157,14 +121,14 @@ export function initAbout() {
 		if (raf) return;
 		raf = requestAnimationFrame(() => {
 			raf = 0;
-				const coords = getBlockCoordsFromClient({
-					clientX: pendingClientX,
-					clientY: pendingClientY,
-					containerRect: blockContainer.getBoundingClientRect(),
-					blockSizePx,
-					columns,
-					rows,
-				});
+			const coords = getBlockCoordsFromClient({
+				clientX: pendingClientX,
+				clientY: pendingClientY,
+				containerRect: blockContainer.getBoundingClientRect(),
+				blockSizePx,
+				columns,
+				rows,
+			});
 			if (!coords) {
 				if (lastIndex !== null) lastIndex = null;
 				return;
@@ -178,10 +142,8 @@ export function initAbout() {
 	}
 
 	function handlePointerMove(e: PointerEvent | MouseEvent) {
-		// Don't trigger the About block trail while interacting with the fixed nav.
-		// Block the entire nav row so trails don't appear in the nav gutters.
 		const targetEl = e.target instanceof Element ? e.target : null;
-		if (e.clientY <= navRowHeightPx || targetEl?.closest('#main-nav, #mobile-nav')) {
+		if (!targetEl || !aboutSection.contains(targetEl)) {
 			lastIndex = null;
 			return;
 		}
@@ -196,7 +158,7 @@ export function initAbout() {
 	window.addEventListener('resize', () => {
 		/**
 		 * Resize handling:
-		 * - Rebuilds the grid and re-snaps content.
+		 * - Rebuilds the grid for the new size.
 		 * - Throttled via rAF to avoid doing work on every resize event tick.
 		 */
 		if (resizeRaf) return;
@@ -338,72 +300,4 @@ function getGridBoundsForElement(params: {
 
 function clamp(value: number, min: number, max: number) {
 	return Math.min(max, Math.max(min, value));
-}
-
-function snapElementLeftToGrid(params: { gridSizePx: number; element: HTMLElement }) {
-	const { gridSizePx, element } = params;
-	if (!Number.isFinite(gridSizePx) || gridSizePx <= 0) return;
-
-	const elementLeft = element.getBoundingClientRect().left;
-	const currentMarginLeftPx = parsePx(window.getComputedStyle(element).marginLeft, 0);
-
-	const snappedElementLeft = Math.round(elementLeft / gridSizePx) * gridSizePx;
-	const snappedMarginLeft = currentMarginLeftPx + (snappedElementLeft - elementLeft);
-	element.style.setProperty('--about-left-start', `${Math.round(snappedMarginLeft)}px`);
-}
-
-function snapElementRightToGrid(params: { gridSizePx: number; element: HTMLElement }) {
-	const { gridSizePx, element } = params;
-	if (!Number.isFinite(gridSizePx) || gridSizePx <= 0) return;
-
-	const elementLeft = element.getBoundingClientRect().left;
-	const computedStyle = window.getComputedStyle(element);
-	const currentStartOffsetPx = parsePx(computedStyle.getPropertyValue('--about-right-start'), 0);
-
-	const snappedElementLeft = Math.round(elementLeft / gridSizePx) * gridSizePx;
-	const snappedStartOffset = currentStartOffsetPx + (snappedElementLeft - elementLeft);
-	element.style.setProperty('--about-right-start', `${Math.round(snappedStartOffset)}px`);
-}
-
-function snapElementTopToGrid(params: { gridSizePx: number; element: HTMLElement }) {
-	const { gridSizePx, element } = params;
-	if (!Number.isFinite(gridSizePx) || gridSizePx <= 0) return;
-
-	const elementTop = element.getBoundingClientRect().top + window.scrollY;
-	const currentMarginTopPx = parsePx(window.getComputedStyle(element).marginTop, 0);
-
-	const snappedElementTop = Math.ceil(elementTop / gridSizePx) * gridSizePx;
-	const snappedMarginTop = currentMarginTopPx + (snappedElementTop - elementTop);
-	element.style.marginTop = `${Math.round(snappedMarginTop)}px`;
-}
-
-function snapTimelineHeadingToGrid(params: { gridSizePx: number; heading: HTMLElement; block: HTMLElement }) {
-	const { gridSizePx, heading, block } = params;
-	if (!Number.isFinite(gridSizePx) || gridSizePx <= 0) return;
-
-	const headingRect = heading.getBoundingClientRect();
-	const blockRect = block.getBoundingClientRect();
-	const headingMarginTopPx = parsePx(window.getComputedStyle(heading).marginTop, 0);
-	const blockMarginTopPx = parsePx(window.getComputedStyle(block).marginTop, 0);
-
-	const headingTop = headingRect.top + window.scrollY;
-	const blockTop = blockRect.top + window.scrollY;
-	const desiredBlockTop = Math.ceil(blockTop / gridSizePx) * gridSizePx;
-	const headingRowTop = desiredBlockTop - gridSizePx;
-	const desiredHeadingTop = headingRowTop + (gridSizePx - headingRect.height) / 2;
-
-	const headingDelta = desiredHeadingTop - headingTop;
-	const blockDelta = desiredBlockTop - blockTop - headingDelta;
-
-	heading.style.marginTop = `${Math.round(headingMarginTopPx + headingDelta)}px`;
-	block.style.marginTop = `${Math.round(blockMarginTopPx + blockDelta)}px`;
-}
-
-function parsePx(value: string, fallbackPx: number): number {
-	const trimmed = value.trim();
-	if (!trimmed) return fallbackPx;
-	const match = trimmed.match(/^(-?\d*\.?\d+)px$/);
-	if (!match) return fallbackPx;
-	const raw = Number(match[1]);
-	return Number.isFinite(raw) ? raw : fallbackPx;
 }

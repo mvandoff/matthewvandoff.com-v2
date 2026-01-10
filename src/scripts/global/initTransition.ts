@@ -1,7 +1,5 @@
 import gsap from 'gsap';
 
-import { waitForAboutLayoutReady } from './aboutLayoutReady';
-
 function adjustGrid() {
 	const transition = document.getElementById('transition');
 	if (!transition) return console.warn('Transition element not found');
@@ -54,14 +52,9 @@ function getBlockSizePxFromCss(transition: HTMLElement, fallbackPx: number): num
  *    - Intercept same-origin links.
  *    - Animate blocks in (autoAlpha -> 1) to cover the screen.
  *    - Only once the screen is covered do we navigate to the destination URL.
- *
- * Special case (About page):
- * - About runs DOM-driven layout snapping on load (`initAbout()`), which can cause layout shift.
- * - To prevent that shift from being visible, we delay the page-load “reveal” animation on the
- *   About route until the About script signals that layout is ready.
  */
 
-export async function initTransition() {
+export function initTransition() {
 	/**
 	 * The transition overlay is a CSS grid whose row count depends on viewport dimensions.
 	 * We build the grid dynamically to ensure full coverage across responsive breakpoints.
@@ -70,7 +63,7 @@ export async function initTransition() {
 
 	/**
 	 * Page-load reveal timeline.
-	 * We build the timeline first, but keep it paused until any required “readiness” gates resolve.
+	 * Build the timeline first, then play it to reveal the page.
 	 */
 	const pageLoadTimeline = gsap.timeline({
 		paused: true,
@@ -84,12 +77,6 @@ export async function initTransition() {
 			ease: 'linear',
 		},
 	});
-
-	/**
-	 * Gate the reveal on About's layout being settled.
-	 * On non-About routes this returns immediately.
-	 */
-	await waitForAboutLayoutReady({ timeoutMs: 3000 });
 
 	// Animate blocks out on page load
 	pageLoadTimeline.to(
