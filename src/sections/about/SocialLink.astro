@@ -23,7 +23,7 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 
 <style>
 	.social-link {
-		/* border: 1px solid red; */
+		/* border: 1px solid var(--bg-block-grid-line-color); */
 		width: calc(3 * var(--bg-block-size));
 		height: var(--bg-block-size);
 		display: flex;
@@ -31,35 +31,31 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		color: var(--slate-400);
 		transition: color 0.25s ease;
 	}
-
 	.social-link-icon-container {
 		height: 100%;
 		flex-basis: var(--bg-block-size);
 		display: flex;
 		justify-content: center;
 		align-items: center;
-	}
 
+		svg {
+			height: 3rem;
+			width: 3rem;
+			color: currentColor;
+			transition: color 0.25s ease;
+			flex-shrink: 0;
+		}
+	}
 	.social-link-text-container {
-		flex: 1;
-		height: 100%;
 		display: flex;
 		align-items: center;
-		padding-left: 1rem;
-	}
+		padding-left: 0.5rem;
 
-	.social-link svg {
-		height: 3rem;
-		width: 3rem;
-		color: currentColor;
-		transition: color 0.25s ease;
-		flex-shrink: 0;
-	}
-
-	.social-label {
-		font-family: 'Inter', sans-serif;
-		font-size: 14px;
-		letter-spacing: 0.15rem;
-		text-transform: lowercase;
+		.social-label {
+			font-family: 'Inter', sans-serif;
+			font-size: 16px;
+			letter-spacing: 0.15rem;
+			/* text-transform: lowercase; */
+		}
 	}
 </style>
