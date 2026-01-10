@@ -45,25 +45,34 @@ import AboutImage from 'sections/about/AboutImage.astro';
 	<AboutSvgFilters />
 </section>
 
+<style is:global>
+	#main-nav {
+		z-index: 10;
+		height: var(--bg-block-size);
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+	#about,
+	#main-nav {
+		/* width: calc(32 * var(--bg-block-size)); */
+		max-width: calc(32 * var(--bg-block-size));
+	}
+</style>
 <style>
 	#about {
 		margin: 0 auto;
 		padding: 0;
-		width: calc(32 * var(--bg-block-size));
-		max-width: none;
 		justify-content: space-between;
 		height: auto;
 		min-height: 100vh;
-		/* border: 2px solid red; */
+		border: 2px solid red;
 	}
 	.left,
 	.right {
 		padding: 8rem 0;
 	}
 	.left {
-		--about-left-width: calc(8 * var(--bg-block-size));
-
-		width: var(--about-left-width);
+		width: calc(8 * var(--bg-block-size));
 		margin-left: calc(4 * var(--bg-block-size));
 		height: calc(16 * var(--bg-block-size));
 		/* background: var(--main-900); */
@@ -95,7 +104,7 @@ import AboutImage from 'sections/about/AboutImage.astro';
 		}
 	}
 	.right {
-		margin-left: calc(14 * var(--bg-block-size));
+		margin-left: calc(15 * var(--bg-block-size));
 		/* background: rgb(111, 32, 3); */
 		width: calc(12 * var(--bg-block-size));
 		height: 100vh;
@@ -148,14 +157,7 @@ import AboutImage from 'sections/about/AboutImage.astro';
 	@media screen and (max-width: 767px) {
 	}
 </style>
-<style is:global>
-	#main-nav {
-		z-index: 10;
-		height: var(--bg-block-size);
-		padding-top: 0;
-		padding-bottom: 0;
-	}
-</style>
+
 <script>
 	import { initAbout } from 'sections/about/scripts/initAbout';
 
