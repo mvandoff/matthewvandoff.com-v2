@@ -65,11 +65,12 @@
 	--btsm-accent-600: hsl(192, 35%, 37%);
 	--btsm-accent-700: hsl(192 37% 23% / 1);
 
-	--scrollbar-thumb: #ff6fb5; /* base pink */
-	--scrollbar-thumb-2: #ff4fa3; /* deeper pink for gradient */
-	--scrollbar-thumb-hover: #ff8fc9;
-	--scrollbar-track: rgba(255, 255, 255, 0.08);
+	--scrollbar-thumb: var(--main-500);
+	--scrollbar-thumb-2: var(--main-700);
+	--scrollbar-thumb-hover: var(--main-300);
+	--scrollbar-track: rgba(99, 102, 241, 0.18);
 	--scrollbar-size: 10px;
+	--scrollbar-block-size: 6px;
 
 	--block-cols: 26;
 
