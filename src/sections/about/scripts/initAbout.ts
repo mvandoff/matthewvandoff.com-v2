@@ -26,6 +26,8 @@ export function initAbout() {
 	const aboutSectionEl = document.querySelector<HTMLElement>('#about');
 	if (!aboutSectionEl) throw new Error('#about element not found');
 	const aboutSection = aboutSectionEl;
+	const aboutContentEl = aboutSectionEl.querySelector<HTMLElement>('.about-content');
+	const aboutContent = aboutContentEl ?? aboutSection;
 	const mainNav = document.querySelector<HTMLElement>('#main-nav')!;
 	const aboutMeDistortEl = document.querySelector<HTMLElement>('#about [data-scroll-distort="me"]');
 	const aboutScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#about-scroll-turbulence');
@@ -79,7 +81,8 @@ export function initAbout() {
 		blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
 
 		const aboutRect = aboutSection.getBoundingClientRect();
-		const targetWidth = Math.max(aboutSection.scrollWidth, aboutSection.clientWidth, aboutRect.width);
+		const contentRect = aboutContent.getBoundingClientRect();
+		const targetWidth = Math.max(aboutContent.scrollWidth, aboutContent.clientWidth, contentRect.width);
 		const targetHeight = Math.max(aboutSection.scrollHeight, aboutSection.clientHeight, aboutRect.height);
 		const baseColumns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
 		rows = Math.max(1, Math.ceil(targetHeight / blockSizePx));
@@ -89,21 +92,20 @@ export function initAbout() {
 
 		let extraColumns = 0;
 		let widthPx = baseWidthPx;
-		let leftPx = aboutRect.left;
+		let leftPx = contentRect.left;
 		const viewportWidth = document.documentElement.clientWidth;
-		const spaceLeft = aboutRect.left;
-		const spaceRight = viewportWidth - aboutRect.right;
+		const spaceLeft = contentRect.left;
+		const spaceRight = viewportWidth - contentRect.right;
 
-		const canExtendIntoGutters = !aboutSection.contains(blockContainer);
 		// When the About section hits its max width, it is centered and leaves extra room on both sides.
 		// Add full block columns to each side (same count) so the grid expands outward while the About
 		// content stays aligned to grid lines. Any leftover pixels become equal gaps at the edges.
-		if (canExtendIntoGutters && spaceLeft > 0 && spaceRight > 0) {
+		if (spaceLeft > 0 && spaceRight > 0) {
 			const extraColumnsPerSide = Math.floor(Math.min(spaceLeft, spaceRight) / blockSizePx);
 			if (extraColumnsPerSide > 0) {
 				extraColumns = extraColumnsPerSide;
 				widthPx = baseWidthPx + extraColumns * blockSizePx * 2;
-				leftPx = aboutRect.left - extraColumns * blockSizePx;
+				leftPx = contentRect.left - extraColumns * blockSizePx;
 			}
 		}
 
@@ -114,12 +116,9 @@ export function initAbout() {
 		blockContainer.style.width = `${widthPx}px`;
 		blockContainer.style.height = `${heightPx}px`;
 
-		if (!aboutSection.contains(blockContainer)) {
-			const top = aboutRect.top + window.scrollY;
-			const left = leftPx + window.scrollX;
-			blockContainer.style.top = `${Math.round(top)}px`;
-			blockContainer.style.left = `${Math.round(left)}px`;
-		}
+		const leftOffset = leftPx - aboutRect.left;
+		blockContainer.style.top = '0px';
+		blockContainer.style.left = `${Math.round(leftOffset)}px`;
 
 		// Calculate the total number of blocks needed
 		const totalBlocks = columns * rows;

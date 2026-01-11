@@ -9,53 +9,55 @@ import SocialLink from 'sections/about/SocialLink.astro';
 
 <section id="about">
 	<div id="block-grid" aria-hidden="true"></div>
-	<div class="left-image-layer left-grid">
-		<div class="left-image">
-			<AboutImage />
+	<div class="about-content">
+		<div class="left-image-layer left-grid">
+			<div class="left-image">
+				<AboutImage />
+			</div>
 		</div>
-	</div>
-	<div class="left left-grid">
-		<div class="left-intro">
-			<h1>matthew van doff</h1>
-			<h2>software developer</h2>
-			<p id="headline">Proin quis sem lacus. Vivamus non lorem nulla. Nam vel molestie est.</p>
+		<div class="left left-grid">
+			<div class="left-intro">
+				<h1>matthew van doff</h1>
+				<h2>software developer</h2>
+				<p id="headline">Proin quis sem lacus. Vivamus non lorem nulla. Nam vel molestie est.</p>
+			</div>
+
+			<div class="left-links links">
+				<SocialLink
+					href="https://www.linkedin.com/in/matthew-vandoff/"
+					icon="fa7-brands:linkedin"
+					label="LinkedIn"
+					brand="linkedin"
+				/>
+				<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
+			</div>
+		</div>
+		<div class="right">
+			<div class="about-h3-container">
+				<h3 class="about">about</h3>
+			</div>
+			<div class="blurbs">
+				<p class="blurb">
+					Hey what's up? I'm a human software developer, one of the last of my kind. I'm based in the Raleigh-Durham area
+					in North Carolina, USA and have been developing professionally for well over 4 years. I like working with all
+					kinds of software, but I specialize in full stack web development.
+				</p>
+				<p class="blurb">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit fringilla lacus id sagittis. Duis
+					aliquam, odio vel fermentum iaculis, metus ligula ultricies risus, et sodales metus augue eget nibh. Donec
+					dapibus at est ac auctor. Phasellus rutrum scelerisque luctus. Orci varius natoque penatibus et magnis dis
+					parturient montes, nascetur ridiculus mus. Cras eu risus eu eros sagittis feugiat a eget metus. Praesent neque
+					ex, efficitur at libero aliquet, interdum venenatis nisi.
+				</p>
+			</div>
+
+			<div class="timeline-slot">
+				<Timeline />
+			</div>
 		</div>
 
-		<div class="left-links links">
-			<SocialLink
-				href="https://www.linkedin.com/in/matthew-vandoff/"
-				icon="fa7-brands:linkedin"
-				label="LinkedIn"
-				brand="linkedin"
-			/>
-			<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
-		</div>
+		<AboutSvgFilters />
 	</div>
-	<div class="right">
-		<div class="about-h3-container">
-			<h3 class="about">about</h3>
-		</div>
-		<div class="blurbs">
-			<p class="blurb">
-				Hey what's up? I'm a human software developer, one of the last of my kind. I'm based in the Raleigh-Durham area
-				in North Carolina, USA and have been developing professionally for well over 4 years. I like working with all
-				kinds of software, but I specialize in full stack web development.
-			</p>
-			<p class="blurb">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit fringilla lacus id sagittis. Duis
-				aliquam, odio vel fermentum iaculis, metus ligula ultricies risus, et sodales metus augue eget nibh. Donec
-				dapibus at est ac auctor. Phasellus rutrum scelerisque luctus. Orci varius natoque penatibus et magnis dis
-				parturient montes, nascetur ridiculus mus. Cras eu risus eu eros sagittis feugiat a eget metus. Praesent neque
-				ex, efficitur at libero aliquet, interdum venenatis nisi.
-			</p>
-		</div>
-
-		<div class="timeline-slot">
-			<Timeline />
-		</div>
-	</div>
-
-	<AboutSvgFilters />
 </section>
 
 <style is:global>
@@ -68,7 +70,11 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		padding-top: 0;
 		padding-bottom: 0;
 	}
-	#about,
+	#about {
+		max-width: none;
+		width: 100%;
+	}
+	.about-content,
 	#main-nav {
 		/* width: calc(32 * var(--block-size)); */
 		max-width: calc(32 * var(--block-size));
@@ -92,6 +98,12 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		--left-row-links: 14;
 		--left-row-links-span: 1;
 		/* border: 2px solid red; */
+	}
+	.about-content {
+		position: relative;
+		margin: 0 auto;
+		width: 100%;
+		min-height: 100%;
 	}
 	.left-grid {
 		width: calc(var(--left-col-span) * var(--block-size));
