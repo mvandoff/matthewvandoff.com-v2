@@ -38,9 +38,9 @@ import SocialLink from 'sections/about/SocialLink.astro';
 			</div>
 			<div class="blurbs">
 				<p class="blurb">
-					Hey what's up? I'm a human software developer, one of the last of my kind. I'm based in the Raleigh-Durham area
-					in North Carolina, USA and have been developing professionally for well over 4 years. I like working with all
-					kinds of software, but I specialize in full stack web development.
+					Hey what's up? I'm a human software developer, one of the last of my kind. I'm based in the Raleigh-Durham
+					area in North Carolina, USA and have been developing professionally for well over 4 years. I like working with
+					all kinds of software, but I specialize in full stack web development.
 				</p>
 				<p class="blurb">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit fringilla lacus id sagittis. Duis
@@ -91,6 +91,13 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		height: auto;
 		min-height: 100vh;
 		--left-col-span: 7;
+		--right-col-span: 10;
+		--content-gap: 3;
+		--edge-gap: 1;
+		--layout-width: calc(
+			(var(--left-col-span) + var(--right-col-span) + var(--content-gap) + (var(--edge-gap) * 2)) * var(--block-size)
+		);
+		--layout-left: calc((100vw - var(--layout-width)) / 2);
 		--left-row-intro: 3;
 		--left-row-intro-span: 4;
 		--left-row-image: 6;
@@ -101,15 +108,16 @@ import SocialLink from 'sections/about/SocialLink.astro';
 	}
 	.about-content {
 		position: relative;
-		margin: 0 auto;
-		width: 100%;
+		margin: 0;
+		margin-left: var(--layout-left);
+		width: var(--layout-width);
 		min-height: 100%;
 	}
 	.left-grid {
 		width: calc(var(--left-col-span) * var(--block-size));
-		margin-left: calc(4 * var(--block-size));
 		position: fixed;
 		top: 0;
+		left: calc(var(--layout-left) + (var(--edge-gap) * var(--block-size)));
 		display: grid;
 		grid-template-columns: repeat(var(--left-col-span), var(--block-size));
 		grid-auto-rows: var(--block-size);
@@ -192,8 +200,7 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		margin-left: calc(var(--block-size) / 4);
 	}
 	.right {
-		--right-col-start: 14;
-		--right-col-span: 11;
+		--right-col-start: calc(var(--left-col-span) + var(--content-gap) + var(--edge-gap));
 		--right-row-about: 2;
 		--right-row-blurbs: 3;
 		--right-row-blurbs-span: 5;
@@ -208,6 +215,7 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		grid-template-columns: repeat(var(--right-col-span), var(--block-size));
 		grid-auto-rows: var(--block-size);
 		padding-bottom: 8rem;
+		padding-right: var(--block-size);
 		/* background: rgb(111, 32, 3); */
 		/* border: 5px solid red; */
 
@@ -249,6 +257,16 @@ import SocialLink from 'sections/about/SocialLink.astro';
 	@media screen and (max-width: 1740px) {
 		#about {
 			/* padding-top: 2rem; */
+		}
+	}
+	@media screen and (max-width: 1408px) {
+		#about {
+			--content-gap: 2;
+		}
+	}
+	@media screen and (max-width: 1344px) {
+		#about {
+			--content-gap: 1;
 		}
 	}
 	@media screen and (max-width: 1023px) {
