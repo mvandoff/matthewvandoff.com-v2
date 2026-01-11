@@ -94,10 +94,11 @@ export function initAbout() {
 		const spaceLeft = aboutRect.left;
 		const spaceRight = viewportWidth - aboutRect.right;
 
+		const canExtendIntoGutters = !aboutSection.contains(blockContainer);
 		// When the About section hits its max width, it is centered and leaves extra room on both sides.
 		// Add full block columns to each side (same count) so the grid expands outward while the About
 		// content stays aligned to grid lines. Any leftover pixels become equal gaps at the edges.
-		if (spaceLeft > 0 && spaceRight > 0) {
+		if (canExtendIntoGutters && spaceLeft > 0 && spaceRight > 0) {
 			const extraColumnsPerSide = Math.floor(Math.min(spaceLeft, spaceRight) / blockSizePx);
 			if (extraColumnsPerSide > 0) {
 				extraColumns = extraColumnsPerSide;

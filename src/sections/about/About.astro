@@ -8,6 +8,7 @@ import SocialLink from 'sections/about/SocialLink.astro';
 ---
 
 <section id="about">
+	<div id="block-grid" aria-hidden="true"></div>
 	<div class="left-image-layer left-grid">
 		<div class="left-image">
 			<AboutImage />
@@ -58,6 +59,9 @@ import SocialLink from 'sections/about/SocialLink.astro';
 </section>
 
 <style is:global>
+	html {
+		overflow: hidden;
+	}
 	#main-nav {
 		z-index: 10;
 		height: var(--block-size);
@@ -72,6 +76,8 @@ import SocialLink from 'sections/about/SocialLink.astro';
 </style>
 <style>
 	#about {
+		margin-top: var(--block-size) !important;
+		overflow: auto;
 		position: relative;
 		margin: 0 auto;
 		padding: 0;
@@ -176,10 +182,10 @@ import SocialLink from 'sections/about/SocialLink.astro';
 	.right {
 		--right-col-start: 14;
 		--right-col-span: 11;
-		--right-row-about: 3;
-		--right-row-blurbs: 4;
+		--right-row-about: 2;
+		--right-row-blurbs: 3;
 		--right-row-blurbs-span: 5;
-		--right-row-timeline: 9;
+		--right-row-timeline: 8;
 		--right-row-timeline-span: 10;
 
 		position: absolute;
