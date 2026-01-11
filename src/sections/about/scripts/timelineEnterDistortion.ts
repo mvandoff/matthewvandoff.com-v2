@@ -5,6 +5,7 @@ type TimelineEnterDistortionState = {
 	turbulenceEl: SVGFETurbulenceElement;
 	displacementEl: SVGFEDisplacementMapElement;
 	originalInlineFilter: string;
+	lastSeed: number;
 };
 
 export function initTimelineEnterDistortion(params: {
@@ -55,10 +56,12 @@ export function initTimelineEnterDistortion(params: {
 		const displacementEl = filter.querySelector('feDisplacementMap') as SVGFEDisplacementMapElement | null;
 		if (!turbulenceEl || !displacementEl) return null;
 
+		const seed = getRandomSeed();
+		turbulenceEl.setAttribute('seed', String(seed));
 		displacementEl.setAttribute('scale', '0');
 		defs.appendChild(filter);
 
-		return { filterId: filter.id, turbulenceEl, displacementEl };
+		return { filterId: filter.id, turbulenceEl, displacementEl, seed };
 	}
 
 	function setBaseFrequency(params: { turbulenceEl: SVGFETurbulenceElement; blockSizePx: number; intensity01: number }) {
@@ -70,6 +73,19 @@ export function initTimelineEnterDistortion(params: {
 		const baseFreqX = quantize(freq, step);
 		const baseFreqY = quantize(freq * 1.8, step);
 		turbulenceEl.setAttribute('baseFrequency', `${baseFreqX.toFixed(4)} ${baseFreqY.toFixed(4)}`);
+	}
+
+	function getRandomSeed() {
+		return Math.floor(Math.random() * 9999) + 1;
+	}
+
+	function randomizeTurbulenceSeed(state: TimelineEnterDistortionState) {
+		let nextSeed = getRandomSeed();
+		if (nextSeed === state.lastSeed) {
+			nextSeed = (nextSeed % 9999) + 1;
+		}
+		state.lastSeed = nextSeed;
+		state.turbulenceEl.setAttribute('seed', String(nextSeed));
 	}
 
 	function startDistortion(target: HTMLElement) {
@@ -84,6 +100,7 @@ export function initTimelineEnterDistortion(params: {
 				turbulenceEl: instance.turbulenceEl,
 				displacementEl: instance.displacementEl,
 				originalInlineFilter: '',
+				lastSeed: instance.seed,
 			};
 				states.set(target, state);
 			}
@@ -98,6 +115,7 @@ export function initTimelineEnterDistortion(params: {
 			target.classList.add('is-distorting');
 			activeState.originalInlineFilter = target.style.filter;
 			target.style.filter = `url(#${activeState.filterId})`;
+			randomizeTurbulenceSeed(activeState);
 
 			const oscillations = 2.5;
 			const blockSizePx = getBlockSizePx();

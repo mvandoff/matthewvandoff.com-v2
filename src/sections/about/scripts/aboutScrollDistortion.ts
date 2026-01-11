@@ -42,6 +42,19 @@ export function initAboutScrollDistortion(params: {
 	let lastFrameTs = performance.now();
 	let lastScrollTs = lastFrameTs;
 	let lastDirection: 1 | -1 = 1;
+	let lastSeed = Number.parseInt(turbulence.getAttribute('seed') ?? '', 10);
+
+	function randomizeTurbulenceSeed() {
+		const maxSeed = 9999;
+		let nextSeed = Math.floor(Math.random() * maxSeed) + 1;
+		if (Number.isFinite(lastSeed) && maxSeed > 1) {
+			while (nextSeed === lastSeed) {
+				nextSeed = Math.floor(Math.random() * maxSeed) + 1;
+			}
+		}
+		lastSeed = nextSeed;
+		turbulence.setAttribute('seed', String(nextSeed));
+	}
 
 	function quantize(value: number, step: number) {
 		if (!Number.isFinite(value) || !Number.isFinite(step) || step <= 0) return value;
@@ -110,10 +123,12 @@ export function initAboutScrollDistortion(params: {
 		latestScrollY = window.scrollY;
 		lastScrollTs = performance.now();
 		if (ticking) return;
+		randomizeTurbulenceSeed();
 		ticking = true;
 		lastFrameTs = lastScrollTs;
 		requestAnimationFrame(update);
 	}
 
+	randomizeTurbulenceSeed();
 	window.addEventListener('scroll', handleScroll, { passive: true });
 }
