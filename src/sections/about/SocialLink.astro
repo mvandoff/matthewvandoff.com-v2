@@ -14,6 +14,7 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 
 <a class="social-link" href={href} target={target} rel={rel} aria-label={label} data-block-trail="ignore">
 	<div class="social-wave-grid" aria-hidden="true"></div>
+	<div class="social-trail-grid" aria-hidden="true"></div>
 	<div class="social-link-icon-container">
 		<Icon name={icon} />
 	</div>
@@ -64,6 +65,40 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		align-content: center;
 	}
 
+	.social-trail-grid {
+		--social-trail-fade-in: var(--bg-block-fade-in);
+		--social-trail-fade-out: var(--bg-block-fade-out);
+		--social-trail-hold: var(--bg-block-hold);
+		--social-trail-color: var(--bg-block-color);
+		--social-trail-radius: 9px;
+
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+		display: grid;
+		justify-content: center;
+		align-content: center;
+	}
+
+	.social-trail-grid :global(.social-trail-block) {
+		position: relative;
+	}
+
+	.social-trail-grid :global(.social-trail-block)::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		background-color: var(--social-trail-color);
+		transition: opacity var(--social-trail-fade-out) ease-out;
+	}
+
+	.social-trail-grid :global(.social-trail-block.is-lit)::after {
+		opacity: 1;
+		transition-duration: var(--social-trail-fade-in);
+	}
+
 	.social-wave-block {
 		/* NOTE: blocks are created dynamically in JS (no Astro scope attr),
 		   so their selectors must be global to style them. */
@@ -99,8 +134,8 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		box-sizing: border-box;
 		border-style: solid;
 		border-color: var(--social-wave-border-color);
-		border-width: var(--social-wave-border-top-width) var(--social-wave-border-right-width) var(--social-wave-border-bottom-width)
-			var(--social-wave-border-left-width);
+		border-width: var(--social-wave-border-top-width) var(--social-wave-border-right-width)
+			var(--social-wave-border-bottom-width) var(--social-wave-border-left-width);
 		transition: opacity var(--social-wave-fade-out) ease-out;
 	}
 
@@ -115,7 +150,7 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		justify-content: center;
 		align-items: center;
 		position: relative;
-		z-index: 1;
+		z-index: 2;
 
 		svg {
 			height: 3rem;
@@ -134,6 +169,6 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		letter-spacing: 0.15rem;
 		/* font-weight: 600; */
 		position: relative;
-		z-index: 1;
+		z-index: 2;
 	}
 </style>
