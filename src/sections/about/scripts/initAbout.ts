@@ -7,6 +7,7 @@ import {
 } from './timelineWave';
 import { initAboutScrollDistortion } from './aboutScrollDistortion';
 import { initDebugGridToggle } from './debugGridToggle';
+import { createSocialLinkWaveController } from './socialLinkWave';
 import { initTimelineEnterDistortion } from './timelineEnterDistortion';
 
 type BlockTimings = { fadeInMs: number; fadeOutMs: number; holdMs: number };
@@ -30,6 +31,7 @@ export function initAbout() {
 	const aboutScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#about-scroll-turbulence');
 	const aboutScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#about-scroll-displacement');
 	const timelineBlocks = Array.from(aboutSectionEl.querySelectorAll<HTMLElement>('.tl-block'));
+	const socialLinks = Array.from(aboutSectionEl.querySelectorAll<HTMLAnchorElement>('.social-link'));
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
 	let blocks: HTMLDivElement[] = [];
@@ -55,6 +57,12 @@ export function initAbout() {
 		getWaveTimings: () => waveTimings,
 	});
 
+	const socialLinkWave = createSocialLinkWaveController({
+		socialLinks,
+		getWaveTimings: () => waveTimings,
+		getSocialBlockSizePx: () => Math.max(8, Math.round(blockSizePx / 4)),
+	});
+
 	function rebuildGrid() {
 		/**
 		 * Rebuild responsibilities:
@@ -64,6 +72,7 @@ export function initAbout() {
 		 */
 		clearAllBlockTimers(blockStates);
 		timelineWave.clearAllTimers();
+		socialLinkWave.clearAllTimers();
 		timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
 		waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
 		blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
@@ -116,6 +125,8 @@ export function initAbout() {
 		blocks = createBlocks(totalBlocks);
 		const debugLabels = createDebugLabelOverlay({ columns, rows, blockSizePx, widthPx, heightPx });
 		blockContainer.replaceChildren(...blocks, debugLabels);
+
+		socialLinkWave.rebuildAll();
 	}
 
 	/**
@@ -125,6 +136,9 @@ export function initAbout() {
 	 */
 	initDebugGridToggle({ container: blockContainer });
 	rebuildGrid();
+	if (socialLinks.length > 0) {
+		socialLinkWave.bindHandlers(pointerEvents);
+	}
 
 	// Scroll-driven image distortion (SVG filter + CSS blur) for the headshot.
 	initAboutScrollDistortion({

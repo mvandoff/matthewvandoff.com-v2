@@ -87,6 +87,7 @@ import SocialLink from 'sections/about/SocialLink.astro';
 		margin-left: calc(4 * var(--block-size));
 		position: fixed;
 		top: 0;
+		z-index: 6;
 		display: grid;
 		grid-template-columns: repeat(var(--left-col-span), var(--block-size));
 		grid-auto-rows: var(--block-size);
@@ -107,6 +108,7 @@ import SocialLink from 'sections/about/SocialLink.astro';
 			text-align: left;
 			padding: 0;
 			user-select: auto;
+			margin-top: 4px;
 		}
 		#headline {
 			font-family: 'Inter', sans-serif;

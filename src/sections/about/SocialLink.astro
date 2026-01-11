@@ -13,6 +13,7 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 ---
 
 <a class="social-link" href={href} target={target} rel={rel} aria-label={label} data-block-trail="ignore">
+	<div class="social-wave-grid" aria-hidden="true"></div>
 	<div class="social-link-icon-container">
 		<Icon name={icon} />
 	</div>
@@ -29,7 +30,83 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		display: flex;
 		align-items: center;
 		color: var(--slate-400);
+		background-color: black;
+		position: relative;
+		overflow: hidden;
+		isolation: isolate;
 		transition: color 0.25s ease;
+
+		&:hover {
+			color: var(--main-200);
+		}
+		&:focus-visible {
+			outline: 2px solid var(--main-400);
+			outline-offset: 4px;
+			border-radius: 8px;
+			color: var(--main-200);
+		}
+	}
+
+	.social-wave-grid {
+		--social-wave-fade-in: var(--bg-block-wave-fade-in, 250ms);
+		--social-wave-fade-out: var(--bg-block-wave-fade-out, 400ms);
+		--social-wave-color: var(--main-950);
+		--social-wave-border-color: hsla(45, 100%, 50%, 0.06);
+		--social-wave-border-width: 1px;
+		--social-wave-border-perimeter-width: 2px;
+
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+		display: grid;
+		justify-content: center;
+		align-content: center;
+	}
+
+	.social-wave-block {
+		/* NOTE: blocks are created dynamically in JS (no Astro scope attr),
+		   so their selectors must be global to style them. */
+	}
+
+	.social-wave-grid :global(.social-wave-block) {
+		position: relative;
+		--social-wave-border-top-width: var(--social-wave-border-width);
+		--social-wave-border-right-width: var(--social-wave-border-width);
+		--social-wave-border-bottom-width: var(--social-wave-border-width);
+		--social-wave-border-left-width: var(--social-wave-border-width);
+	}
+
+	.social-wave-grid :global(.social-wave-block.is-edge-top) {
+		--social-wave-border-top-width: var(--social-wave-border-perimeter-width);
+	}
+	.social-wave-grid :global(.social-wave-block.is-edge-right) {
+		--social-wave-border-right-width: var(--social-wave-border-perimeter-width);
+	}
+	.social-wave-grid :global(.social-wave-block.is-edge-bottom) {
+		--social-wave-border-bottom-width: var(--social-wave-border-perimeter-width);
+	}
+	.social-wave-grid :global(.social-wave-block.is-edge-left) {
+		--social-wave-border-left-width: var(--social-wave-border-perimeter-width);
+	}
+
+	.social-wave-grid :global(.social-wave-block)::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		background-color: var(--social-wave-color);
+		box-sizing: border-box;
+		border-style: solid;
+		border-color: var(--social-wave-border-color);
+		border-width: var(--social-wave-border-top-width) var(--social-wave-border-right-width) var(--social-wave-border-bottom-width)
+			var(--social-wave-border-left-width);
+		transition: opacity var(--social-wave-fade-out) ease-out;
+	}
+
+	.social-wave-grid :global(.social-wave-block.is-lit)::before {
+		opacity: 1;
+		transition-duration: var(--social-wave-fade-in);
 	}
 	.social-link-icon-container {
 		height: 100%;
@@ -37,6 +114,8 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		position: relative;
+		z-index: 1;
 
 		svg {
 			height: 3rem;
@@ -54,5 +133,7 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		font-size: 16px;
 		letter-spacing: 0.15rem;
 		/* font-weight: 600; */
+		position: relative;
+		z-index: 1;
 	}
 </style>
