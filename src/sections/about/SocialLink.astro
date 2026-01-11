@@ -5,14 +5,40 @@ type Props = {
 	href: string;
 	icon: string;
 	label: string;
+	brand?: 'linkedin' | 'github';
 	target?: '_blank' | '_self' | '_parent' | '_top';
 	rel?: string;
 };
 
-const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props as Props;
+const { href, icon, label, brand: brandProp, target = '_blank', rel = 'noreferrer' } = Astro.props as Props;
+
+let brand: 'linkedin' | 'github' | undefined = brandProp;
+try {
+	if (!brand) {
+		const hostname = new URL(href).hostname.toLowerCase();
+		if (hostname.includes('linkedin')) brand = 'linkedin';
+		if (hostname.includes('github')) brand = 'github';
+	}
+} catch {
+	// Ignore invalid/relative URLs.
+}
+
+if (!brand) {
+	const token = `${icon} ${label}`.toLowerCase();
+	if (token.includes('linkedin')) brand = 'linkedin';
+	if (token.includes('github')) brand = 'github';
+}
 ---
 
-<a class="social-link" href={href} target={target} rel={rel} aria-label={label} data-block-trail="ignore">
+<a
+	class="social-link"
+	href={href}
+	target={target}
+	rel={rel}
+	aria-label={label}
+	data-block-trail="ignore"
+	data-brand={brand}
+>
 	<div class="social-wave-grid" aria-hidden="true"></div>
 	<div class="social-trail-grid" aria-hidden="true"></div>
 	<div class="social-link-icon-container">
@@ -26,6 +52,31 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 <style>
 	.social-link {
 		/* border: 1px solid var(--bg-block-grid-line-color); */
+		--social-hover-color: var(--main-200);
+		--social-focus-outline-color: var(--main-400);
+		--social-hover-bg-color: rgba(255, 255, 255, 0.02);
+		--social-wave-color: var(--main-950);
+		--social-wave-border-color: hsla(45, 100%, 50%, 0.06);
+		--social-trail-color: var(--bg-block-color);
+
+		&[data-brand='linkedin'] {
+			--social-hover-color: #c0dbf7;
+			--social-focus-outline-color: #0a66c2;
+			--social-hover-bg-color: rgba(10, 102, 194, 0.08);
+			--social-wave-color: rgba(10, 102, 194, 0.22);
+			--social-wave-border-color: rgba(10, 102, 194, 0.109);
+			--social-trail-color: rgba(10, 102, 194, 0.5);
+		}
+
+		&[data-brand='github'] {
+			--social-hover-color: #b9dec0;
+			--social-focus-outline-color: #2ea043;
+			--social-hover-bg-color: rgba(46, 160, 67, 0.06);
+			--social-wave-color: rgba(46, 160, 67, 0.18);
+			--social-wave-border-color: rgba(46, 160, 67, 0.071);
+			--social-trail-color: rgba(46, 160, 67, 0.45);
+		}
+
 		width: calc(3 * var(--block-size));
 		height: var(--block-size);
 		display: flex;
@@ -35,24 +86,29 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		position: relative;
 		overflow: hidden;
 		isolation: isolate;
-		transition: color 0.25s ease;
+		transition:
+			color 0.25s ease,
+			background-color 0.25s ease,
+			box-shadow 0.25s ease;
 
 		&:hover {
-			color: var(--main-200);
+			color: var(--social-hover-color);
+			background-color: var(--social-hover-bg-color);
+			box-shadow: inset 0 0 0 1px var(--social-wave-border-color);
 		}
 		&:focus-visible {
-			outline: 2px solid var(--main-400);
+			outline: 2px solid var(--social-focus-outline-color);
 			outline-offset: 4px;
 			border-radius: 8px;
-			color: var(--main-200);
+			color: var(--social-hover-color);
+			background-color: var(--social-hover-bg-color);
+			box-shadow: inset 0 0 0 1px var(--social-wave-border-color);
 		}
 	}
 
 	.social-wave-grid {
 		--social-wave-fade-in: var(--bg-block-wave-fade-in, 250ms);
 		--social-wave-fade-out: var(--bg-block-wave-fade-out, 400ms);
-		--social-wave-color: var(--main-950);
-		--social-wave-border-color: hsla(45, 100%, 50%, 0.06);
 		--social-wave-border-width: 1px;
 		--social-wave-border-perimeter-width: 2px;
 
@@ -69,7 +125,6 @@ const { href, icon, label, target = '_blank', rel = 'noreferrer' } = Astro.props
 		--social-trail-fade-in: var(--bg-block-fade-in);
 		--social-trail-fade-out: var(--bg-block-fade-out);
 		--social-trail-hold: var(--bg-block-hold);
-		--social-trail-color: var(--bg-block-color);
 		--social-trail-radius: 9px;
 
 		position: absolute;

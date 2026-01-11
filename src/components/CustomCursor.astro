@@ -2,6 +2,20 @@
 	@media (hover: hover) and (pointer: fine) {
 		:root {
 			--cursor-default: url('/cursor-circle.svg') 9 9, auto;
+			--cursor-badge-icon-bg: rgb(99 102 241 / 0.22);
+			--cursor-badge-icon-color: var(--main-200);
+		}
+
+		:root[data-cursor-brand='linkedin'] {
+			--cursor-default: url('/cursor-circle-linkedin.svg') 9 9, auto;
+			--cursor-badge-icon-bg: rgb(10 102 194 / 0.22);
+			--cursor-badge-icon-color: #c0dbf7;
+		}
+
+		:root[data-cursor-brand='github'] {
+			--cursor-default: url('/cursor-circle-github.svg') 9 9, auto;
+			--cursor-badge-icon-bg: rgb(46 160 67 / 0.22);
+			--cursor-badge-icon-color: #b9dec0;
 		}
 
 		html,
@@ -62,8 +76,8 @@
 			width: 1.15rem;
 			height: 1.15rem;
 			border-radius: 0.35rem;
-			background: rgb(99 102 241 / 0.22);
-			color: var(--main-200);
+			background: var(--cursor-badge-icon-bg);
+			color: var(--cursor-badge-icon-color);
 			font-size: 0.85rem;
 			line-height: 1;
 			transform: rotate(90deg);
@@ -96,6 +110,7 @@
 <script>
 	const badge = document.getElementById('cursor-newtab-badge');
 	if (badge) {
+		const root = document.documentElement;
 		const finePointer = window.matchMedia?.('(hover: hover) and (pointer: fine)')?.matches ?? false;
 		if (!finePointer) {
 			badge.remove();
@@ -137,6 +152,23 @@
 				return Boolean(target?.closest?.('a[target="_blank"]'));
 			};
 
+			const getSocialBrand = (eventTarget: EventTarget | null) => {
+				const target = eventTarget instanceof Element ? eventTarget : null;
+				const link = target?.closest?.('.social-link');
+				if (!link) return null;
+				const brand = link.getAttribute('data-brand');
+				return brand === 'linkedin' || brand === 'github' ? brand : null;
+			};
+
+			const setCursorBrand = (brand: string | null) => {
+				if (!root) return;
+				if (brand) {
+					root.setAttribute('data-cursor-brand', brand);
+				} else {
+					root.removeAttribute('data-cursor-brand');
+				}
+			};
+
 			document.addEventListener(moveEventName, handleMove, { passive: true });
 
 			document.addEventListener(
@@ -144,6 +176,7 @@
 				(event) => {
 					handleMove(event);
 					setVisible(isNewTabTarget(event.target));
+					setCursorBrand(getSocialBrand(event.target));
 				},
 				{ passive: true },
 			);
@@ -151,8 +184,13 @@
 			document.addEventListener(
 				outEventName,
 				(event) => {
-					if (event.relatedTarget == null) return setVisible(false);
+					if (event.relatedTarget == null) {
+						setVisible(false);
+						setCursorBrand(null);
+						return;
+					}
 					setVisible(isNewTabTarget(event.relatedTarget));
+					setCursorBrand(getSocialBrand(event.relatedTarget));
 				},
 				{ passive: true },
 			);
