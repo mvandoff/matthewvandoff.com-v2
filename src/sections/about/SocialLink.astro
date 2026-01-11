@@ -91,6 +91,10 @@ if (!brand) {
 			background-color 0.25s ease,
 			box-shadow 0.25s ease;
 
+		&.is-distorting {
+			will-change: filter;
+		}
+
 		&:hover {
 			color: var(--social-hover-color);
 			background-color: var(--social-hover-bg-color);

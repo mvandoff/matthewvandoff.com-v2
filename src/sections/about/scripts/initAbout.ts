@@ -32,6 +32,7 @@ export function initAbout() {
 	const aboutScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#about-scroll-displacement');
 	const timelineBlocks = Array.from(aboutSectionEl.querySelectorAll<HTMLElement>('.tl-block'));
 	const socialLinks = Array.from(aboutSectionEl.querySelectorAll<HTMLAnchorElement>('.social-link'));
+	const hoverDistortTargets = [...timelineBlocks, ...socialLinks];
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
 	let blocks: HTMLDivElement[] = [];
@@ -153,7 +154,7 @@ export function initAbout() {
 	}
 
 	initTimelineEnterDistortion({
-		timelineBlocks,
+		timelineBlocks: hoverDistortTargets,
 		enterEventName: pointerEvents.enter,
 		getBlockSizePx: () => blockSizePx,
 		durationMs: 1000,
