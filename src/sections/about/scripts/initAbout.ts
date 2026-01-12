@@ -147,7 +147,7 @@ export function initAbout() {
 
 		const leftOffset = leftPx - aboutRect.left;
 		blockContainer.style.top = '0px';
-		blockContainer.style.left = `${Math.round(leftOffset)}px`;
+		blockContainer.style.left = `${leftOffset}px`;
 
 		// Calculate the total number of blocks needed
 		const totalBlocks = columns * rows;
