@@ -25,8 +25,9 @@ export function initAboutScrollDistortion(params: {
 	turbulenceEl: SVGFETurbulenceElement | null;
 	displacementEl: SVGFEDisplacementMapElement | null;
 	getBlockSizePx: () => number;
+	scrollContainer?: Window | HTMLElement;
 }) {
-	const { meDistortEl, turbulenceEl, displacementEl, getBlockSizePx } = params;
+	const { meDistortEl, turbulenceEl, displacementEl, getBlockSizePx, scrollContainer } = params;
 	if (!meDistortEl || !turbulenceEl || !displacementEl) return;
 	if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return;
 
@@ -34,8 +35,11 @@ export function initAboutScrollDistortion(params: {
 	const wrapperEl = meDistortEl;
 	const turbulence = turbulenceEl;
 	const displacement = displacementEl;
+	const container = scrollContainer ?? window;
+	const isWindow = container === window;
+	const getScrollY = () => (isWindow ? window.scrollY : (container as HTMLElement).scrollTop);
 
-	let latestScrollY = window.scrollY;
+	let latestScrollY = getScrollY();
 	let lastScrollY = latestScrollY;
 	let ticking = false;
 	let velocityPxPerMs = 0;
@@ -120,7 +124,7 @@ export function initAboutScrollDistortion(params: {
 	}
 
 	function handleScroll() {
-		latestScrollY = window.scrollY;
+		latestScrollY = getScrollY();
 		lastScrollTs = performance.now();
 		if (ticking) return;
 		randomizeTurbulenceSeed();
@@ -130,5 +134,5 @@ export function initAboutScrollDistortion(params: {
 	}
 
 	randomizeTurbulenceSeed();
-	window.addEventListener('scroll', handleScroll, { passive: true });
+	container.addEventListener('scroll', handleScroll, { passive: true });
 }

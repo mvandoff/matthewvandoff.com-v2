@@ -19,6 +19,12 @@ import {
 } from './aboutBlockGrid';
 
 export function initAbout() {
+	const aboutSectionEl = document.querySelector<HTMLElement>('#about');
+	if (!aboutSectionEl) throw new Error('#about element not found');
+	const aboutSection = aboutSectionEl;
+	// Keep the right column aligned with the fixed left grid by resetting any restored scroll offset.
+	aboutSection.scrollTop = 0;
+	aboutSection.scrollLeft = 0;
 	if (
 		!window.matchMedia('(hover: hover) and (pointer: fine)').matches ||
 		window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -34,9 +40,6 @@ export function initAbout() {
 	if (!blockContainerEl) throw new Error('#block-grid element not found');
 	// Capture non-null ref for use inside callbacks (TS won’t narrow captured variables).
 	const blockContainer = blockContainerEl;
-	const aboutSectionEl = document.querySelector<HTMLElement>('#about');
-	if (!aboutSectionEl) throw new Error('#about element not found');
-	const aboutSection = aboutSectionEl;
 	const aboutContentEl = aboutSectionEl.querySelector<HTMLElement>('.about-content');
 	const aboutContent = aboutContentEl ?? aboutSection;
 	const mainNav = document.querySelector<HTMLElement>('#main-nav')!;
@@ -174,6 +177,7 @@ export function initAbout() {
 		turbulenceEl: aboutScrollTurbulenceEl,
 		displacementEl: aboutScrollDisplacementEl,
 		getBlockSizePx: () => blockSizePx,
+		scrollContainer: aboutSection,
 	});
 
 	if (timelineBlocks.length > 0) {
