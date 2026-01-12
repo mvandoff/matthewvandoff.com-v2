@@ -16,7 +16,7 @@
 	--bg-block-grid-line-color: hsla(45, 100%, 50%, 0.25);
 	--bg-block-grid-line-width: 1px;
 	--bg-block-grid-label-color: hsla(45, 100%, 50%, 0.7);
-	--bg-block-gutter-border-color: hsla(45, 100%, 50%, 0.08);
+	--bg-block-gutter-border-color: hsla(239, 85%, 67%, 0.096);
 	--bg-block-gutter-border-width: 1px;
 }
 
@@ -50,6 +50,15 @@
 
 #block-grid::after {
 	right: 0;
+}
+
+@media screen and (max-width: 1280px) {
+	:root {
+		--bg-block-gutter-border-width: 0px;
+	}
+	#block-grid {
+		display: none;
+	}
 }
 
 .bg-block {
