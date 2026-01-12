@@ -100,10 +100,16 @@ export function initAbout() {
 		waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
 		blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
 
+		// Avoid measuring the existing grid as part of the section's scrollable height.
+		const previousDisplay = blockContainer.style.display;
+		blockContainer.style.display = 'none';
+
 		const aboutRect = aboutSection.getBoundingClientRect();
 		const contentRect = aboutContent.getBoundingClientRect();
 		const targetWidth = Math.max(aboutContent.scrollWidth, aboutContent.clientWidth, contentRect.width);
 		const targetHeight = Math.max(aboutSection.scrollHeight, aboutSection.clientHeight, aboutRect.height);
+
+		blockContainer.style.display = previousDisplay;
 		const baseColumns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
 		rows = Math.max(1, Math.ceil(targetHeight / blockSizePx));
 
