@@ -28,6 +28,11 @@ export type MobileNavMessageSwap = {
 	elements: HTMLElement[];
 };
 
+/**
+ * Builds a controller that injects a stacked message group into the mobile nav,
+ * creates/rehydrates message spans, and swaps visibility with GSAP (yPercent + autoAlpha)
+ * while setting `display: none` on hidden items to avoid layout shifts.
+ */
 export function createMobileNavMessageSwap(options: MobileNavMessageSwapOptions): MobileNavMessageSwap | null {
 	const {
 		groupId,
@@ -44,6 +49,7 @@ export function createMobileNavMessageSwap(options: MobileNavMessageSwapOptions)
 
 	let group = container.querySelector<HTMLElement>(`[data-mobile-nav-group="${groupId}"]`);
 	if (!group) {
+		// Group wrapper keeps all messages stacked in the same layout slot.
 		group = document.createElement('div');
 		group.dataset.mobileNavGroup = groupId;
 		group.className = 'mobile-nav-msg-group';
@@ -84,6 +90,7 @@ export function createMobileNavMessageSwap(options: MobileNavMessageSwapOptions)
 			gsap.killTweensOf(el);
 
 			if (opts.immediate) {
+				// Immediate path is used for initial paint/hydration.
 				el.style.display = isActive ? display : 'none';
 				gsap.set(el, {
 					yPercent: isActive ? 0 : toY,
@@ -108,6 +115,7 @@ export function createMobileNavMessageSwap(options: MobileNavMessageSwapOptions)
 					ease,
 					pointerEvents: 'none',
 					onComplete: () => {
+						// Fully remove hidden items from layout to avoid shifts.
 						el.style.display = 'none';
 					},
 				});
@@ -119,6 +127,7 @@ export function createMobileNavMessageSwap(options: MobileNavMessageSwapOptions)
 
 	const toggle = () => {
 		if (messages.length <= 1) return;
+		// Cycle through message list when consumers want a simple flip.
 		const nextIndex = currentIndex === null ? 0 : (currentIndex + 1) % messages.length;
 		setActive(nextIndex);
 	};

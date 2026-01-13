@@ -39,6 +39,7 @@ export function initAboutMobileNav() {
 
 	if (!messageSwap) return;
 
+	// Track visibility ratios so we can pick the most visible screen.
 	const ratios = new Map<Element, number>();
 	const updateActiveLabel = () => {
 		let bestElement: Element | null = null;
@@ -61,6 +62,7 @@ export function initAboutMobileNav() {
 		messageSwap.setActive(typeof nextIndex === 'number' ? nextIndex : null);
 	};
 
+	// Use the About section as the scroll container root on mobile.
 	const observer = new IntersectionObserver(
 		(entries) => {
 			entries.forEach((entry) => {
