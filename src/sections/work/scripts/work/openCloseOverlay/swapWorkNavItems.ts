@@ -1,9 +1,18 @@
 import { gsap } from 'gsap';
+import type { MobileNavMessageSwap } from 'components/MobileNav/scripts/mobileNavMessageSwap';
 
 let open = false;
+let mobileMessageSwap: MobileNavMessageSwap | null = null;
+
+export function setWorkMobileNavMessageSwap(swap: MobileNavMessageSwap | null) {
+	mobileMessageSwap = swap;
+}
 
 export function swapWorkNavItems() {
-	document.querySelectorAll('#main-nav a, #menu-btn, #work-help-msg-mobile')?.forEach((navItem) => {
+	const nextOpen = !open;
+	mobileMessageSwap?.setActive(nextOpen ? 1 : 0);
+
+	document.querySelectorAll('#main-nav a, #menu-btn')?.forEach((navItem) => {
 		gsap.to(navItem, {
 			yPercent: open ? 0 : -100,
 			autoAlpha: open ? 1 : 0,
@@ -11,7 +20,7 @@ export function swapWorkNavItems() {
 		});
 	});
 
-	document.querySelectorAll('.work-nav-item')?.forEach((workNavItem) => {
+	document.querySelectorAll('.work-nav-item:not([data-mobile-nav-swap])')?.forEach((workNavItem) => {
 		gsap.fromTo(
 			workNavItem,
 			{
@@ -26,5 +35,5 @@ export function swapWorkNavItems() {
 		);
 	});
 
-	open = !open;
+	open = nextOpen;
 }

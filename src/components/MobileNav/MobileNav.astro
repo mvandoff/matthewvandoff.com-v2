@@ -19,6 +19,12 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 		font-size: 26px;
 		padding: 1rem;
 	}
+	.mobile-nav-msg-group {
+		display: grid;
+		align-items: center;
+		justify-items: start;
+		position: relative;
+	}
 	#menu-btn {
 		position: fixed;
 		right: 0.5rem;
@@ -33,12 +39,10 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 	@media (max-width: 1023px) {
 		#menu-btn,
 		#work-back-btn-mobile,
-		#work-scroll-msg-mobile,
-		#work-help-msg-mobile {
+		.mobile-nav-msg {
 			display: block;
 		}
-		#work-scroll-msg-mobile,
-		#work-help-msg-mobile {
+		.mobile-nav-msg {
 			font-size: 18px;
 			letter-spacing: 0.15rem;
 			display: flex;
@@ -46,6 +50,7 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 			gap: 1.25rem;
 			white-space: nowrap;
 			z-index: 999;
+			grid-area: 1 / 1;
 		}
 		#work-help-msg-mobile::before {
 			content: '';

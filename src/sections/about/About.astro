@@ -11,7 +11,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 <section id="about">
 	<div id="block-grid" aria-hidden="true"></div>
 	<div class="about-content">
-		<div class="screen-header screen">
+		<div class="screen-header screen" data-mobile-nav-label="about">
 			<div class="left-image-layer left-grid">
 				<div class="left-image">
 					<AboutImage />
@@ -35,7 +35,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 				</div>
 			</div>
 		</div>
-		<div class="screen-about screen">
+		<div class="screen-about screen" data-mobile-nav-label="about">
 			<div class="right">
 				<div class="about-h3-container">
 					<h3 class="about">about</h3>
@@ -359,6 +359,9 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 			grid-row: auto;
 			height: auto;
 		}
+		.right .about-h3-container {
+			display: none;
+		}
 		.right h3,
 		.right .blurbs .blurb {
 			padding-left: 0;
@@ -376,6 +379,10 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 
 <script>
 	import { initAbout } from 'sections/about/scripts/initAbout';
+	import { initAboutMobileNav } from 'sections/about/scripts/initAboutMobileNav';
 
-	document.addEventListener('DOMContentLoaded', initAbout);
+	document.addEventListener('DOMContentLoaded', () => {
+		initAboutMobileNav();
+		initAbout();
+	});
 </script>

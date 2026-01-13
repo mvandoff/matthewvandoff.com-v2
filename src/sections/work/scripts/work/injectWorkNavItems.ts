@@ -1,6 +1,8 @@
 import type { WorkContext } from 'sections/work/scripts/work/types';
 import { SELECTORS } from './selectors';
 import { closeOverlay } from 'sections/work/scripts/work/openCloseOverlay/closeOverlay';
+import { createMobileNavMessageSwap } from 'components/MobileNav/scripts/mobileNavMessageSwap';
+import { setWorkMobileNavMessageSwap } from 'sections/work/scripts/work/openCloseOverlay/swapWorkNavItems';
 
 // Simple creation utility used once on DOMContentLoaded via initWorkPage.
 export function injectWorkNavItems(ctx: WorkContext) {
@@ -28,22 +30,37 @@ export function injectWorkNavItems(ctx: WorkContext) {
 
 	const mobileNav = document.getElementById('mobile-nav');
 	if (mobileNav) {
+		mobileNav.querySelector('#work-back-btn-mobile')?.remove();
+
 		const mobileBackBtn = document.createElement('button');
 		mobileBackBtn.id = 'work-back-btn-mobile';
 		mobileBackBtn.className = 'work-nav-item';
 		mobileBackBtn.textContent = '[ back ]';
 
-		const mobileHelpMsg = document.createElement('span');
-		mobileHelpMsg.id = 'work-help-msg-mobile';
-		mobileHelpMsg.textContent = 'select project';
+		const mobileMessageSwap = createMobileNavMessageSwap({
+			container: mobileNav,
+			groupId: 'work',
+			activeIndex: 0,
+			showDuration: 1.25,
+			hideDuration: 0.75,
+			messages: [
+				{
+					id: 'work-help-msg-mobile',
+					text: 'select project',
+					showFromYPercent: -100,
+					hideToYPercent: -100,
+				},
+				{
+					id: 'work-scroll-msg-mobile',
+					text: 'scroll to explore',
+					showFromYPercent: 100,
+					hideToYPercent: 100,
+				},
+			],
+		});
 
-		const mobileScrollMsg = document.createElement('span');
-		mobileScrollMsg.id = 'work-scroll-msg-mobile';
-		mobileScrollMsg.className = 'work-nav-item';
-		mobileScrollMsg.textContent = 'scroll to explore';
+		setWorkMobileNavMessageSwap(mobileMessageSwap);
 
-		mobileNav.prepend(mobileHelpMsg);
-		mobileNav.append(mobileScrollMsg);
 		mobileNav.append(mobileBackBtn);
 		mobileBackBtn.addEventListener('pointerdown', () => closeOverlay(ctx));
 	}
