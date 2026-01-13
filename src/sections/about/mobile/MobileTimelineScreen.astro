@@ -1,0 +1,26 @@
+---
+type Props = {
+	company: string;
+	start: string;
+	end: string;
+	title: string;
+	description: string;
+	link?: string;
+	icon?: string;
+};
+
+const { start, end, title, company, description, link, icon } = Astro.props;
+---
+
+<div class="mobile-tl screen">Screen</div>
+
+<style>
+	.mobile.tl {
+		display: none;
+	}
+	@media screen and (max-width: 1280px) {
+		.mobile.tl {
+			display: block;
+		}
+	}
+</style>

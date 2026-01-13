@@ -5,56 +5,61 @@ import Timeline from 'sections/about/Timeline.astro';
 import AboutSvgFilters from 'sections/about/AboutSvgFilters.astro';
 import AboutImage from 'sections/about/AboutImage.astro';
 import SocialLink from 'sections/about/SocialLink.astro';
+import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 ---
 
 <section id="about">
 	<div id="block-grid" aria-hidden="true"></div>
 	<div class="about-content">
-		<div class="left-image-layer left-grid">
-			<div class="left-image">
-				<AboutImage />
+		<div class="screen-header screen">
+			<div class="left-image-layer left-grid">
+				<div class="left-image">
+					<AboutImage />
+				</div>
+			</div>
+			<div class="left left-grid">
+				<div class="left-intro">
+					<h1>matthew van doff</h1>
+					<h2>software developer</h2>
+					<p id="headline">Proin quis sem lacus. Vivamus non lorem nulla. Nam vel molestie est.</p>
+				</div>
+
+				<div class="left-links links">
+					<SocialLink
+						href="https://www.linkedin.com/in/matthew-vandoff/"
+						icon="fa7-brands:linkedin"
+						label="LinkedIn"
+						brand="linkedin"
+					/>
+					<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
+				</div>
 			</div>
 		</div>
-		<div class="left left-grid">
-			<div class="left-intro">
-				<h1>matthew van doff</h1>
-				<h2>software developer</h2>
-				<p id="headline">Proin quis sem lacus. Vivamus non lorem nulla. Nam vel molestie est.</p>
+		<div class="screen-about screen">
+			<div class="right">
+				<div class="about-h3-container">
+					<h3 class="about">about</h3>
+				</div>
+				<div class="blurbs">
+					<p class="blurb">
+						Hey what's up? I'm a human software developer, one of the last of my kind. I'm based in the Raleigh-Durham
+						area in North Carolina, USA and have been developing professionally for well over 4 years. I like working
+						with all kinds of software, but I specialize in full stack web development.
+					</p>
+					<p class="blurb">
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit fringilla lacus id sagittis. Duis
+						aliquam, odio vel fermentum iaculis, metus ligula ultricies risus, et sodales metus augue eget nibh. Donec
+						dapibus at est ac auctor. Phasellus rutrum scelerisque luctus. Orci varius natoque penatibus et magnis dis
+						parturient montes, nascetur ridiculus mus. Cras eu risus eu eros sagittis feugiat a eget metus. Praesent
+						neque ex, efficitur at libero aliquet, interdum venenatis nisi.
+					</p>
+				</div>
 			</div>
-
-			<div class="left-links links">
-				<SocialLink
-					href="https://www.linkedin.com/in/matthew-vandoff/"
-					icon="fa7-brands:linkedin"
-					label="LinkedIn"
-					brand="linkedin"
-				/>
-				<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
-			</div>
-		</div>
-		<div class="right">
-			<div class="about-h3-container">
-				<h3 class="about">about</h3>
-			</div>
-			<div class="blurbs">
-				<p class="blurb">
-					Hey what's up? I'm a human software developer, one of the last of my kind. I'm based in the Raleigh-Durham
-					area in North Carolina, USA and have been developing professionally for well over 4 years. I like working with
-					all kinds of software, but I specialize in full stack web development.
-				</p>
-				<p class="blurb">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit fringilla lacus id sagittis. Duis
-					aliquam, odio vel fermentum iaculis, metus ligula ultricies risus, et sodales metus augue eget nibh. Donec
-					dapibus at est ac auctor. Phasellus rutrum scelerisque luctus. Orci varius natoque penatibus et magnis dis
-					parturient montes, nascetur ridiculus mus. Cras eu risus eu eros sagittis feugiat a eget metus. Praesent neque
-					ex, efficitur at libero aliquet, interdum venenatis nisi.
-				</p>
-			</div>
-
 			<div class="timeline-slot">
 				<Timeline />
 			</div>
 		</div>
+		<MobileTimeline />
 
 		<AboutSvgFilters />
 	</div>
@@ -73,6 +78,12 @@ import SocialLink from 'sections/about/SocialLink.astro';
 	#about {
 		max-width: none;
 		width: 100%;
+
+		.screen {
+			height: 100vh;
+			scroll-snap-align: start;
+			scroll-snap-stop: always;
+		}
 	}
 	.about-content,
 	#main-nav {
@@ -268,8 +279,14 @@ import SocialLink from 'sections/about/SocialLink.astro';
 			--layout-width: 100%;
 			--layout-left: 0;
 			padding-bottom: calc(var(--block-size) * 2);
-			/* margin-top: calc(var(--block-size) * 2) !important; */
+			scroll-snap-type: y mandatory;
+			margin-top: calc(var(--block-size) * 2) !important;
+
+			h1 {
+				font-size: 32px;
+			}
 		}
+
 		.about-content {
 			margin: 0 auto;
 			width: min(100%, calc(18 * var(--block-size)));
@@ -299,8 +316,8 @@ import SocialLink from 'sections/about/SocialLink.astro';
 			grid-column: auto;
 			grid-row: auto;
 			width: 100%;
-			max-width: calc(6 * var(--block-size));
-			aspect-ratio: 3 / 4;
+			max-width: calc(12 * var(--block-size));
+			aspect-ratio: 2;
 			margin: 0 auto;
 		}
 		.left-image :global(.img-container-outer) {
