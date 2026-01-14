@@ -1,8 +1,9 @@
 import { createMobileNavMessageSwap } from 'components/MobileNav/scripts/mobileNavMessageSwap';
 
 const LABEL_INDEX: Record<string, number> = {
-	about: 0,
-	experience: 1,
+	welcome: 0,
+	'about-me': 1,
+	experience: 2,
 };
 
 export function initAboutMobileNav() {
@@ -23,14 +24,23 @@ export function initAboutMobileNav() {
 		hideDuration: 0.5,
 		messages: [
 			{
-				id: 'about-msg-mobile',
-				text: 'about',
+				id: 'welcome-msg-mobile',
+				text: 'welcome',
+				className: 'mobile-nav-msg--spinner',
+				showFromYPercent: -100,
+				hideToYPercent: -100,
+			},
+			{
+				id: 'about-me-msg-mobile',
+				text: 'about me',
+				className: 'mobile-nav-msg--spinner',
 				showFromYPercent: -100,
 				hideToYPercent: -100,
 			},
 			{
 				id: 'experience-msg-mobile',
 				text: 'experience',
+				className: 'mobile-nav-msg--spinner',
 				showFromYPercent: -100,
 				hideToYPercent: -100,
 			},
