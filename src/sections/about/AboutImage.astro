@@ -114,6 +114,21 @@ import Corner from 'sections/about/Corner.astro';
 	}
 
 	@media screen and (max-width: 1280px) {
+		.img-container-outer {
+			--about-image-inset: 1.25rem;
+		}
+		.img-container-outer .corner {
+			display: none;
+		}
+		.img-container-outer img.me {
+			border-radius: 0;
+		}
+	}
+
+	@media screen and (max-width: 767px) {
+		.img-container-outer {
+			--about-image-inset: 1rem;
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
