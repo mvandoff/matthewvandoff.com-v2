@@ -11,7 +11,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 <section id="about">
 	<div id="block-grid" aria-hidden="true"></div>
 	<div class="about-content">
-		<div class="screen-header screen" data-mobile-nav-label="welcome">
+		<div class="screen-hero screen" data-mobile-nav-label="welcome">
 			<div class="left-image-layer left-grid">
 				<div class="left-image">
 					<AboutImage />
@@ -83,9 +83,6 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 
 		.screen {
 			display: contents;
-			height: 100vh;
-			scroll-snap-align: start;
-			scroll-snap-stop: always;
 		}
 	}
 	.about-content,
@@ -284,27 +281,45 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 		}
 	}
 	@media screen and (max-width: 1280px) {
+		:root {
+			--mobile-nav-height: 48px;
+			/* Round viewport width down to the nearest block to keep layout aligned. */
+			--full-width: round(down, 100vw, var(--block-size));
+		}
+		:global(#mobile-nav) {
+			height: var(--mobile-nav-height);
+			margin: 0 auto;
+			/* background: yellow; */
+		}
 		#about {
 			--content-gap: 0;
 			--edge-gap: 0;
 			--layout-width: 100%;
 			--layout-left: 0;
 
+			margin-top: var(--mobile-nav-height) !important;
 			scroll-snap-type: y mandatory;
-			margin-top: 5rem !important;
-		}
-		.about-content {
-			box-sizing: border-box;
-			display: flex;
-			flex-direction: column;
-		}
 
-		.screen-header {
-			--hero-radius: 2px;
-			--hero-border: rgba(255, 255, 255, 0.09);
-			--hero-grid-size: 18px;
-
-			box-sizing: border-box;
+			.about-content {
+				box-sizing: border-box;
+				width: var(--full-width);
+				max-width: none;
+				margin: 0 auto;
+				/* background: red; */
+			}
+			.screen {
+				height: calc(100vh - var(--mobile-nav-height));
+				margin-top: var(--mobile-nav-height);
+				scroll-snap-align: start;
+				scroll-snap-stop: always;
+				box-sizing: border-box;
+				display: grid;
+			}
+			.screen-hero {
+				--hero-radius: 2px;
+				--hero-border: rgba(255, 255, 255, 0.09);
+				--hero-grid-size: 18px;
+			}
 		}
 		.left-grid {
 			position: relative;
