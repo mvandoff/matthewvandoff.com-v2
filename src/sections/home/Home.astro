@@ -1,20 +1,20 @@
 ---
-import './about-background.css';
+import './home-background.css';
 import './blocks.css';
-import Timeline from 'sections/about/Timeline.astro';
-import AboutSvgFilters from 'sections/about/AboutSvgFilters.astro';
-import AboutImage from 'sections/about/AboutImage.astro';
-import SocialLink from 'sections/about/SocialLink.astro';
-import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
+import Timeline from 'sections/home/Timeline.astro';
+import HomeSvgFilters from 'sections/home/HomeSvgFilters.astro';
+import HomeImage from 'sections/home/HomeImage.astro';
+import SocialLink from 'sections/home/SocialLink.astro';
+import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 ---
 
-<section id="about">
+<section id="home">
 	<div id="block-grid" aria-hidden="true"></div>
-	<div class="about-content">
+	<div class="home-content">
 		<div class="screen-hero screen" data-mobile-nav-label="welcome">
 			<div class="left-image-layer left-grid">
 				<div class="left-image">
-					<AboutImage />
+					<HomeImage />
 				</div>
 			</div>
 			<div class="left left-grid">
@@ -37,10 +37,10 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 				</div>
 			</div>
 		</div>
-		<div class="screen-about screen" data-mobile-nav-label="about-me">
+		<div class="screen-home screen" data-mobile-nav-label="home-me">
 			<div class="right">
-				<div class="about-h3-container">
-					<h3 class="about">about</h3>
+				<div class="home-h3-container">
+					<h3 class="home">about</h3>
 				</div>
 				<div class="blurbs">
 					<p class="blurb">
@@ -63,7 +63,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 		</div>
 		<MobileTimeline />
 
-		<AboutSvgFilters />
+		<HomeSvgFilters />
 	</div>
 </section>
 
@@ -77,7 +77,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 		padding-top: 0;
 		padding-bottom: 0;
 	}
-	#about {
+	#home {
 		max-width: none;
 		width: 100%;
 
@@ -85,12 +85,12 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 			display: contents;
 		}
 	}
-	.about-content,
+	.home-content,
 	#main-nav {
 		max-width: calc(32 * var(--block-size));
 	}
 	@media screen and (max-width: 1280px) {
-		#about {
+		#home {
 			.screen {
 				display: block;
 			}
@@ -98,7 +98,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 	}
 </style>
 <style>
-	#about {
+	#home {
 		margin-top: var(--block-size) !important;
 		overflow: auto;
 		position: relative;
@@ -123,7 +123,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 		--left-row-links-span: 1;
 		/* border: 2px solid red; */
 	}
-	.about-content {
+	.home-content {
 		position: relative;
 		margin: 0;
 		margin-left: var(--layout-left);
@@ -218,7 +218,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 	}
 	.right {
 		--right-col-start: calc(var(--left-col-span) + var(--content-gap) + var(--edge-gap));
-		--right-row-about: 2;
+		--right-row-home: 2;
 		--right-row-blurbs: 3;
 		--right-row-blurbs-span: 5;
 		--right-row-timeline: 8;
@@ -240,10 +240,10 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 			padding-left: 1rem;
 			font-size: 22px;
 		}
-		.about-h3-container {
+		.home-h3-container {
 			/* background: green; */
 			grid-column: 1 / -1;
-			grid-row: var(--right-row-about) / span 1;
+			grid-row: var(--right-row-home) / span 1;
 			height: var(--block-size);
 			width: 100%;
 			display: flex;
@@ -271,12 +271,12 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 	}
 
 	@media screen and (max-width: 1408px) {
-		#about {
+		#home {
 			--content-gap: 2;
 		}
 	}
 	@media screen and (max-width: 1344px) {
-		#about {
+		#home {
 			--content-gap: 1;
 		}
 	}
@@ -291,7 +291,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 			margin: 0 auto;
 			/* background: yellow; */
 		}
-		#about {
+		#home {
 			--content-gap: 0;
 			--edge-gap: 0;
 			--layout-width: 100%;
@@ -300,7 +300,7 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 			margin-top: var(--mobile-nav-height) !important;
 			scroll-snap-type: y mandatory;
 
-			.about-content {
+			.home-content {
 				box-sizing: border-box;
 				width: var(--full-width);
 				max-width: none;
@@ -394,14 +394,14 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 			padding-right: 0;
 			padding-bottom: 0;
 		}
-		.right .about-h3-container,
+		.right .home-h3-container,
 		.right .blurbs,
 		.right .timeline-slot {
 			grid-column: auto;
 			grid-row: auto;
 			height: auto;
 		}
-		.right .about-h3-container {
+		.right .home-h3-container {
 			display: none;
 		}
 		.right h3,
@@ -420,11 +420,11 @@ import MobileTimeline from 'sections/about/mobile/MobileTimeline.astro';
 </style>
 
 <script>
-	import { initAbout } from 'sections/about/scripts/initAbout';
-	import { initAboutMobileNav } from 'sections/about/scripts/initAboutMobileNav';
+	import { initHome } from 'sections/home/scripts/initHome';
+	import { initHomeMobileNav } from 'sections/home/scripts/initHomeMobileNav';
 
 	document.addEventListener('DOMContentLoaded', () => {
-		initAboutMobileNav();
-		initAbout();
+		initHomeMobileNav();
+		initHome();
 	});
 </script>

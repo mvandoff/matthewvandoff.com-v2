@@ -1,5 +1,5 @@
 import type { PointerEventNames } from './timelineWave';
-import { getBlockCoordsFromClient, triggerBlockHover, type BlockState, type BlockTimings } from './aboutBlockGrid';
+import { getBlockCoordsFromClient, triggerBlockHover, type BlockState, type BlockTimings } from './homeBlockGrid';
 
 type GridMetrics = { blockSizePx: number; columns: number; rows: number };
 
@@ -83,7 +83,7 @@ export function createBlockTrailController(deps: BlockTrailDeps) {
 			lastIndex = null;
 			return;
 		}
-		// Use the block grid bounds (not just #about) so the trail works in the extra columns
+		// Use the block grid bounds (not just #home) so the trail works in the extra columns
 		// that extend into the left/right gutters on wide viewports.
 		const rect = blockContainerEl.getBoundingClientRect();
 		if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {

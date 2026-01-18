@@ -1,7 +1,7 @@
 ---
 import me from 'assets/images/idea.png';
 import { Image } from 'astro:assets';
-import Corner from 'sections/about/Corner.astro';
+import Corner from 'sections/home/Corner.astro';
 ---
 
 <div class="img-container-outer">
@@ -18,7 +18,7 @@ import Corner from 'sections/about/Corner.astro';
 
 <style is:global>
 	.img-container-outer {
-		--about-image-inset: 2rem;
+		--home-image-inset: 2rem;
 
 		position: relative;
 		width: 100%;
@@ -28,8 +28,8 @@ import Corner from 'sections/about/Corner.astro';
 		&:hover {
 			.img-container {
 				img.me {
-					--about-me-grayscale: 0.2;
-					--about-me-opacity: 0.9;
+					--home-me-grayscale: 0.2;
+					--home-me-opacity: 0.9;
 				}
 			}
 		}
@@ -62,25 +62,25 @@ import Corner from 'sections/about/Corner.astro';
 			width: 100%;
 			height: 100%;
 			box-sizing: border-box;
-			padding: var(--about-image-inset);
+			padding: var(--home-image-inset);
 			position: relative;
 
 			.me-distort {
-				--about-scroll-blur: 0px;
+				--home-scroll-blur: 0px;
 				width: 100%;
 				height: 100%;
 				display: block;
-				filter: url(#about-scroll-distort);
+				filter: url(#home-scroll-distort);
 				will-change: filter;
 			}
 
 			img.me {
 				width: 100%;
 				height: 100%;
-				--about-me-grayscale: 0.75;
-				--about-me-opacity: 0.8;
-				opacity: var(--about-me-opacity);
-				filter: grayscale(var(--about-me-grayscale)) blur(var(--about-scroll-blur));
+				--home-me-grayscale: 0.75;
+				--home-me-opacity: 0.8;
+				opacity: var(--home-me-opacity);
+				filter: grayscale(var(--home-me-grayscale)) blur(var(--home-scroll-blur));
 				user-select: none;
 				object-fit: cover;
 				border-radius: 0.25rem;
@@ -115,7 +115,7 @@ import Corner from 'sections/about/Corner.astro';
 
 	@media screen and (max-width: 1280px) {
 		.img-container-outer {
-			--about-image-inset: 1.25rem;
+			--home-image-inset: 1.25rem;
 		}
 		.img-container-outer .corner {
 			display: none;
@@ -127,12 +127,12 @@ import Corner from 'sections/about/Corner.astro';
 
 	@media screen and (max-width: 767px) {
 		.img-container-outer {
-			--about-image-inset: 1rem;
+			--home-image-inset: 1rem;
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		#about .me-distort {
+		#home .me-distort {
 			filter: none;
 			transform: none;
 		}

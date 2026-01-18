@@ -2,23 +2,21 @@ import { createMobileNavMessageSwap } from 'components/MobileNav/scripts/mobileN
 
 const LABEL_INDEX: Record<string, number> = {
 	welcome: 0,
-	'about-me': 1,
+	'home-me': 1,
 	experience: 2,
 };
 
-export function initAboutMobileNav() {
+export function initHomeMobileNav() {
 	const mobileNav = document.getElementById('mobile-nav');
-	const aboutSection = document.getElementById('about');
-	if (!mobileNav || !aboutSection) return;
+	const homeSection = document.getElementById('home');
+	if (!mobileNav || !homeSection) return;
 
-	const labeledScreens = Array.from(
-		aboutSection.querySelectorAll<HTMLElement>('.screen[data-mobile-nav-label]'),
-	);
+	const labeledScreens = Array.from(homeSection.querySelectorAll<HTMLElement>('.screen[data-mobile-nav-label]'));
 	if (labeledScreens.length === 0) return;
 
 	const messageSwap = createMobileNavMessageSwap({
 		container: mobileNav,
-		groupId: 'about',
+		groupId: 'home',
 		activeIndex: 0,
 		showDuration: 0.8,
 		hideDuration: 0.5,
@@ -72,7 +70,7 @@ export function initAboutMobileNav() {
 		messageSwap.setActive(typeof nextIndex === 'number' ? nextIndex : null);
 	};
 
-	// Use the About section as the scroll container root on mobile.
+	// Use the Home section as the scroll container root on mobile.
 	const observer = new IntersectionObserver(
 		(entries) => {
 			entries.forEach((entry) => {
@@ -81,7 +79,7 @@ export function initAboutMobileNav() {
 			updateActiveLabel();
 		},
 		{
-			root: aboutSection,
+			root: homeSection,
 			threshold: [0, 0.35, 0.6, 0.85],
 		},
 	);

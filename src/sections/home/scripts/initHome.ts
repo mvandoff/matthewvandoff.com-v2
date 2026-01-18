@@ -1,9 +1,9 @@
 import { createTimelineWaveController, type WaveTimings } from './timelineWave';
-import { initAboutScrollDistortion } from './aboutScrollDistortion';
+import { initHomeScrollDistortion } from './homeScrollDistortion';
 import { initDebugGridToggle } from './debugGridToggle';
 import { createSocialLinkWaveController } from './socialLinkWave';
 import { initTimelineEnterDistortion } from './timelineEnterDistortion';
-import { createBlockTrailController } from './aboutBlockTrail';
+import { createBlockTrailController } from './homeBlockTrail';
 import {
 	clearAllBlockTimers,
 	createBlocks,
@@ -16,15 +16,15 @@ import {
 	getWaveTimingsFromCss,
 	type BlockState,
 	type BlockTimings,
-} from './aboutBlockGrid';
+} from './homeBlockGrid';
 
-export function initAbout() {
-	const aboutSectionEl = document.querySelector<HTMLElement>('#about');
-	if (!aboutSectionEl) throw new Error('#about element not found');
-	const aboutSection = aboutSectionEl;
+export function initHome() {
+	const homeSectionEl = document.querySelector<HTMLElement>('#home');
+	if (!homeSectionEl) throw new Error('#home element not found');
+	const homeSection = homeSectionEl;
 	// Keep the right column aligned with the fixed left grid by resetting any restored scroll offset.
-	aboutSection.scrollTop = 0;
-	aboutSection.scrollLeft = 0;
+	homeSection.scrollTop = 0;
+	homeSection.scrollLeft = 0;
 	if (
 		!window.matchMedia('(hover: hover) and (pointer: fine)').matches ||
 		window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -32,22 +32,22 @@ export function initAbout() {
 		return;
 
 	/**
-	 * About background blocks:
-	 * - The About page creates a block grid overlay used for the mouse trail effect.
-	 * - The grid is sized to the About section instead of the full document.
+	 * Home background blocks:
+	 * - The Home page creates a block grid overlay used for the mouse trail effect.
+	 * - The grid is sized to the Home section instead of the full document.
 	 */
 	const blockContainerEl = document.getElementById('block-grid');
 	if (!blockContainerEl) throw new Error('#block-grid element not found');
 	// Capture non-null ref for use inside callbacks (TS won’t narrow captured variables).
 	const blockContainer = blockContainerEl;
-	const aboutContentEl = aboutSectionEl.querySelector<HTMLElement>('.about-content');
-	const aboutContent = aboutContentEl ?? aboutSection;
+	const homeContentEl = homeSectionEl.querySelector<HTMLElement>('.home-content');
+	const homeContent = homeContentEl ?? homeSection;
 	const mainNav = document.querySelector<HTMLElement>('#main-nav')!;
-	const aboutMeDistortEl = document.querySelector<HTMLElement>('#about [data-scroll-distort="me"]');
-	const aboutScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#about-scroll-turbulence');
-	const aboutScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#about-scroll-displacement');
-	const timelineBlocks = Array.from(aboutSectionEl.querySelectorAll<HTMLElement>('.tl-block'));
-	const socialLinks = Array.from(aboutSectionEl.querySelectorAll<HTMLAnchorElement>('.social-link'));
+	const homeMeDistortEl = document.querySelector<HTMLElement>('#home [data-scroll-distort="me"]');
+	const homeScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#home-scroll-turbulence');
+	const homeScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#home-scroll-displacement');
+	const timelineBlocks = Array.from(homeSectionEl.querySelectorAll<HTMLElement>('.tl-block'));
+	const socialLinks = Array.from(homeSectionEl.querySelectorAll<HTMLAnchorElement>('.social-link'));
 	const hoverDistortTargets = [...timelineBlocks, ...socialLinks];
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
@@ -93,7 +93,7 @@ export function initAbout() {
 		/**
 		 * Rebuild responsibilities:
 		 * - Re-read CSS custom properties (block sizing + animation timings).
-		 * - Calculate grid columns/rows from the About section dimensions.
+		 * - Calculate grid columns/rows from the Home section dimensions.
 		 * - Replace all block elements (mouse trail + wave propagation targets).
 		 */
 		clearAllBlockTimers(blockStates);
@@ -107,10 +107,10 @@ export function initAbout() {
 		const previousDisplay = blockContainer.style.display;
 		blockContainer.style.display = 'none';
 
-		const aboutRect = aboutSection.getBoundingClientRect();
-		const contentRect = aboutContent.getBoundingClientRect();
-		const targetWidth = Math.max(aboutContent.scrollWidth, aboutContent.clientWidth, contentRect.width);
-		const targetHeight = Math.max(aboutSection.scrollHeight, aboutSection.clientHeight, aboutRect.height);
+		const homeRect = homeSection.getBoundingClientRect();
+		const contentRect = homeContent.getBoundingClientRect();
+		const targetWidth = Math.max(homeContent.scrollWidth, homeContent.clientWidth, contentRect.width);
+		const targetHeight = Math.max(homeSection.scrollHeight, homeSection.clientHeight, homeRect.height);
 
 		blockContainer.style.display = previousDisplay;
 		const baseColumns = Math.max(1, Math.ceil(targetWidth / blockSizePx));
@@ -126,8 +126,8 @@ export function initAbout() {
 		const spaceLeft = contentRect.left;
 		const spaceRight = viewportWidth - contentRect.right;
 
-		// When the About section hits its max width, it is centered and leaves extra room on both sides.
-		// Add full block columns to each side (same count) so the grid expands outward while the About
+		// When the Home section hits its max width, it is centered and leaves extra room on both sides.
+		// Add full block columns to each side (same count) so the grid expands outward while the Home
 		// content stays aligned to grid lines. Any leftover pixels become equal gaps at the edges.
 		if (spaceLeft > 0 && spaceRight > 0) {
 			const extraColumnsPerSide = Math.floor(Math.min(spaceLeft, spaceRight) / blockSizePx);
@@ -145,7 +145,7 @@ export function initAbout() {
 		blockContainer.style.width = `${widthPx}px`;
 		blockContainer.style.height = `${heightPx}px`;
 
-		const leftOffset = leftPx - aboutRect.left;
+		const leftOffset = leftPx - homeRect.left;
 		blockContainer.style.top = '0px';
 		blockContainer.style.left = `${leftOffset}px`;
 
@@ -161,7 +161,7 @@ export function initAbout() {
 
 	/**
 	 * Initial build:
-	 * - We do this immediately on DOMContentLoaded (see About.astro).
+	 * - We do this immediately on DOMContentLoaded (see Home.astro).
 	 * - The Transition overlay is still covering the page at this moment, which is what we want.
 	 */
 	initDebugGridToggle({ container: blockContainer });
@@ -172,12 +172,12 @@ export function initAbout() {
 	}
 
 	// Scroll-driven image distortion (SVG filter + CSS blur) for the headshot.
-	initAboutScrollDistortion({
-		meDistortEl: aboutMeDistortEl,
-		turbulenceEl: aboutScrollTurbulenceEl,
-		displacementEl: aboutScrollDisplacementEl,
+	initHomeScrollDistortion({
+		meDistortEl: homeMeDistortEl,
+		turbulenceEl: homeScrollTurbulenceEl,
+		displacementEl: homeScrollDisplacementEl,
 		getBlockSizePx: () => blockSizePx,
-		scrollContainer: aboutSection,
+		scrollContainer: homeSection,
 	});
 
 	if (timelineBlocks.length > 0) {

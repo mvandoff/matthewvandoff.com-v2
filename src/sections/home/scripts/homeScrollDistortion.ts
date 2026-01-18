@@ -1,16 +1,16 @@
 /**
- * About page: scroll-driven image distortion
+ * Home page: scroll-driven image distortion
  * -----------------------------------------
  *
- * This powers the “digital distortion” effect on the About headshot.
+ * This powers the “digital distortion” effect on the Home headshot.
  *
  * How it works:
- * - The About page defines an SVG filter (`#about-scroll-distort`) composed of:
+ * - The Home page defines an SVG filter (`#home-scroll-distort`) composed of:
  *   - `feTurbulence` to generate a noisy displacement field
  *   - `feDisplacementMap` to apply that noise to the image
  * - On scroll, we estimate scroll velocity and map it to an intensity (0..1).
  * - We then update the filter attributes (noise frequency + displacement scale)
- *   and a CSS custom property (`--about-scroll-blur`) to blur the image slightly.
+ *   and a CSS custom property (`--home-scroll-blur`) to blur the image slightly.
  *
  * Why the effect looks “blocky”:
  * - Values are quantized (snapped) to small steps.
@@ -20,7 +20,7 @@
 
 const SCROLL_DISTORTION_SENSITIVITY = 3;
 
-export function initAboutScrollDistortion(params: {
+export function initHomeScrollDistortion(params: {
 	meDistortEl: HTMLElement | null;
 	turbulenceEl: SVGFETurbulenceElement | null;
 	displacementEl: SVGFEDisplacementMapElement | null;
@@ -87,7 +87,7 @@ export function initAboutScrollDistortion(params: {
 		// distortion feel “dragged” by the scroll.
 		const signedScale = displacementScale * direction;
 
-		wrapperEl.style.setProperty('--about-scroll-blur', `${blurPx.toFixed(2)}px`);
+		wrapperEl.style.setProperty('--home-scroll-blur', `${blurPx.toFixed(2)}px`);
 		displacement.setAttribute('scale', signedScale.toFixed(1));
 		turbulence.setAttribute('baseFrequency', `${baseFreqX.toFixed(4)} ${baseFreqY.toFixed(4)}`);
 	}
