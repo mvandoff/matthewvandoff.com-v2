@@ -17,7 +17,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 					<HomeImage />
 				</div>
 			</div>
-			<!-- <div class="left left-grid">
+			<div class="left left-grid intro-container">
 				<div class="left-intro">
 					<h1>
 						matthew <span class="last-name">van&nbsp;doff</span>
@@ -26,7 +26,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 					<p id="headline">Proin quis sem lacus. Vivamus non lorem nulla. Nam vel molestie est.</p>
 				</div>
 
-				<div class="left-links links">
+				<!-- <div class="left-links links">
 					<SocialLink
 						href="https://www.linkedin.com/in/matthew-vandoff/"
 						icon="fa7-brands:linkedin"
@@ -34,8 +34,10 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 						brand="linkedin"
 					/>
 					<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
-				</div>
-			</div> -->
+				</div> -->
+			</div>
+			<div id="mb-up-tile"></div>
+			<div id="mb-bg-tile"></div>
 		</div>
 		<div class="screen-home screen" data-mobile-nav-label="home-me">
 			<div class="right">
@@ -101,6 +103,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 	#home {
 		margin-top: var(--block-size) !important;
 		overflow: auto;
+		overflow-anchor: none;
 		position: relative;
 		margin: 0 auto;
 		padding: 0;
@@ -283,9 +286,11 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 	@media screen and (max-width: 1280px) {
 		:root {
 			--mobile-nav-height: 48px;
-			--full-width: calc(round(down, 100vw, var(--block-size)) - var(--block-size));
+			--full-width: calc(round(down, 100vw, var(--block-size)) - (var(--block-size) * 2));
 			--total-blocks: round(up, calc(100vw / var(--block-size)));
 			--home-image-inset: 0 !important;
+			--grid-gap: 12px;
+			--border-radius: 4px;
 		}
 		:global(#mobile-nav) {
 			height: var(--mobile-nav-height);
@@ -295,7 +300,6 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 		#home {
 			--content-gap: 0;
 			--edge-gap: 0;
-			--layout-width: 100%;
 			--layout-left: 0;
 
 			margin-top: var(--mobile-nav-height) !important;
@@ -310,7 +314,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 			}
 			.screen {
 				height: calc(100vh - var(--mobile-nav-height));
-				width: min(100%, calc(var(--block-size) * 20));
+				width: min(100%, calc(var(--block-size) * 40));
 				margin: 0 auto;
 				/* border: 1px solid yellow; */
 				margin-top: var(--mobile-nav-height);
@@ -320,85 +324,113 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 				display: grid;
 				grid-template-columns: repeat(auto-fill, var(--block-size));
 				grid-template-rows: repeat(auto-fill, var(--block-size));
+				/* row-gap: var(--grid-gap); */
+				/* column-gap: var(--grid-gap); */
+
+				.left-grid {
+					position: relative;
+					width: 100%;
+					grid-template-columns: none;
+					grid-auto-rows: auto;
+				}
 			}
 			.screen-hero {
-				--hero-radius: 2px;
 				--hero-border: rgba(255, 255, 255, 0.09);
-				--hero-grid-size: 18px;
 
 				.left-image-layer {
 					display: block;
-					grid-column: 1 / clamp(11, calc(var(--total-blocks) - 2), 16);
-					grid-row: 1 / 9;
+					grid-column: 4 / -1;
+					grid-row: 1 / 14;
 
 					.left-image {
 						height: 100%;
 						width: 100%;
+
+						.img-container {
+							padding: 0;
+							img {
+								opacity: 1;
+								/* border-radius: 0; */
+							}
+						}
 					}
 				}
-				.img-container {
-					padding: 0;
+				.intro-container {
+					grid-column: 4 / -1;
+					grid-row: 15 / 28;
+					background: rgb(21, 21, 21);
+					padding: clamp(14px, 4vw, 18px);
+					display: flex;
+					border-radius: var(--border-radius);
+					border: 0px solid var(--hero-border);
+					border-left-width: 4px;
+					border-left-color: rgba(226, 232, 240, 0.65);
+
+					.left-intro {
+						gap: 0.85rem;
+					}
+					h1 {
+						width: 100%;
+						padding: 0;
+						background: transparent;
+						border: 0;
+						border-radius: 0;
+						font-size: clamp(34px, 9vw, 44px);
+						line-height: 0.95;
+						letter-spacing: 0.005em;
+					}
+					h2 {
+						padding: 0;
+						background: transparent;
+						border: 0;
+						border-radius: 0;
+						margin-top: -2px;
+						font-family: 'Inter', sans-serif;
+						font-size: 12px;
+						letter-spacing: 0.22rem;
+						text-transform: uppercase;
+						color: rgba(226, 232, 240, 0.82);
+						width: max-content;
+					}
+					.last-name {
+						white-space: nowrap;
+						display: inline-block;
+					}
+					#headline {
+						margin-top: 0;
+						padding-top: 0.9rem;
+						border-top: 1px solid rgba(255, 255, 255, 0.07);
+						border-radius: 0;
+						background: transparent;
+						box-shadow: none;
+						line-height: 1.6;
+					}
+				}
+				#mb-up-tile {
+					height: 100%;
+					width: 100%;
+					/* border: 1px solid white; */
+					border-radius: var(--border-radius);
+					grid-column: 1 / 3;
+					grid-row: 1 / -8;
+					position: sticky;
+					top: 0;
+
+					canvas {
+						border-radius: var(--border-radius);
+					}
+				}
+				#mb-bg-tile {
+					height: 100%;
+					width: 100%;
+					background-color: rgb(26, 26, 26);
+					grid-column: -12 / -1;
+					grid-row: 29 / span 4;
+					border-radius: var(--border-radius);
 				}
 			}
 		}
-		.left-grid {
-			position: relative;
-			width: 100%;
-			grid-template-columns: none;
-			grid-auto-rows: auto;
-		}
-		.left-image {
-			background: rgba(0, 0, 0, 0.25);
-		}
-		.left-image :global(.img-container-outer) {
-			height: 100%;
-		}
-		.left-intro {
-			padding: clamp(14px, 4vw, 18px);
-			border: 1px solid var(--hero-border);
-			border-left-width: 3px;
-			border-left-color: rgba(226, 232, 240, 0.65);
-			display: grid;
-			align-content: start;
-			gap: 0.85rem;
-		}
-		.left h1 {
-			width: 100%;
-			padding: 0;
-			background: transparent;
-			border: 0;
-			border-radius: 0;
-			font-size: clamp(34px, 9vw, 44px);
-			line-height: 0.95;
-			letter-spacing: 0.005em;
-		}
-		.left h2 {
-			padding: 0;
-			background: transparent;
-			border: 0;
-			border-radius: 0;
-			margin-top: -2px;
-			font-family: 'Inter', sans-serif;
-			font-size: 12px;
-			letter-spacing: 0.22rem;
-			text-transform: uppercase;
-			color: rgba(226, 232, 240, 0.82);
-			width: max-content;
-		}
-		.left h1 .last-name {
-			white-space: nowrap;
-			display: inline-block;
-		}
-		.left #headline {
-			margin-top: 0;
-			padding-top: 0.9rem;
-			border-top: 1px solid rgba(255, 255, 255, 0.07);
-			border-radius: 0;
-			background: transparent;
-			box-shadow: none;
-			line-height: 1.6;
-			color: rgba(148, 163, 184, 0.95);
-		}
+
 		.left-links {
 			display: none;
 		}
@@ -442,9 +474,11 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 <script>
 	import { initHome } from 'sections/home/scripts/initHome';
 	import { initHomeMobileNav } from 'sections/home/scripts/initHomeMobileNav';
+	import { initThree } from 'sections/home/scripts/initThree';
 
 	document.addEventListener('DOMContentLoaded', () => {
 		initHomeMobileNav();
 		initHome();
+		initThree();
 	});
 </script>

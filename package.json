@@ -9,10 +9,13 @@
 		"astro": "astro"
 	},
 	"dependencies": {
+		"@types/three": "^0.182.0",
 		"astro": "^5.16.11",
 		"astro-icon": "^1.1.5",
 		"gsap": "^3.14.2",
-		"sharp": "^0.34.5"
+		"sharp": "^0.34.5",
+		"three": "^0.182.0",
+		"vanta": "^0.5.24"
 	},
 	"devDependencies": {
 		"@iconify-json/fa7-brands": "^1.2.1",
