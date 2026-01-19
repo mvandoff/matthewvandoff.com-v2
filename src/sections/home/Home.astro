@@ -39,7 +39,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 			<div id="mb-up-tile"></div>
 			<div id="mb-bg-tile"></div>
 		</div>
-		<div class="screen-home screen" data-mobile-nav-label="home-me">
+		<div class="screen-about screen" data-mobile-nav-label="home-me">
 			<div class="right">
 				<div class="home-h3-container">
 					<h3 class="home">about</h3>
@@ -63,14 +63,16 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 				</div>
 			</div>
 		</div>
-		<MobileTimeline />
+		<!-- <MobileTimeline /> -->
 
 		<HomeSvgFilters />
 	</div>
 </section>
 
 <style is:global>
-	html {
+	html,
+	body,
+	main {
 		overflow: hidden;
 	}
 	#main-nav {
@@ -132,6 +134,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 		margin-left: var(--layout-left);
 		width: var(--layout-width);
 		min-height: 100%;
+		padding-bottom: 8rem;
 	}
 	.left-grid {
 		width: calc(var(--left-col-span) * var(--block-size));
@@ -313,7 +316,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 				/* background: red; */
 			}
 			.screen {
-				height: calc(100vh - var(--mobile-nav-height));
+				height: calc(100dvh - var(--mobile-nav-height));
 				width: min(100%, calc(var(--block-size) * 40));
 				margin: 0 auto;
 				/* border: 1px solid yellow; */
@@ -339,7 +342,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 
 				.left-image-layer {
 					display: block;
-					grid-column: 4 / -1;
+					grid-column: 3 / -1;
 					grid-row: 1 / 14;
 
 					.left-image {
@@ -349,14 +352,14 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 						.img-container {
 							padding: 0;
 							img {
-								opacity: 1;
+								opacity: 0.8;
 								/* border-radius: 0; */
 							}
 						}
 					}
 				}
 				.intro-container {
-					grid-column: 4 / -1;
+					grid-column: 3 / -1;
 					grid-row: 15 / 28;
 					background: rgb(21, 21, 21);
 					padding: clamp(14px, 4vw, 18px);
@@ -409,9 +412,10 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 				#mb-up-tile {
 					height: 100%;
 					width: 100%;
+					background: black;
 					/* border: 1px solid white; */
 					border-radius: var(--border-radius);
-					grid-column: 1 / 3;
+					grid-column: 1 / 2;
 					grid-row: 1 / -8;
 					position: sticky;
 					top: 0;
@@ -423,7 +427,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 				#mb-bg-tile {
 					height: 100%;
 					width: 100%;
-					background-color: rgb(26, 26, 26);
+					background-color: rgb(12, 12, 12);
 					grid-column: -12 / -1;
 					grid-row: 29 / span 4;
 					border-radius: var(--border-radius);
@@ -437,14 +441,15 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 		.right {
 			margin-left: 0;
 			width: 100%;
-			order: 2;
 			display: flex;
 			flex-direction: column;
-			grid-template-columns: none;
-			grid-auto-rows: auto;
+			grid-column: 3 / -1;
+			grid-row: 1 / -1;
+			justify-content: end;
 			gap: calc(var(--block-size) * 0.5);
 			padding-right: 0;
 			padding-bottom: 0;
+			padding-bottom: calc(var(--block-size) * 2);
 		}
 		.right .home-h3-container,
 		.right .blurbs,

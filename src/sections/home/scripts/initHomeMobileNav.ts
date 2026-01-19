@@ -30,7 +30,7 @@ export function initHomeMobileNav() {
 			},
 			{
 				id: 'about-me-msg-mobile',
-				text: 'about me',
+				text: 'about',
 				className: 'mobile-nav-msg--spinner',
 				showFromYPercent: -100,
 				hideToYPercent: -100,
