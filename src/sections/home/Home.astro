@@ -17,7 +17,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 					<HomeImage />
 				</div>
 			</div>
-			<div class="left left-grid">
+			<!-- <div class="left left-grid">
 				<div class="left-intro">
 					<h1>
 						matthew <span class="last-name">van&nbsp;doff</span>
@@ -35,7 +35,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 					/>
 					<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
 				</div>
-			</div>
+			</div> -->
 		</div>
 		<div class="screen-home screen" data-mobile-nav-label="home-me">
 			<div class="right">
@@ -283,8 +283,9 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 	@media screen and (max-width: 1280px) {
 		:root {
 			--mobile-nav-height: 48px;
-			/* Round viewport width down to the nearest block to keep layout aligned. */
-			--full-width: round(down, 100vw, var(--block-size));
+			--full-width: calc(round(down, 100vw, var(--block-size)) - var(--block-size));
+			--total-blocks: round(up, calc(100vw / var(--block-size)));
+			--home-image-inset: 0 !important;
 		}
 		:global(#mobile-nav) {
 			height: var(--mobile-nav-height);
@@ -309,16 +310,35 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 			}
 			.screen {
 				height: calc(100vh - var(--mobile-nav-height));
+				width: min(100%, calc(var(--block-size) * 20));
+				margin: 0 auto;
+				/* border: 1px solid yellow; */
 				margin-top: var(--mobile-nav-height);
 				scroll-snap-align: start;
 				scroll-snap-stop: always;
 				box-sizing: border-box;
 				display: grid;
+				grid-template-columns: repeat(auto-fill, var(--block-size));
+				grid-template-rows: repeat(auto-fill, var(--block-size));
 			}
 			.screen-hero {
 				--hero-radius: 2px;
 				--hero-border: rgba(255, 255, 255, 0.09);
 				--hero-grid-size: 18px;
+
+				.left-image-layer {
+					display: block;
+					grid-column: 1 / clamp(11, calc(var(--total-blocks) - 2), 16);
+					grid-row: 1 / 9;
+
+					.left-image {
+						height: 100%;
+						width: 100%;
+					}
+				}
+				.img-container {
+					padding: 0;
+				}
 			}
 		}
 		.left-grid {
