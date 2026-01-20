@@ -1,11 +1,14 @@
 ---
 import './home-background.css';
 import './blocks.css';
+import './mb-scroll-tile.css';
+import './home-background.css';
 import Timeline from 'sections/home/Timeline.astro';
 import HomeSvgFilters from 'sections/home/HomeSvgFilters.astro';
 import HomeImage from 'sections/home/HomeImage.astro';
 import SocialLink from 'sections/home/SocialLink.astro';
 import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
+import { Icon } from 'astro-icon/components';
 ---
 
 <section id="home">
@@ -36,8 +39,16 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 					<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
 				</div> -->
 			</div>
-			<div id="mb-up-tile"></div>
-			<div id="mb-bg-tile"></div>
+			<div id="mb-animated-tile"></div>
+			<div id="mb-scroll-tile">
+				<button class="mb-scroll-cue" type="button" aria-label="Scroll down">
+					<span class="mb-scroll-cue__chevrons" aria-hidden="true">
+						<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+						<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+						<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+					</span>
+				</button>
+			</div>
 		</div>
 		<div class="screen-about screen" data-mobile-nav-label="home-me">
 			<div class="right">
@@ -69,6 +80,31 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 	</div>
 </section>
 
+<style>
+	/* Mobile "bento" tile positions (grid-row/grid-column). */
+	@media screen and (max-width: 1280px) {
+		.screen-hero .left-image-layer {
+			grid-column: 3 / -1;
+			grid-row: 1 / 12;
+		}
+		.screen-hero .intro-container {
+			grid-column: 3 / -1;
+			grid-row: 13 / 26;
+		}
+		.screen-hero #mb-animated-tile {
+			grid-column: 1 / 2;
+			grid-row: 1 / 26;
+		}
+		.screen-hero #mb-scroll-tile {
+			grid-column: -4 / -1;
+			grid-row: 27 / -1;
+		}
+		.screen-about .right {
+			grid-column: 2 / -2;
+			grid-row: 1 / -1;
+		}
+	}
+</style>
 <style is:global>
 	html,
 	body,
@@ -342,8 +378,6 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 
 				.left-image-layer {
 					display: block;
-					grid-column: 3 / -1;
-					grid-row: 1 / 14;
 
 					.left-image {
 						height: 100%;
@@ -359,9 +393,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 					}
 				}
 				.intro-container {
-					grid-column: 3 / -1;
-					grid-row: 15 / 28;
-					background: rgb(21, 21, 21);
+					background: rgb(8, 8, 8);
 					padding: clamp(14px, 4vw, 18px);
 					display: flex;
 					border-radius: var(--border-radius);
@@ -409,28 +441,18 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 						line-height: 1.6;
 					}
 				}
-				#mb-up-tile {
+				#mb-animated-tile {
 					height: 100%;
 					width: 100%;
 					background: black;
 					/* border: 1px solid white; */
 					border-radius: var(--border-radius);
-					grid-column: 1 / 2;
-					grid-row: 1 / -8;
 					position: sticky;
 					top: 0;
 
 					canvas {
 						border-radius: var(--border-radius);
 					}
-				}
-				#mb-bg-tile {
-					height: 100%;
-					width: 100%;
-					background-color: rgb(12, 12, 12);
-					grid-column: -12 / -1;
-					grid-row: 29 / span 4;
-					border-radius: var(--border-radius);
 				}
 			}
 		}
@@ -443,8 +465,6 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 			width: 100%;
 			display: flex;
 			flex-direction: column;
-			grid-column: 3 / -1;
-			grid-row: 1 / -1;
 			justify-content: end;
 			gap: calc(var(--block-size) * 0.5);
 			padding-right: 0;
@@ -479,11 +499,13 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 <script>
 	import { initHome } from 'sections/home/scripts/initHome';
 	import { initHomeMobileNav } from 'sections/home/scripts/initHomeMobileNav';
+	import { initHomeScrollCue } from 'sections/home/scripts/initHomeScrollCue';
 	import { initThree } from 'sections/home/scripts/initThree';
 
 	document.addEventListener('DOMContentLoaded', () => {
 		initHomeMobileNav();
 		initHome();
+		initHomeScrollCue();
 		initThree();
 	});
 </script>

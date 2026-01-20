@@ -1,0 +1,152 @@
+:root {
+	--mb-scroll-tile-bg: var(--main-950);
+	--mb-scroll-tile-grid-line-alpha: 0.06;
+	--mb-scroll-tile-grid-opacity: 0.12;
+	--mb-scroll-tile-scan-alpha: 0.09;
+	--mb-scroll-tile-scan-opacity: 0.45;
+	--mb-scroll-tile-scan-duration: 2.6s;
+
+	--mb-scroll-chevron-size: 24px;
+	--mb-scroll-chevron-gap: 2px;
+	--mb-scroll-chevron-base-opacity: 0.75;
+	--mb-scroll-chevron-peak-opacity: 1;
+	--mb-scroll-chevron-pulse-duration: 4s;
+	--mb-scroll-chevron-pulse-timing: ease-in-out;
+	--mb-scroll-chevron-stagger: 120ms;
+}
+
+#mb-scroll-tile {
+	display: none;
+}
+
+@media screen and (max-width: 1280px) {
+	#mb-scroll-tile {
+		display: block;
+		height: 100%;
+		width: 100%;
+		border-radius: var(--border-radius);
+		background: var(--mb-scroll-tile-bg);
+		border: 0;
+		position: relative;
+		overflow: hidden;
+		isolation: isolate;
+		pointer-events: auto;
+	}
+
+	#mb-scroll-tile::before,
+	#mb-scroll-tile::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	/* Subtle block grid texture. */
+	#mb-scroll-tile::before {
+		background-image:
+			linear-gradient(to right, rgba(226, 232, 240, var(--mb-scroll-tile-grid-line-alpha)) 1px, transparent 1px),
+			linear-gradient(to bottom, rgba(226, 232, 240, var(--mb-scroll-tile-grid-line-alpha)) 1px, transparent 1px);
+		background-size: var(--block-size) var(--block-size);
+		opacity: var(--mb-scroll-tile-grid-opacity);
+	}
+
+	/* A stepped “scan” that nudges the eye downward. */
+	#mb-scroll-tile::after {
+		background: linear-gradient(
+			to bottom,
+			transparent 0%,
+			rgba(226, 232, 240, var(--mb-scroll-tile-scan-alpha)) 50%,
+			transparent 100%
+		);
+		opacity: var(--mb-scroll-tile-scan-opacity);
+		transform: translateY(-80%);
+		animation: mb-scroll-tile-scan var(--mb-scroll-tile-scan-duration) steps(10, end) infinite;
+	}
+
+	.mb-scroll-cue {
+		position: relative;
+		z-index: 1;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0;
+		background: transparent;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+		color: rgba(226, 232, 240, 0.82);
+		font-family: 'Inter', sans-serif;
+		text-transform: uppercase;
+		letter-spacing: 0.22rem;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.mb-scroll-cue:active {
+		transform: translateY(1px);
+	}
+
+	.mb-scroll-cue__chevrons {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--mb-scroll-chevron-gap);
+	}
+
+	.mb-scroll-cue__chevron {
+		display: flex;
+		line-height: 0;
+		opacity: var(--mb-scroll-chevron-base-opacity);
+		animation: mb-scroll-chevron-pulse var(--mb-scroll-chevron-pulse-duration) var(--mb-scroll-chevron-pulse-timing)
+			infinite;
+		will-change: transform, opacity;
+		transform: translate3d(0, var(--mb-scroll-chevron-rest-y), 0);
+	}
+	.mb-scroll-cue__chevron:nth-child(2) {
+		animation-delay: calc(var(--mb-scroll-chevron-stagger) * 1);
+	}
+	.mb-scroll-cue__chevron:nth-child(3) {
+		animation-delay: calc(var(--mb-scroll-chevron-stagger) * 2);
+	}
+
+	.mb-scroll-cue__chevron svg {
+		width: var(--mb-scroll-chevron-size);
+		height: var(--mb-scroll-chevron-size);
+	}
+
+	@keyframes mb-scroll-chevron-pulse {
+		0%,
+		76% {
+			opacity: var(--mb-scroll-chevron-base-opacity);
+		}
+		84% {
+			opacity: var(--mb-scroll-chevron-peak-opacity);
+		}
+		90%,
+		92% {
+			opacity: var(--mb-scroll-chevron-base-opacity);
+		}
+		100% {
+			opacity: var(--mb-scroll-chevron-base-opacity);
+		}
+	}
+
+	@keyframes mb-scroll-tile-scan {
+		0% {
+			transform: translateY(-85%);
+		}
+		100% {
+			transform: translateY(85%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#mb-scroll-tile::after,
+		.mb-scroll-cue__chevron {
+			animation: none !important;
+		}
+	}
+}
