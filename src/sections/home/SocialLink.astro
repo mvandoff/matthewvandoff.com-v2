@@ -59,24 +59,6 @@ if (!brand) {
 		--social-wave-border-color: hsla(45, 100%, 50%, 0.06);
 		--social-trail-color: var(--bg-block-color);
 
-		&[data-brand='linkedin'] {
-			--social-hover-color: #c0dbf7;
-			--social-focus-outline-color: #0a66c2;
-			--social-hover-bg-color: rgba(10, 102, 194, 0.08);
-			--social-wave-color: rgba(10, 102, 194, 0.22);
-			--social-wave-border-color: rgba(10, 102, 194, 0.109);
-			--social-trail-color: rgba(10, 102, 194, 0.5);
-		}
-
-		&[data-brand='github'] {
-			--social-hover-color: #b9dec0;
-			--social-focus-outline-color: #2ea043;
-			--social-hover-bg-color: rgba(46, 160, 67, 0.06);
-			--social-wave-color: rgba(46, 160, 67, 0.18);
-			--social-wave-border-color: rgba(46, 160, 67, 0.071);
-			--social-trail-color: rgba(46, 160, 67, 0.45);
-		}
-
 		width: calc(3 * var(--block-size));
 		height: var(--block-size);
 		border-radius: 2px;
@@ -96,7 +78,6 @@ if (!brand) {
 		&.is-distorting {
 			will-change: filter;
 		}
-
 		&:hover {
 			color: var(--social-hover-color);
 			background-color: var(--social-hover-bg-color);
@@ -110,6 +91,23 @@ if (!brand) {
 			background-color: var(--social-hover-bg-color);
 			border-color: var(--social-wave-border-color);
 			box-shadow: inset 0 0 0 1px var(--social-wave-border-color);
+		}
+		&[data-brand='linkedin'] {
+			--social-hover-color: #c0dbf7;
+			--social-focus-outline-color: #0a66c2;
+			--social-hover-bg-color: rgba(10, 102, 194, 0.08);
+			--social-wave-color: rgba(10, 102, 194, 0.22);
+			--social-wave-border-color: rgba(10, 102, 194, 0.109);
+			--social-trail-color: rgba(10, 102, 194, 0.5);
+		}
+
+		&[data-brand='github'] {
+			--social-hover-color: #b9dec0;
+			--social-focus-outline-color: #2ea043;
+			--social-hover-bg-color: rgba(46, 160, 67, 0.06);
+			--social-wave-color: rgba(46, 160, 67, 0.18);
+			--social-wave-border-color: rgba(46, 160, 67, 0.071);
+			--social-trail-color: rgba(46, 160, 67, 0.45);
 		}
 	}
 

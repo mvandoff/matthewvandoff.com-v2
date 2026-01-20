@@ -6,8 +6,10 @@ import Timeline from 'sections/home/Timeline.astro';
 import HomeSvgFilters from 'sections/home/HomeSvgFilters.astro';
 import HomeImage from 'sections/home/HomeImage.astro';
 import SocialLink from 'sections/home/SocialLink.astro';
+import MVDLogo from 'components/MVDLogo.astro';
 import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 import { Icon } from 'astro-icon/components';
+import keyboardCat from 'assets/gif/keyboard-cat.gif';
 ---
 
 <section id="home">
@@ -53,6 +55,9 @@ import { Icon } from 'astro-icon/components';
 				<span class="mb-social-arrow" aria-hidden="true">⇱</span>
 			</a>
 			<div id="mb-animated-tile"></div>
+			<div id="mb-logo-tile" aria-hidden="true">
+				<MVDLogo />
+			</div>
 			<div id="mb-scroll-tile">
 				<button class="mb-scroll-cue" type="button" aria-label="Scroll down">
 					<span class="mb-scroll-cue__chevrons" aria-hidden="true">
@@ -61,6 +66,9 @@ import { Icon } from 'astro-icon/components';
 						<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
 					</span>
 				</button>
+			</div>
+			<div id="mb-gif-tile">
+				<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
 			</div>
 		</div>
 		<div class="screen-about screen" data-mobile-nav-label="home-me">
@@ -121,7 +129,26 @@ import { Icon } from 'astro-icon/components';
 				grid-column: 1 / span 12;
 				grid-row: 31 / span 3;
 			}
+			#mb-logo-tile {
+				grid-column: 14 / 19;
+				grid-row: 27 / -1;
+			}
+			#mb-gif-tile {
+				grid-column: 1 / span 12;
+				grid-row: 35 / -1;
+
+				/* border: 1px solid white; */
+				border-radius: var(--home-border-radius);
+			}
+			#mb-gif-tile img {
+				display: block;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				border-radius: inherit;
+			}
 		}
+
 		.screen-about .right {
 			grid-column: 2 / -2;
 			grid-row: 1 / -1;
@@ -539,6 +566,23 @@ import { Icon } from 'astro-icon/components';
 					transform: rotate(90deg);
 				}
 			}
+		}
+		#mb-logo-tile {
+			/* border: 1px solid white; */
+			border-radius: var(--home-border-radius);
+			background: #80734f;
+			display: grid;
+			place-items: center;
+			padding: calc(var(--block-size) * 0.5);
+		}
+		#mb-logo-tile :global(.mvd-logo) {
+			display: block;
+			width: auto;
+			height: min(100%, calc(var(--block-size) * 6));
+			max-width: 200%;
+			transform: rotate(-90deg);
+			transform-origin: center;
+			fill: white;
 		}
 
 		.left-links {

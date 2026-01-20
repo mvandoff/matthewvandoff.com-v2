@@ -1,5 +1,5 @@
 :root {
-	--mb-scroll-tile-bg: var(--main-950);
+	--mb-scroll-tile-bg: rgb(12, 12, 12);
 	--mb-scroll-tile-grid-line-alpha: 0.06;
 	--mb-scroll-tile-grid-opacity: 0.12;
 	--mb-scroll-tile-scan-alpha: 0.09;
