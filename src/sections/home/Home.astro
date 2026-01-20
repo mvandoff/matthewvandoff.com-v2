@@ -38,6 +38,20 @@ import { Icon } from 'astro-icon/components';
 					<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
 				</div>
 			</div>
+			<a class="mb-social-link" data-brand="li" href="https://www.linkedin.com/in/matthew-vandoff/">
+				<span class="mb-social-left">
+					<span class="mb-social-brand-icon" aria-hidden="true"><Icon name="fa7-brands:linkedin" /></span>
+					<span class="mb-social-label">LinkedIn</span>
+				</span>
+				<span class="mb-social-arrow" aria-hidden="true">⇱</span>
+			</a>
+			<a class="mb-social-link" data-brand="gh" href="https://github.com/mvandoff">
+				<span class="mb-social-left">
+					<span class="mb-social-brand-icon" aria-hidden="true"><Icon name="fa7-brands:github" /></span>
+					<span class="mb-social-label">GitHub</span>
+				</span>
+				<span class="mb-social-arrow" aria-hidden="true">⇱</span>
+			</a>
 			<div id="mb-animated-tile"></div>
 			<div id="mb-scroll-tile">
 				<button class="mb-scroll-cue" type="button" aria-label="Scroll down">
@@ -82,21 +96,31 @@ import { Icon } from 'astro-icon/components';
 <style>
 	/* Mobile "bento" tile positions (grid-row/grid-column). */
 	@media screen and (max-width: 1280px) {
-		.screen-hero .left-image-layer {
-			grid-column: 3 / -1;
-			grid-row: 1 / 12;
-		}
-		.screen-hero .intro-container {
-			grid-column: 3 / -1;
-			grid-row: 13 / 26;
-		}
-		.screen-hero #mb-animated-tile {
-			grid-column: 1 / 2;
-			grid-row: 1 / 26;
-		}
-		.screen-hero #mb-scroll-tile {
-			grid-column: -4 / -1;
-			grid-row: 27 / -1;
+		.screen-hero {
+			.left-image-layer {
+				grid-column: 3 / -1;
+				grid-row: 1 / 12;
+			}
+			.intro-container {
+				grid-column: 3 / -1;
+				grid-row: 13 / 26;
+			}
+			#mb-animated-tile {
+				grid-column: 1 / 2;
+				grid-row: 1 / 26;
+			}
+			#mb-scroll-tile {
+				grid-column: -4 / -1;
+				grid-row: 27 / -1;
+			}
+			.mb-social-link[data-brand='li'] {
+				grid-column: 1 / span 12;
+				grid-row: 27 / span 3;
+			}
+			.mb-social-link[data-brand='gh'] {
+				grid-column: 1 / span 12;
+				grid-row: 31 / span 3;
+			}
 		}
 		.screen-about .right {
 			grid-column: 2 / -2;
@@ -246,6 +270,9 @@ import { Icon } from 'astro-icon/components';
 		margin-top: -32px;
 		pointer-events: auto;
 	}
+	.mb-social-link {
+		display: none;
+	}
 	.left-links :global(.social-link) {
 		width: 100%;
 		height: 100%;
@@ -328,7 +355,7 @@ import { Icon } from 'astro-icon/components';
 			--total-blocks: round(up, calc(100vw / var(--block-size)));
 			--home-image-inset: 0 !important;
 			--grid-gap: 12px;
-			--border-radius: 4px;
+			--home-border-radius: 4px;
 		}
 		:global(#mobile-nav) {
 			height: var(--mobile-nav-height);
@@ -395,7 +422,7 @@ import { Icon } from 'astro-icon/components';
 					background: rgb(8, 8, 8);
 					padding: clamp(14px, 4vw, 18px);
 					display: flex;
-					border-radius: var(--border-radius);
+					border-radius: var(--home-border-radius);
 					border: 0px solid var(--hero-border);
 					border-left-width: 4px;
 					border-left-color: rgba(226, 232, 240, 0.65);
@@ -445,13 +472,71 @@ import { Icon } from 'astro-icon/components';
 					width: 100%;
 					background: black;
 					/* border: 1px solid white; */
-					border-radius: var(--border-radius);
+					border-radius: var(--home-border-radius);
 					position: sticky;
 					top: 0;
 
 					canvas {
-						border-radius: var(--border-radius);
+						border-radius: var(--home-border-radius);
 					}
+				}
+				.mb-social-link {
+					--mb-social-icon-size: 42px;
+
+					height: 100%;
+					width: 100%;
+					border-radius: var(--home-border-radius);
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: calc(var(--block-size) * 0.4);
+					padding: 0 calc(var(--block-size) * 0.55);
+					text-decoration: none;
+					color: rgba(226, 232, 240, 0.86);
+					background:
+						radial-gradient(circle at 20% 50%, var(--mb-social-accent-bg), transparent 68%),
+						linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+					/* border: 1px solid rgba(255, 255, 255, 0.08); */
+					border-bottom: 4px solid var(--mb-social-accent);
+
+					&[data-brand='li'] {
+						--mb-social-accent: #0a66c2;
+						--mb-social-accent-bg: rgba(10, 102, 194, 0.18);
+					}
+					&[data-brand='gh'] {
+						--mb-social-accent: #2ea043;
+						--mb-social-accent-bg: rgba(46, 160, 67, 0.14);
+					}
+				}
+				.mb-social-left {
+					display: flex;
+					align-items: center;
+					gap: 12px;
+					min-width: 0;
+				}
+				.mb-social-brand-icon {
+					display: grid;
+					place-items: center;
+
+					:global(svg) {
+						height: var(--mb-social-icon-size);
+						width: var(--mb-social-icon-size);
+						color: var(--mb-social-accent);
+					}
+				}
+				.mb-social-label {
+					font-family: 'Inter', sans-serif;
+					font-size: 14px;
+					letter-spacing: 0.15em;
+					/* text-transform: uppercase; */
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				.mb-social-arrow {
+					font-size: 30px;
+					color: rgba(226, 232, 240, 0.7);
+					transform: rotate(90deg);
 				}
 			}
 		}
