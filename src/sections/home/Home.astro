@@ -1,7 +1,7 @@
 ---
 import './blocks.css';
 import './mb-scroll-tile.css';
-import './intro-container-background.css';
+// import './intro-container-background.css';
 import Timeline from 'sections/home/Timeline.astro';
 import HomeSvgFilters from 'sections/home/HomeSvgFilters.astro';
 import HomeImage from 'sections/home/HomeImage.astro';
@@ -16,12 +16,12 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 	<div id="block-grid" aria-hidden="true"></div>
 	<div class="home-content">
 		<div class="screen-hero screen" data-mobile-nav-label="welcome">
-			<div class="left-image-layer left-grid">
+			<div class="left-image-layer left-grid mb-tile">
 				<div class="left-image">
 					<HomeImage />
 				</div>
 			</div>
-			<div class="left left-grid intro-container">
+			<div class="left left-grid intro-container mb-tile">
 				<div class="left-intro">
 					<h1>
 						matthew <span class="last-name">van&nbsp;doff</span>
@@ -40,36 +40,36 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 					<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
 				</div>
 			</div>
-			<a class="mb-social-link" data-brand="li" href="https://www.linkedin.com/in/matthew-vandoff/">
+			<a class="mb-social-link mb-tile" data-brand="li" href="https://www.linkedin.com/in/matthew-vandoff/">
 				<span class="mb-social-left">
 					<span class="mb-social-brand-icon" aria-hidden="true"><Icon name="fa7-brands:linkedin" /></span>
 					<span class="mb-social-label">LinkedIn</span>
 				</span>
 				<span class="mb-social-arrow" aria-hidden="true">⇱</span>
 			</a>
-			<a class="mb-social-link" data-brand="gh" href="https://github.com/mvandoff">
+			<a class="mb-social-link mb-tile" data-brand="gh" href="https://github.com/mvandoff">
 				<span class="mb-social-left">
 					<span class="mb-social-brand-icon" aria-hidden="true"><Icon name="fa7-brands:github" /></span>
 					<span class="mb-social-label">GitHub</span>
 				</span>
 				<span class="mb-social-arrow" aria-hidden="true">⇱</span>
 			</a>
-			<div id="mb-animated-tile"></div>
-			<div id="mb-logo-tile" aria-hidden="true">
+			<div id="mb-animated-tile" class="mb-tile"></div>
+			<!-- <div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
 				<MVDLogo />
-			</div>
-			<div id="mb-scroll-tile">
+			</div> -->
+			<!-- <div id="mb-scroll-tile" class="mb-tile">
 				<button class="mb-scroll-cue" type="button" aria-label="Scroll down">
-					<span class="mb-scroll-cue__chevrons" aria-hidden="true">
-						<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
-						<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
-						<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
-					</span>
-				</button>
-			</div>
-			<div id="mb-gif-tile">
+				<span class="mb-scroll-cue__chevrons" aria-hidden="true">
+					<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+					<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+					<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+				</span>
+			</button>
+			</div> -->
+			<!-- <div id="mb-gif-tile" class="mb-tile">
 				<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
-			</div>
+			</div> -->
 		</div>
 		<div class="screen-about screen" data-mobile-nav-label="home-me">
 			<div class="right">
@@ -100,7 +100,6 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 		<HomeSvgFilters />
 	</div>
 </section>
-
 <style>
 	/* Mobile "bento" tile positions (grid-row/grid-column). */
 	@media screen and (max-width: 1280px) {
@@ -136,16 +135,17 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 			#mb-gif-tile {
 				grid-column: 1 / span 12;
 				grid-row: 35 / -1;
-
 				/* border: 1px solid white; */
 				border-radius: var(--home-border-radius);
 			}
-			#mb-gif-tile img {
+			#mb-gif-tile {
 				display: block;
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				border-radius: inherit;
+				img {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+					border-radius: inherit;
+				}
 			}
 		}
 
@@ -160,6 +160,8 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 	body,
 	main {
 		overflow: hidden;
+		/* background: #181828; */
+		/* background: linear-gradient(to right, #111118 45%, black 45%); */
 	}
 	#main-nav {
 		z-index: 10;
@@ -221,6 +223,9 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 		width: var(--layout-width);
 		min-height: 100%;
 		padding-bottom: 8rem;
+	}
+	.mb-tile {
+		display: none;
 	}
 	.left-grid {
 		width: calc(var(--left-col-span) * var(--block-size));
@@ -446,13 +451,9 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 					}
 				}
 				.intro-container {
-					background: rgb(8, 8, 8);
+					/* background: rgb(8, 8, 8); */
 					padding: clamp(14px, 4vw, 18px);
-					display: flex;
 					border-radius: var(--home-border-radius);
-					border: 0px solid var(--hero-border);
-					border-left-width: 4px;
-					border-left-color: rgba(226, 232, 240, 0.65);
 
 					.left-intro {
 						gap: 0.85rem;
@@ -495,6 +496,7 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 					}
 				}
 				#mb-animated-tile {
+					display: block;
 					height: 100%;
 					width: 100%;
 					background: black;
@@ -519,12 +521,6 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 					gap: calc(var(--block-size) * 0.4);
 					padding: 0 calc(var(--block-size) * 0.55);
 					text-decoration: none;
-					color: rgba(226, 232, 240, 0.86);
-					background:
-						radial-gradient(circle at 20% 50%, var(--mb-social-accent-bg), transparent 68%),
-						linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-					/* border: 1px solid rgba(255, 255, 255, 0.08); */
-					border-bottom: 4px solid var(--mb-social-accent);
 
 					&[data-brand='li'] {
 						--mb-social-accent: #0a66c2;
