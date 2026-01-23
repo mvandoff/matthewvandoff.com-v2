@@ -45,6 +45,30 @@
 	--slate-900: #0f172a;
 	--slate-950: #020617;
 
+	--gray-50: oklch(0.985 0.002 247.839);
+	--gray-100: oklch(0.967 0.003 264.542);
+	--gray-200: oklch(0.928 0.006 264.531);
+	--gray-300: oklch(0.872 0.01 258.338);
+	--gray-400: oklch(0.707 0.022 261.325);
+	--gray-500: oklch(0.551 0.027 264.364);
+	--gray-600: oklch(0.446 0.03 256.802);
+	--gray-700: oklch(0.373 0.034 259.733);
+	--gray-800: oklch(0.278 0.033 256.848);
+	--gray-900: oklch(0.21 0.034 264.665);
+	--gray-950: oklch(0.13 0.028 261.692);
+
+	--neutral-50: oklch(0.985 0 0);
+	--neutral-100: oklch(0.97 0 0);
+	--neutral-200: oklch(0.922 0 0);
+	--neutral-300: oklch(0.87 0 0);
+	--neutral-400: oklch(0.708 0 0);
+	--neutral-500: oklch(0.556 0 0);
+	--neutral-600: oklch(0.439 0 0);
+	--neutral-700: oklch(0.371 0 0);
+	--neutral-800: oklch(0.269 0 0);
+	--neutral-900: oklch(0.205 0 0);
+	--neutral-950: oklch(0.145 0 0);
+
 	--btsm-bg-50: #fffbf7;
 	--btsm-bg-100: #f1ede9;
 	--btsm-bg-200: hsl(28, 19%, 84%);
