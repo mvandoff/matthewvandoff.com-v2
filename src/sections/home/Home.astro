@@ -41,18 +41,16 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 				</div>
 			</div>
 			<a class="mb-social-link" data-brand="li" href="https://www.linkedin.com/in/matthew-vandoff/">
-				<span class="mb-social-left">
-					<span class="mb-social-brand-icon" aria-hidden="true"><Icon name="fa7-brands:linkedin" /></span>
-					<span class="mb-social-label">LinkedIn</span>
+				<span class="mb-social-brand-icon" aria-hidden="true">
+					<Icon name="fa7-brands:linkedin" id="mb-li-icon" />
 				</span>
-				<span class="mb-social-arrow" aria-hidden="true">⇱</span>
+				<span class="mb-social-label">LinkedIn</span>
 			</a>
 			<a class="mb-social-link" data-brand="gh" href="https://github.com/mvandoff">
-				<span class="mb-social-left">
-					<span class="mb-social-brand-icon" aria-hidden="true"><Icon name="fa7-brands:github" /></span>
-					<span class="mb-social-label">GitHub</span>
+				<span class="mb-social-brand-icon" aria-hidden="true">
+					<Icon name="fa7-brands:github" id="mb-gh-icon" />
 				</span>
-				<span class="mb-social-arrow" aria-hidden="true">⇱</span>
+				<span class="mb-social-label">GitHub</span>
 			</a>
 			<div id="mb-animated-tile" class=""></div>
 			<!-- <div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
@@ -121,12 +119,12 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 				grid-row: 27 / -1;
 			}
 			.mb-social-link[data-brand='li'] {
-				grid-column: 1 / span 12;
-				grid-row: 27 / span 3;
+				grid-column: 1 / span 5;
+				grid-row: 27 / span 5;
 			}
 			.mb-social-link[data-brand='gh'] {
-				grid-column: 1 / span 12;
-				grid-row: 31 / span 3;
+				grid-column: 7 / span 5;
+				grid-row: 27 / span 5;
 			}
 			#mb-logo-tile {
 				grid-column: 14 / 19;
@@ -526,59 +524,44 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 					}
 				}
 				.mb-social-link {
-					--mb-social-icon-size: 42px;
-
 					height: 100%;
 					width: 100%;
 					border-radius: var(--home-border-radius);
 					display: flex;
+					flex-direction: column;
 					align-items: center;
 					justify-content: space-between;
-					padding: 0 calc(var(--block-size) * 0.55);
-					text-decoration: none;
-					border: 1px solid var(--neutral-900);
+					padding: 0.5rem;
+					position: relative;
+					background-color: rgba(255, 255, 255, 0.03);
 
-					&[data-brand='li'] {
-						--mb-social-accent: #0a66c2;
-						--mb-social-accent-bg: rgba(10, 102, 194, 0.18);
+					&::before {
+						content: '';
+						position: absolute;
+						border-radius: var(--home-border-radius);
+						inset: 0;
+						background:
+							radial-gradient(120% 120% at 0% 0%, rgba(255, 255, 255, 0.08), transparent 55%),
+							linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 62%);
+						pointer-events: none;
 					}
-					&[data-brand='gh'] {
-						--mb-social-accent: #2ea043;
-						--mb-social-accent-bg: rgba(46, 160, 67, 0.14);
+					.mb-social-label {
+						font-family: 'Inter', sans-serif;
+						font-size: 10px;
+						letter-spacing: 0.15em;
+						/* text-transform: lowercase; */
+						color: var(--neutral-400);
 					}
-				}
-				.mb-social-left {
-					display: flex;
-					align-items: center;
-					gap: 12px;
-					min-width: 0;
-				}
-				.mb-social-brand-icon {
-					display: grid;
-					place-items: center;
-
-					:global(svg) {
-						height: var(--mb-social-icon-size);
-						width: var(--mb-social-icon-size);
-						color: var(--mb-social-accent);
-					}
-				}
-				.mb-social-label {
-					font-family: 'Inter', sans-serif;
-					font-size: 14px;
-					letter-spacing: 0.15em;
-					/* text-transform: uppercase; */
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-				}
-				.mb-social-arrow {
-					font-size: 24px;
-					padding-top: 1rem;
-					color: var(--neutral-300);
-					transform: rotate(90deg);
 				}
 			}
+		}
+		:root {
+			--mb-social-icon-size: 48px;
+		}
+		:global(.mb-social-link svg) {
+			height: var(--mb-social-icon-size);
+			width: var(--mb-social-icon-size);
+			color: var(--neutral-300);
 		}
 		#mb-logo-tile {
 			/* border: 1px solid white; */
