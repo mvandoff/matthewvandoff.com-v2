@@ -29,18 +29,18 @@ const { pathname } = Astro.url;
 
 		a {
 			transition: color 0.25s ease;
-			color: #737373;
+			color: var(--neutral-500);
 			&.inactive:not(.transitioning) {
 				color: #494949 !important;
 			}
 			&.active {
-				color: white;
+				color: var(--neutral-100);
 			}
 			&:hover {
-				color: white;
+				color: var(--neutral-100);
 			}
 			&.selected {
-				color: white;
+				color: var(--neutral-100);
 				cursor: default;
 				pointer-events: none;
 			}
@@ -50,10 +50,10 @@ const { pathname } = Astro.url;
 			}
 		}
 		button {
-			color: #737373;
+			color: var(--neutral-500);
 			transition: color 0.25s ease;
 			&:hover {
-				color: white;
+				color: var(--neutral-100);
 			}
 		}
 	}
