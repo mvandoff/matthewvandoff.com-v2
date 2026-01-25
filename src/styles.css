@@ -21,17 +21,17 @@
     --main-950: #001623; */
 
 	/* Tailwind indigo colors */
-	--main-50: #eef2ff;
-	--main-100: #e0e7ff;
-	--main-200: #c7d2fe;
-	--main-300: #a5b4fc;
-	--main-400: #818cf8;
-	--main-500: #6366f1;
-	--main-600: #4f46e5;
-	--main-700: #4338ca;
-	--main-800: #3730a3;
-	--main-900: #312e81;
-	--main-950: #1e1b4b; /* Custom indigo-950 */
+	--main-50: hsl(226, 100%, 97%);
+	--main-100: hsl(226, 100%, 94%);
+	--main-200: hsl(228, 96%, 89%);
+	--main-300: hsl(230, 94%, 82%);
+	--main-400: hsl(234, 89%, 74%);
+	--main-500: hsl(239, 84%, 67%);
+	--main-600: hsl(243, 75%, 59%);
+	--main-700: hsl(245, 58%, 51%);
+	--main-800: hsl(244, 55%, 41%);
+	--main-900: hsl(242, 47%, 34%);
+	--main-950: hsl(244, 47%, 20%); /* Custom indigo-950 */
 	--main-1k: hsl(244 40% 10% / 1);
 
 	--slate-50: #f8fafc;
