@@ -51,7 +51,15 @@ import kidA from 'assets/images/kid-a.jpg';
 		iconId="mb-gh-icon"
 	/>
 	<div id="mb-animated-tile" class="mb-tile"></div>
-	<div id="mb-copy-tile" class="mb-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>everything in it's right place</div>
+	<div id="mb-gif-tile" class="mb-tile">
+		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
+	</div>
+	<div id="mb-copy-tile" class="mb-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>
+		everything in it's right place
+	</div>
+	<div id="mb-down-tile" class="mb-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>
+		<Icon name="heroicons:chevron-down-16-solid" aria-hidden="true" />
+	</div>
 	<!-- <div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
 		<MVDLogo />
 	</div> -->
@@ -64,10 +72,4 @@ import kidA from 'assets/images/kid-a.jpg';
 		</span>
 	</button>
 	</div> -->
-	<div id="mb-gif-tile" class="mb-tile">
-		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
-	</div>
-	<div id="mb-down-tile" class="mb-tile">
-		<Icon name="heroicons:chevron-down-16-solid" aria-hidden="true" />
-	</div>
 </div>
