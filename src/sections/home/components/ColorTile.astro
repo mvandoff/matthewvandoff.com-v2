@@ -2,42 +2,159 @@
 import { Icon } from 'astro-icon/components';
 ---
 
-<button id="mb-color-tile" class="mb-tile mb-tile-surface" type="button">
-	<Icon name="f7:paintbrush-fill" aria-hidden="true" />
+<button
+	id="mb-color-tile"
+	class="mb-tile mb-tile-surface"
+	type="button"
+	aria-expanded="false"
+	aria-label="Open accent color"
+>
+	<span class="mb-color-tile__drawer" aria-hidden="true">
+		<span class="mb-color-tile__drawer-inner">
+			<span class="mb-color-tile__label">accent</span>
+			<span class="mb-color-tile__sub">tap to close</span>
+		</span>
+	</span>
+	<span class="mb-color-tile__handle" aria-hidden="true">
+		<Icon name="f7:paintbrush-fill" />
+		<span class="mb-color-tile__dot"></span>
+	</span>
 </button>
 <script>
-	import iro from '@jaames/iro';
+	const OPEN_CLASS = 'is-open';
+
+	const getTile = () => document.getElementById('mb-color-tile');
+
+	const setOpen = (tile: HTMLElement, open: boolean) => {
+		tile.classList.toggle(OPEN_CLASS, open);
+		tile.setAttribute('aria-expanded', open ? 'true' : 'false');
+		tile.setAttribute('aria-label', open ? 'Close accent color' : 'Open accent color');
+	};
 
 	document.addEventListener('DOMContentLoaded', () => {
-		const tile = document.getElementById('mb-color-tile');
+		const tile = getTile();
+		if (!tile) return;
+
+		tile.addEventListener('click', () => {
+			setOpen(tile, !tile.classList.contains(OPEN_CLASS));
+		});
+		document.addEventListener('pointerdown', (event) => {
+			if (!tile.classList.contains(OPEN_CLASS)) return;
+			if (event.target instanceof Node && tile.contains(event.target)) return;
+			setOpen(tile, false);
+		});
 	});
 </script>
 <style>
 	#mb-color-tile {
+		--mb-color-tile-handle-width: min(100%, calc(var(--block-size) * 5));
+		--mb-color-tile-slide-over: calc(var(--block-size) * 12);
+		--mb-color-tile-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
 		--mb-tile-linear-start: transparent;
 		--mb-tile-linear-end: #1e1b4b64;
 
-		display: flex;
+		display: block;
+		padding: 0;
 		font-size: 32px;
-		justify-content: center;
-		align-items: center;
 		color: var(--neutral-300);
 		position: relative;
+		justify-self: end;
+		overflow: hidden;
+		isolation: isolate;
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+		transition:
+			width 520ms var(--mb-color-tile-ease),
+			box-shadow 520ms var(--mb-color-tile-ease),
+			border-color 520ms var(--mb-color-tile-ease);
+		will-change: width;
 
-		svg {
-			rotate: 0deg;
+		&:focus-visible {
+			outline: 2px solid rgba(226, 232, 240, 0.6);
+			outline-offset: 2px;
 		}
 
-		&::after {
-			content: '';
-			position: absolute;
-			width: 8px;
-			height: 8px;
-			background: var(--main-500);
-			border-radius: 100%;
-			top: 8px;
-			right: 8px;
-			z-index: 99;
+		&.is-open {
+			width: calc(100% + var(--mb-color-tile-slide-over));
+			z-index: 50;
+			border-color: rgba(148, 163, 184, 0.18);
+			box-shadow:
+				0 18px 34px rgba(0, 0, 0, 0.32),
+				0 8px 14px rgba(0, 0, 0, 0.22);
+		}
+	}
+
+	.mb-color-tile__drawer {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: var(--mb-color-tile-handle-width);
+		overflow: hidden;
+		display: grid;
+		place-items: center;
+		padding-left: 0;
+		opacity: 0;
+		transform: translateX(12px);
+		transition:
+			opacity 320ms var(--mb-color-tile-ease),
+			transform 520ms var(--mb-color-tile-ease);
+	}
+	#mb-color-tile.is-open .mb-color-tile__drawer {
+		padding-left: clamp(12px, 3vw, 16px);
+		opacity: 1;
+		transform: translateX(0px);
+	}
+	.mb-color-tile__drawer-inner {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		text-transform: uppercase;
+		letter-spacing: 0.18em;
+		font-family: 'Inter', sans-serif;
+	}
+	.mb-color-tile__label {
+		font-size: 10px;
+		color: rgba(226, 232, 240, 0.86);
+	}
+	.mb-color-tile__sub {
+		font-size: 10px;
+		color: rgba(148, 163, 184, 0.78);
+	}
+	.mb-color-tile__handle {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: var(--mb-color-tile-handle-width);
+		display: grid;
+		place-items: center;
+		padding: 0.5rem;
+		z-index: 2;
+	}
+	.mb-color-tile__dot {
+		position: absolute;
+		width: 8px;
+		height: 8px;
+		background: var(--main-500);
+		border-radius: 100%;
+		top: 8px;
+		right: 8px;
+		z-index: 2;
+		box-shadow: 0 0 0 2px rgba(2, 6, 23, 0.55);
+		transition: transform 520ms var(--mb-color-tile-ease);
+	}
+	#mb-color-tile.is-open .mb-color-tile__dot {
+		transform: scale(0.9);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#mb-color-tile,
+		.mb-color-tile__drawer,
+		.mb-color-tile__handle svg,
+		.mb-color-tile__dot {
+			transition: none !important;
 		}
 	}
 </style>
