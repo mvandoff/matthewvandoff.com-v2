@@ -97,6 +97,10 @@
 			/* border: 1px solid white; */
 			border-radius: var(--home-border-radius);
 		}
+		#mb-color-tile {
+			border: 1px solid white;
+			border-radius: var(--home-border-radius);
+		}
 	}
 	#mb-down-tile {
 		/* display: none; */

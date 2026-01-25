@@ -3,6 +3,7 @@ import 'sections/home/styles/desktop/home-hero.css';
 import 'sections/home/styles/mobile/home-hero.css';
 import 'sections/home/styles/mobile/home-hero-grid.css';
 import HomeImage from 'sections/home/components/HomeImage.astro';
+import ColorTile from 'sections/home/components/ColorTile.astro';
 import SocialLink from 'sections/home/components/SocialLink.astro';
 import MbSocialLink from 'sections/home/components/MbSocialLink.astro';
 import MVDLogo from 'components/MVDLogo.astro';
@@ -54,6 +55,7 @@ import kidA from 'assets/images/kid-a.jpg';
 	<div id="mb-gif-tile" class="mb-tile">
 		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
 	</div>
+	<ColorTile />
 	<div id="mb-copy-tile" class="mb-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>
 		everything in it's right place
 	</div>

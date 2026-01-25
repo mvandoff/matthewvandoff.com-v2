@@ -9,6 +9,7 @@
 		"astro": "astro"
 	},
 	"dependencies": {
+		"@jaames/iro": "^5.5.2",
 		"@types/three": "^0.182.0",
 		"astro": "^5.16.11",
 		"astro-icon": "^1.1.5",
