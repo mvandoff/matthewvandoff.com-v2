@@ -32,9 +32,25 @@
 		grid-row: 33 / span 4;
 	}
 	#mb-color-tile {
-		grid-column: -5 / span 4;
-		grid-row: 13 / span 4;
+		grid-column: 13 / span 5;
+		grid-row: 33 / span 4;
 		/* display: none !important; */
+	}
+	#joystick-tile {
+		grid-column: 13 / span 5;
+		grid-row: 27 / span 5;
+		border: 1px solid teal;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	#img-tile {
+		grid-column: 19 / span 4;
+		grid-row: 27 / span 10;
+		border: 1px solid indianred;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 	#mb-copy-tile {
 		grid-column: 1 / -4;
