@@ -1,4 +1,6 @@
 ---
+// ColorTile is a component that modifies the main color values of the site
+
 import { Icon } from 'astro-icon/components';
 ---
 
@@ -32,6 +34,7 @@ import { Icon } from 'astro-icon/components';
 	const MAIN_COLOR_KEYS = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950', '1k'] as const;
 	const MAIN_COLOR_BASE_KEY = '50';
 	const DEFAULT_MAIN_HUE = 226;
+	const MAIN_HUE_EVENT = 'mb-main-hue-change';
 
 	// Parse any HSL-ish string into numeric H/S/L/A using iro's parser.
 	const parseHsl = (value: string) => {
@@ -155,6 +158,11 @@ import { Icon } from 'astro-icon/components';
 			picker.on('color:change', (color: iro.Color) => {
 				// Keep updates minimal: only one CSS var changes on drag.
 				setBaseHue(color.hsl.h);
+				window.dispatchEvent(
+					new CustomEvent(MAIN_HUE_EVENT, {
+						detail: { hue: color.hsl.h },
+					})
+				);
 			});
 
 			sliderHost.setAttribute(IRO_READY_ATTR, 'true');
