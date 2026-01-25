@@ -8,6 +8,27 @@
 		width: 100%;
 		border-radius: var(--home-border-radius);
 	}
+	.mb-tile-surface {
+		--mb-tile-radial-x: 0%;
+		--mb-tile-radial-y: 0%;
+		--mb-tile-linear-dir: bottom right;
+
+		height: 100%;
+		width: 100%;
+		border-radius: var(--home-border-radius);
+		border: solid 1px transparent;
+		padding: 0.5rem;
+		position: relative;
+		background:
+			radial-gradient(
+				circle at var(--mb-tile-radial-x) var(--mb-tile-radial-y),
+				var(--neutral-900),
+				var(--neutral-950)
+			),
+			linear-gradient(to var(--mb-tile-linear-dir), var(--mb-tile-linear-start), var(--mb-tile-linear-end) 80%);
+		background-origin: border-box;
+		background-clip: padding-box, border-box;
+	}
 	.screen-hero {
 		--hero-border: rgba(255, 255, 255, 0.09);
 

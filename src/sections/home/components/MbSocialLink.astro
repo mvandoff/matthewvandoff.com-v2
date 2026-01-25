@@ -12,7 +12,7 @@ type Props = {
 const { href, icon, label, brand, iconId } = Astro.props as Props;
 ---
 
-<a class="mb-social-link" data-brand={brand} href={href} aria-label={label}>
+<a class="mb-social-link mb-tile-surface" data-brand={brand} href={href} aria-label={label}>
 	<span class="mb-social-brand-icon" aria-hidden="true">
 		<Icon name={icon} id={iconId} />
 	</span>
@@ -21,32 +21,17 @@ const { href, icon, label, brand, iconId } = Astro.props as Props;
 
 <style>
 	.mb-social-link {
-		--mb-social-radial-x: 0%;
-		--mb-social-radial-y: 0%;
-		--mb-social-icon-size: 48px;
-		--mb-social-linear-dir: bottom right;
-		--mb-social-linear-start: #1e1b4b;
-		--mb-social-linear-end: #1e1b4b64;
+		--mb-tile-radial-x: 0%;
+		--mb-tile-radial-y: 0%;
+		--mb-tile-icon-size: 48px;
+		--mb-tile-linear-dir: bottom right;
+		--mb-tile-linear-start: var(--main-950);
+		--mb-tile-linear-end: #1e1b4b64;
 
 		display: none;
-		height: 100%;
-		width: 100%;
-		border-radius: var(--home-border-radius);
-		border: solid 1px transparent;
 		flex-direction: column;
 		align-items: center;
 		justify-content: space-between;
-		padding: 0.5rem;
-		position: relative;
-		background:
-			radial-gradient(
-				circle at var(--mb-social-radial-x) var(--mb-social-radial-y),
-				var(--neutral-900),
-				var(--neutral-950)
-			),
-			linear-gradient(to var(--mb-social-linear-dir), var(--mb-social-linear-start), var(--mb-social-linear-end) 80%);
-		background-origin: border-box;
-		background-clip: padding-box, border-box;
 
 		.mb-social-label {
 			font-family: 'Inter', sans-serif;
@@ -55,19 +40,19 @@ const { href, icon, label, brand, iconId } = Astro.props as Props;
 			color: var(--neutral-400);
 		}
 		svg {
-			height: var(--mb-social-icon-size);
-			width: var(--mb-social-icon-size);
+			height: var(--mb-tile-icon-size);
+			width: var(--mb-tile-icon-size);
 			color: var(--neutral-300);
 		}
 		&[data-brand='li'] {
-			--mb-social-radial-x: 100%;
-			--mb-social-linear-dir: bottom left;
-			--mb-social-linear-start: hsl(210, 60%, 25%, 0.8);
-			--mb-social-linear-end: hsla(210, 59%, 30%, 0.15);
+			--mb-tile-radial-x: 100%;
+			--mb-tile-linear-dir: bottom left;
+			--mb-tile-linear-start: hsl(210, 60%, 25%, 0.8);
+			--mb-tile-linear-end: hsla(210, 59%, 30%, 0.15);
 		}
 		&[data-brand='gh'] {
-			--mb-social-linear-start: hsl(131, 45%, 25%, 0.6);
-			--mb-social-linear-end: hsla(132, 45%, 25%, 0.15);
+			--mb-tile-linear-start: hsl(131, 45%, 25%, 0.6);
+			--mb-tile-linear-end: hsla(132, 45%, 25%, 0.15);
 		}
 	}
 	@media screen and (max-width: 1280px) {

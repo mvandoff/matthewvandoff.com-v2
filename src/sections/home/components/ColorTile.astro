@@ -2,7 +2,7 @@
 import { Icon } from 'astro-icon/components';
 ---
 
-<button id="mb-color-tile" class="mb-tile" type="button">
+<button id="mb-color-tile" class="mb-tile mb-tile-surface" type="button">
 	<Icon name="f7:paintbrush-fill" aria-hidden="true" />
 </button>
 <script>
@@ -14,16 +14,30 @@ import { Icon } from 'astro-icon/components';
 </script>
 <style>
 	#mb-color-tile {
-		/* display: none; */
+		--mb-tile-linear-start: transparent;
+		--mb-tile-linear-end: #1e1b4b64;
+
 		display: flex;
-		border: 1px solid rgba(255, 68, 0, 0.378);
-		border-radius: var(--home-border-radius);
 		font-size: 32px;
 		justify-content: center;
 		align-items: center;
 		color: var(--neutral-300);
+		position: relative;
 
-		/* background-color: var(--main-1k);
-		color: var(--main-400); */
+		svg {
+			rotate: 0deg;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			width: 8px;
+			height: 8px;
+			background: var(--main-500);
+			border-radius: 100%;
+			top: 8px;
+			right: 8px;
+			z-index: 99;
+		}
 	}
 </style>
