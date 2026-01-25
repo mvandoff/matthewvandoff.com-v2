@@ -1,0 +1,70 @@
+---
+import 'sections/home/styles/desktop/home-hero.css';
+import 'sections/home/styles/mobile/home-hero.css';
+import 'sections/home/styles/mobile/home-hero-grid.css';
+import HomeImage from 'sections/home/components/HomeImage.astro';
+import SocialLink from 'sections/home/components/SocialLink.astro';
+import MVDLogo from 'components/MVDLogo.astro';
+import { Icon } from 'astro-icon/components';
+import keyboardCat from 'assets/gif/keyboard-cat.gif';
+import kidA from 'assets/images/kid-a.jpg';
+---
+
+<div class="screen-hero screen" data-mobile-nav-label="welcome">
+	<div class="left-image-layer left-grid">
+		<div class="left-image">
+			<HomeImage />
+		</div>
+	</div>
+	<div class="left left-grid intro-container">
+		<div class="left-intro">
+			<h1>
+				matthew <span class="last-name">van&nbsp;doff</span>
+			</h1>
+			<h2>software developer</h2>
+			<p id="headline">Proin quis sem lacus. Vivamus non lorem nulla. Nam vel molestie est.</p>
+		</div>
+
+		<div class="left-links links">
+			<SocialLink
+				href="https://www.linkedin.com/in/matthew-vandoff/"
+				icon="fa7-brands:linkedin"
+				label="LinkedIn"
+				brand="linkedin"
+			/>
+			<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
+		</div>
+	</div>
+	<a class="mb-social-link" data-brand="li" href="https://www.linkedin.com/in/matthew-vandoff/">
+		<span class="mb-social-brand-icon" aria-hidden="true">
+			<Icon name="fa7-brands:linkedin" id="mb-li-icon" />
+		</span>
+		<span class="mb-social-label">LinkedIn</span>
+	</a>
+	<a class="mb-social-link" data-brand="gh" href="https://github.com/mvandoff">
+		<span class="mb-social-brand-icon" aria-hidden="true">
+			<Icon name="fa7-brands:github" id="mb-gh-icon" />
+		</span>
+		<span class="mb-social-label">GitHub</span>
+	</a>
+	<div id="mb-animated-tile" class="mb-tile"></div>
+	<div id="mb-copy-tile" class="mb-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>everything in it's right place</div>
+	<!-- <div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
+		<MVDLogo />
+	</div> -->
+	<!-- <div id="mb-scroll-tile" class="mb-tile">
+		<button class="mb-scroll-cue" type="button" aria-label="Scroll down">
+		<span class="mb-scroll-cue__chevrons" aria-hidden="true">
+			<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+			<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+			<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
+		</span>
+	</button>
+	</div> -->
+	<div id="mb-gif-tile" class="mb-tile">
+		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
+	</div>
+	<div id="mb-down-tile" class="mb-tile">
+		<Icon name="heroicons:chevron-down-16-solid" aria-hidden="true" />
+	</div>
+</div>

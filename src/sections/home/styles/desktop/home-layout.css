@@ -1,0 +1,54 @@
+#home {
+	max-width: none;
+	width: 100%;
+	margin-top: var(--block-size) !important;
+	overflow: auto;
+	overflow-anchor: none;
+	position: relative;
+	margin: 0 auto;
+	padding: 0;
+	justify-content: space-between;
+	/* height: auto; */
+	min-height: 100vh;
+	--left-col-span: 7;
+	--right-col-span: 10;
+	--content-gap: 3;
+	--edge-gap: 1;
+	--layout-width: calc(
+		(var(--left-col-span) + var(--right-col-span) + var(--content-gap) + (var(--edge-gap) * 2)) * var(--block-size)
+	);
+	--layout-left: calc((100vw - var(--layout-width)) / 2);
+	--left-row-intro: 3;
+	--left-row-intro-span: 4;
+	--left-row-image: 6;
+	--left-row-image-span: 7;
+	--left-row-links: 14;
+	--left-row-links-span: 1;
+	/* border: 2px solid red; */
+}
+
+.home-content {
+	position: relative;
+	margin: 0;
+	margin-left: var(--layout-left);
+	width: var(--layout-width);
+	min-height: 100%;
+	padding-bottom: 8rem;
+	max-width: calc(32 * var(--block-size));
+}
+
+#home .screen {
+	display: contents;
+}
+
+@media screen and (max-width: 1408px) {
+	#home {
+		--content-gap: 2;
+	}
+}
+
+@media screen and (max-width: 1344px) {
+	#home {
+		--content-gap: 1;
+	}
+}
