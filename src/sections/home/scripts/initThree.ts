@@ -65,7 +65,7 @@ function getFogColors() {
 }
 
 export function initThree() {
-	const fogEl = document.querySelector<HTMLElement>('#mb-animated-tile');
+	const fogEl = document.querySelector<HTMLElement>('#mb-liquid-tile');
 	if (!fogEl) return;
 	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 	const fogColors = getFogColors();
