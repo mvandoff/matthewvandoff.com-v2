@@ -161,7 +161,7 @@ import { Icon } from 'astro-icon/components';
 				window.dispatchEvent(
 					new CustomEvent(MAIN_HUE_EVENT, {
 						detail: { hue: color.hsl.h },
-					})
+					}),
 				);
 			});
 
@@ -192,8 +192,8 @@ import { Icon } from 'astro-icon/components';
 		--mb-color-tile-slide-over: calc(var(--block-size) * 12);
 		--mb-color-tile-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-		--mb-tile-linear-start: transparent;
-		--mb-tile-linear-end: #1e1b4b64;
+		--mb-tile-linear-start: var(--main-950);
+		--mb-tile-linear-end: hsl(from var(--main-950) h s l / 0.25);
 
 		display: block;
 		padding: 0;
