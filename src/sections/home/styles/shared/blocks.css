@@ -19,7 +19,6 @@
 	--bg-block-gutter-border-color: hsla(239, 85%, 67%, 0.096);
 	--bg-block-gutter-border-width: 1px;
 }
-
 #block-grid {
 	width: 100%;
 	position: absolute;
@@ -31,7 +30,6 @@
 	display: grid;
 	overflow: hidden;
 }
-
 #block-grid::before,
 #block-grid::after {
 	content: '';
@@ -43,15 +41,12 @@
 	pointer-events: none;
 	z-index: 1;
 }
-
 #block-grid::before {
 	left: 0;
 }
-
 #block-grid::after {
 	right: 0;
 }
-
 .bg-block {
 	position: relative;
 	pointer-events: none;
@@ -60,11 +55,9 @@
 	--bg-block-border-bottom-width: var(--bg-block-wave-border-width);
 	--bg-block-border-left-width: var(--bg-block-wave-border-width);
 }
-
 #block-grid.is-debug-grid .bg-block {
 	box-shadow: inset 0 0 0 var(--bg-block-grid-line-width) var(--bg-block-grid-line-color);
 }
-
 #block-grid .bg-grid-debug {
 	position: absolute;
 	inset: 0;
@@ -75,11 +68,9 @@
 	font-variant-numeric: tabular-nums;
 	color: var(--bg-block-grid-label-color);
 }
-
 #block-grid.is-debug-grid .bg-grid-debug {
 	display: block;
 }
-
 .bg-grid-debug-cols,
 .bg-grid-debug-rows {
 	position: absolute;
@@ -88,7 +79,6 @@
 	line-height: 1;
 	color: var(--bg-block-grid-label-color);
 }
-
 .bg-grid-debug-cols {
 	top: 0;
 	left: 0;
@@ -96,7 +86,6 @@
 	justify-items: center;
 	text-align: center;
 }
-
 .bg-grid-debug-rows {
 	top: 0;
 	left: 0;
@@ -104,7 +93,6 @@
 	justify-items: start;
 	text-align: left;
 }
-
 .bg-grid-debug-label {
 	display: flex;
 	align-items: center;
@@ -112,12 +100,10 @@
 	height: 100%;
 	width: 100%;
 }
-
 .bg-grid-debug-rows .bg-grid-debug-label {
 	justify-content: flex-start;
 	padding-left: 0.35rem;
 }
-
 .bg-block.is-tl-edge-top {
 	--bg-block-border-top-width: var(--bg-block-wave-border-perimeter-width);
 }
@@ -130,7 +116,6 @@
 .bg-block.is-tl-edge-left {
 	--bg-block-border-left-width: var(--bg-block-wave-border-perimeter-width);
 }
-
 .bg-block::before,
 .bg-block::after {
 	content: '';
@@ -139,7 +124,6 @@
 	opacity: 0;
 	transition: opacity var(--bg-block-fade-out) ease-out;
 }
-
 .bg-block::before {
 	background-color: var(--bg-block-wave-color);
 	transition-duration: var(--bg-block-wave-fade-out);
@@ -149,25 +133,20 @@
 	border-width: var(--bg-block-border-top-width) var(--bg-block-border-right-width) var(--bg-block-border-bottom-width)
 		var(--bg-block-border-left-width);
 }
-
 .bg-block::after {
 	background-color: var(--bg-block-color);
 }
-
 .bg-block.is-tl-lit::before {
 	opacity: 1;
 	transition-duration: var(--bg-block-wave-fade-in);
 }
-
 .bg-block.is-lit::after {
 	opacity: 1;
 	transition-duration: var(--bg-block-fade-in);
 }
-
 .bg-block.is-tl-lit.is-lit::before {
 	border-color: transparent;
 }
-
 .bg-block.is-tl-lit.is-lit::after {
 	box-sizing: border-box;
 	border-style: solid;

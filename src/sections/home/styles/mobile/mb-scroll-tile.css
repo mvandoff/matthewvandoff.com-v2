@@ -14,11 +14,9 @@
 	--mb-scroll-chevron-pulse-timing: ease-in-out;
 	--mb-scroll-chevron-stagger: 120ms;
 }
-
 #mb-scroll-tile {
 	display: none;
 }
-
 @media screen and (max-width: 1280px) {
 	#mb-scroll-tile {
 		display: block;
@@ -32,7 +30,6 @@
 		isolation: isolate;
 		pointer-events: auto;
 	}
-
 	#mb-scroll-tile::before,
 	#mb-scroll-tile::after {
 		content: '';
@@ -41,7 +38,6 @@
 		pointer-events: none;
 		z-index: 0;
 	}
-
 	/* Subtle block grid texture. */
 	#mb-scroll-tile::before {
 		background-image:
@@ -50,7 +46,6 @@
 		background-size: var(--block-size) var(--block-size);
 		opacity: var(--mb-scroll-tile-grid-opacity);
 	}
-
 	/* A stepped “scan” that nudges the eye downward. */
 	#mb-scroll-tile::after {
 		background: linear-gradient(
@@ -63,7 +58,6 @@
 		transform: translateY(-80%);
 		animation: mb-scroll-tile-scan var(--mb-scroll-tile-scan-duration) steps(10, end) infinite;
 	}
-
 	.mb-scroll-cue {
 		position: relative;
 		z-index: 1;
@@ -84,18 +78,15 @@
 		letter-spacing: 0.22rem;
 		-webkit-tap-highlight-color: transparent;
 	}
-
 	.mb-scroll-cue:active {
 		transform: translateY(1px);
 	}
-
 	.mb-scroll-cue__chevrons {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: var(--mb-scroll-chevron-gap);
 	}
-
 	.mb-scroll-cue__chevron {
 		display: flex;
 		line-height: 0;
@@ -111,12 +102,10 @@
 	.mb-scroll-cue__chevron:nth-child(3) {
 		animation-delay: calc(var(--mb-scroll-chevron-stagger) * 2);
 	}
-
 	.mb-scroll-cue__chevron svg {
 		width: var(--mb-scroll-chevron-size);
 		height: var(--mb-scroll-chevron-size);
 	}
-
 	@keyframes mb-scroll-chevron-pulse {
 		0%,
 		76% {
@@ -133,7 +122,6 @@
 			opacity: var(--mb-scroll-chevron-base-opacity);
 		}
 	}
-
 	@keyframes mb-scroll-tile-scan {
 		0% {
 			transform: translateY(-85%);
@@ -142,7 +130,6 @@
 			transform: translateY(85%);
 		}
 	}
-
 	@media (prefers-reduced-motion: reduce) {
 		#mb-scroll-tile::after,
 		.mb-scroll-cue__chevron {

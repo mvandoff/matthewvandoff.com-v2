@@ -5,7 +5,6 @@
 		width: 100%;
 		border-radius: var(--home-border-radius);
 	}
-
 	.screen-hero {
 		--hero-border: rgba(255, 255, 255, 0.09);
 
@@ -98,7 +97,6 @@
 			border-radius: var(--home-border-radius);
 		}
 	}
-
 	#mb-down-tile {
 		/* display: none; */
 		display: flex;
@@ -109,14 +107,12 @@
 		background: var(--neutral-400);
 		color: var(--neutral-100);
 	}
-
 	#mb-gif-tile img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 		border-radius: inherit;
 	}
-
 	#mb-logo-tile {
 		/* border: 1px solid white; */
 		background: #80734f;
@@ -124,7 +120,6 @@
 		place-items: center;
 		padding: calc(var(--block-size) * 0.5);
 	}
-
 	#mb-logo-tile .mvd-logo {
 		display: block;
 		width: auto;
@@ -134,11 +129,9 @@
 		transform-origin: center;
 		fill: white;
 	}
-
 	.left-links {
 		display: none;
 	}
-
 	.left #headline {
 		width: 100%;
 		max-width: 32rem;

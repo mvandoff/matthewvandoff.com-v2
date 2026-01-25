@@ -2,7 +2,6 @@
 	:root {
 		--bg-lines-color: rgba(69, 69, 69, 0.05);
 	}
-
 	.intro-container {
 		background-image:
 			repeating-linear-gradient(

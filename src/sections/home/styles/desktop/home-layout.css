@@ -26,7 +26,6 @@
 	--left-row-links-span: 1;
 	/* border: 2px solid red; */
 }
-
 .home-content {
 	position: relative;
 	margin: 0;
@@ -36,17 +35,14 @@
 	padding-bottom: 8rem;
 	max-width: calc(32 * var(--block-size));
 }
-
 #home .screen {
 	display: contents;
 }
-
 @media screen and (max-width: 1408px) {
 	#home {
 		--content-gap: 2;
 	}
 }
-
 @media screen and (max-width: 1344px) {
 	#home {
 		--content-gap: 1;

@@ -7,7 +7,6 @@
 		--grid-gap: 12px;
 		--home-border-radius: 4px;
 	}
-
 	#mobile-nav {
 		height: var(--mobile-nav-height);
 		margin: 0 auto;

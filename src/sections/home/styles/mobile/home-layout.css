@@ -6,14 +6,12 @@
 		margin-top: var(--mobile-nav-height) !important;
 		scroll-snap-type: y mandatory;
 	}
-
 	.home-content {
 		box-sizing: border-box;
 		width: var(--full-width);
 		max-width: none;
 		margin: 0 auto;
 	}
-
 	#home .screen {
 		height: calc(100dvh - var(--mobile-nav-height));
 		width: min(100%, calc(var(--block-size) * 40));
@@ -28,7 +26,6 @@
 		/* row-gap: var(--grid-gap); */
 		/* column-gap: var(--grid-gap); */
 	}
-
 	#home .screen .left-grid {
 		position: relative;
 		width: 100%;
