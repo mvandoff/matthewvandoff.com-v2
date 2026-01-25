@@ -4,6 +4,7 @@ import 'sections/home/styles/mobile/home-hero.css';
 import 'sections/home/styles/mobile/home-hero-grid.css';
 import HomeImage from 'sections/home/components/HomeImage.astro';
 import SocialLink from 'sections/home/components/SocialLink.astro';
+import MbSocialLink from 'sections/home/components/MbSocialLink.astro';
 import MVDLogo from 'components/MVDLogo.astro';
 import { Icon } from 'astro-icon/components';
 import keyboardCat from 'assets/gif/keyboard-cat.gif';
@@ -35,18 +36,20 @@ import kidA from 'assets/images/kid-a.jpg';
 			<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
 		</div>
 	</div>
-	<a class="mb-social-link" data-brand="li" href="https://www.linkedin.com/in/matthew-vandoff/">
-		<span class="mb-social-brand-icon" aria-hidden="true">
-			<Icon name="fa7-brands:linkedin" id="mb-li-icon" />
-		</span>
-		<span class="mb-social-label">LinkedIn</span>
-	</a>
-	<a class="mb-social-link" data-brand="gh" href="https://github.com/mvandoff">
-		<span class="mb-social-brand-icon" aria-hidden="true">
-			<Icon name="fa7-brands:github" id="mb-gh-icon" />
-		</span>
-		<span class="mb-social-label">GitHub</span>
-	</a>
+	<MbSocialLink
+		href="https://www.linkedin.com/in/matthew-vandoff/"
+		icon="fa7-brands:linkedin"
+		label="LinkedIn"
+		brand="li"
+		iconId="mb-li-icon"
+	/>
+	<MbSocialLink
+		href="https://github.com/mvandoff"
+		icon="fa7-brands:github"
+		label="GitHub"
+		brand="gh"
+		iconId="mb-gh-icon"
+	/>
 	<div id="mb-animated-tile" class="mb-tile"></div>
 	<div id="mb-copy-tile" class="mb-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>everything in it's right place</div>
 	<!-- <div id="mb-logo-tile" class="mb-tile" aria-hidden="true">

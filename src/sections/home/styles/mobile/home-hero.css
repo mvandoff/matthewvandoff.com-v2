@@ -97,56 +97,6 @@
 			/* border: 1px solid white; */
 			border-radius: var(--home-border-radius);
 		}
-		.mb-social-link {
-			--mb-social-radial-x: 0%;
-			--mb-social-radial-y: 0%;
-
-			height: 100%;
-			width: 100%;
-			border-radius: var(--home-border-radius);
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: space-between;
-			padding: 0.5rem;
-			position: relative;
-			background-color: var(--main-1k);
-
-			&::before {
-				content: '';
-				position: absolute;
-				border-radius: var(--home-border-radius);
-				inset: 0;
-				background:
-					radial-gradient(
-						120% 120% at var(--mb-social-radial-x) var(--mb-social-radial-y),
-						rgba(255, 255, 255, 0.08),
-						transparent 55%
-					),
-					linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 62%);
-				pointer-events: none;
-			}
-			.mb-social-label {
-				font-family: 'Inter', sans-serif;
-				font-size: 10px;
-				letter-spacing: 0.15em;
-				/* text-transform: lowercase; */
-				color: var(--neutral-400);
-			}
-		}
-		.mb-social-link[data-brand='li'] {
-			--mb-social-radial-x: 100%;
-		}
-	}
-
-	:root {
-		--mb-social-icon-size: 48px;
-	}
-
-	.mb-social-link svg {
-		height: var(--mb-social-icon-size);
-		width: var(--mb-social-icon-size);
-		color: var(--neutral-300);
 	}
 
 	#mb-down-tile {
