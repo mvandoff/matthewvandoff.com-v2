@@ -39,6 +39,7 @@
 	#joystick-tile {
 		grid-column: 13 / span 5;
 		grid-row: 27 / span 5;
+		display: none !important;
 		border: 1px solid teal;
 		display: flex;
 		justify-content: center;
@@ -47,6 +48,7 @@
 	#img-tile {
 		grid-column: 19 / span 4;
 		grid-row: 27 / span 10;
+		display: none !important;
 		border: 1px solid indianred;
 		display: flex;
 		justify-content: center;

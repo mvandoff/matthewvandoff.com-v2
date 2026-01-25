@@ -11,8 +11,7 @@ import { Icon } from 'astro-icon/components';
 >
 	<span class="mb-color-tile__drawer" aria-hidden="true">
 		<span class="mb-color-tile__drawer-inner">
-			<span class="mb-color-tile__label">accent</span>
-			<span class="mb-color-tile__sub">tap to close</span>
+			<span class="mb-color-tile__hue-slider" data-hue-slider></span>
 		</span>
 	</span>
 	<span class="mb-color-tile__handle" aria-hidden="true">
@@ -21,7 +20,11 @@ import { Icon } from 'astro-icon/components';
 	</span>
 </button>
 <script>
+	import iro from '@jaames/iro';
+
 	const OPEN_CLASS = 'is-open';
+	const IRO_READY_ATTR = 'data-iro-ready';
+	const IRO_WIDTH = 175;
 
 	const getTile = () => document.getElementById('mb-color-tile');
 
@@ -29,13 +32,43 @@ import { Icon } from 'astro-icon/components';
 		tile.classList.toggle(OPEN_CLASS, open);
 		tile.setAttribute('aria-expanded', open ? 'true' : 'false');
 		tile.setAttribute('aria-label', open ? 'Close accent color' : 'Open accent color');
+
+		if (open) initHueSlider(tile);
+	};
+
+	const initHueSlider = (tile: HTMLElement) => {
+		const sliderHost = tile.querySelector<HTMLElement>('[data-hue-slider]');
+		if (!sliderHost) return;
+		if (sliderHost.hasAttribute(IRO_READY_ATTR)) return;
+
+		const tryInit = () => {
+			iro.ColorPicker(sliderHost, {
+				width: IRO_WIDTH,
+				layout: [
+					{
+						component: iro.ui.Slider,
+						options: {
+							sliderType: 'hue',
+							sliderSize: 25,
+							borderWidth: 0,
+							handleRadius: 12,
+						},
+					},
+				],
+			});
+
+			sliderHost.setAttribute(IRO_READY_ATTR, 'true');
+		};
+
+		requestAnimationFrame(tryInit);
 	};
 
 	document.addEventListener('DOMContentLoaded', () => {
 		const tile = getTile();
 		if (!tile) return;
 
-		tile.addEventListener('click', () => {
+		tile.addEventListener('click', (event) => {
+			if (event.target instanceof Element && event.target.closest('[data-color-tile-slider]')) return;
 			setOpen(tile, !tile.classList.contains(OPEN_CLASS));
 		});
 		document.addEventListener('pointerdown', (event) => {
@@ -47,7 +80,7 @@ import { Icon } from 'astro-icon/components';
 </script>
 <style>
 	#mb-color-tile {
-		--mb-color-tile-handle-width: min(100%, calc(var(--block-size) * 5));
+		--mb-color-tile-handle-width: calc(var(--block-size) * 5);
 		--mb-color-tile-slide-over: calc(var(--block-size) * 12);
 		--mb-color-tile-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -74,7 +107,6 @@ import { Icon } from 'astro-icon/components';
 			outline: 2px solid rgba(226, 232, 240, 0.6);
 			outline-offset: 2px;
 		}
-
 		&.is-open {
 			width: calc(100% + var(--mb-color-tile-slide-over));
 			z-index: 50;
@@ -94,33 +126,19 @@ import { Icon } from 'astro-icon/components';
 		overflow: hidden;
 		display: grid;
 		place-items: center;
-		padding-left: 0;
 		opacity: 0;
-		transform: translateX(12px);
 		transition:
 			opacity 320ms var(--mb-color-tile-ease),
 			transform 520ms var(--mb-color-tile-ease);
+		padding-left: 0.5rem;
 	}
 	#mb-color-tile.is-open .mb-color-tile__drawer {
-		padding-left: clamp(12px, 3vw, 16px);
 		opacity: 1;
-		transform: translateX(0px);
 	}
 	.mb-color-tile__drawer-inner {
 		display: flex;
 		flex-direction: column;
-		gap: 2px;
-		text-transform: uppercase;
-		letter-spacing: 0.18em;
-		font-family: 'Inter', sans-serif;
-	}
-	.mb-color-tile__label {
-		font-size: 10px;
-		color: rgba(226, 232, 240, 0.86);
-	}
-	.mb-color-tile__sub {
-		font-size: 10px;
-		color: rgba(148, 163, 184, 0.78);
+		align-items: center;
 	}
 	.mb-color-tile__handle {
 		position: absolute;
@@ -130,8 +148,6 @@ import { Icon } from 'astro-icon/components';
 		width: var(--mb-color-tile-handle-width);
 		display: grid;
 		place-items: center;
-		padding: 0.5rem;
-		z-index: 2;
 	}
 	.mb-color-tile__dot {
 		position: absolute;
@@ -143,12 +159,11 @@ import { Icon } from 'astro-icon/components';
 		right: 8px;
 		z-index: 2;
 		box-shadow: 0 0 0 2px rgba(2, 6, 23, 0.55);
-		transition: transform 520ms var(--mb-color-tile-ease);
+		transition: transform 1000ms var(--mb-color-tile-ease);
 	}
 	#mb-color-tile.is-open .mb-color-tile__dot {
-		transform: scale(0.9);
+		transform: scale(0.85);
 	}
-
 	@media (prefers-reduced-motion: reduce) {
 		#mb-color-tile,
 		.mb-color-tile__drawer,
