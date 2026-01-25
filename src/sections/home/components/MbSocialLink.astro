@@ -24,6 +24,9 @@ const { href, icon, label, brand, iconId } = Astro.props as Props;
 		--mb-social-radial-x: 0%;
 		--mb-social-radial-y: 0%;
 		--mb-social-icon-size: 48px;
+		--mb-social-border: rgba(255, 255, 255, 0.12);
+		--mb-social-border-dim: rgba(255, 255, 255, 0.06);
+		--mb-social-edge-dim: rgba(255, 255, 255, 0.035);
 
 		display: none;
 		height: 100%;
@@ -34,7 +37,7 @@ const { href, icon, label, brand, iconId } = Astro.props as Props;
 		justify-content: space-between;
 		padding: 0.5rem;
 		position: relative;
-		background-color: var(--main-1k);
+		background-color: transparent;
 
 		&::before {
 			content: '';
@@ -42,6 +45,11 @@ const { href, icon, label, brand, iconId } = Astro.props as Props;
 			border-radius: var(--home-border-radius);
 			inset: 0;
 			background:
+				linear-gradient(var(--mb-social-border), var(--mb-social-border)) top / 100% 1px no-repeat,
+				linear-gradient(var(--mb-social-border-dim), var(--mb-social-border-dim)) bottom / 100% 1px no-repeat,
+				linear-gradient(to bottom, var(--mb-social-border), var(--mb-social-edge-dim) 55%) left / 1px 100% no-repeat,
+				linear-gradient(to bottom, var(--mb-social-border), var(--mb-social-edge-dim) 55%) right / 1px 100% no-repeat,
+				linear-gradient(0deg, rgba(255, 255, 255, 0.035), transparent 62%),
 				radial-gradient(
 					120% 120% at var(--mb-social-radial-x) var(--mb-social-radial-y),
 					rgba(255, 255, 255, 0.08),
