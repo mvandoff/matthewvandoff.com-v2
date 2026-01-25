@@ -32,6 +32,7 @@
 	--main-800: #3730a3;
 	--main-900: #312e81;
 	--main-950: #1e1b4b; /* Custom indigo-950 */
+	--main-1k: hsl(244 40% 10% / 1);
 
 	--slate-50: #f8fafc;
 	--slate-100: #f1f5f9;

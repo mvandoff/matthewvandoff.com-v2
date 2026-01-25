@@ -10,6 +10,7 @@ import MVDLogo from 'components/MVDLogo.astro';
 import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 import { Icon } from 'astro-icon/components';
 import keyboardCat from 'assets/gif/keyboard-cat.gif';
+import kidA from 'assets/images/kid-a.jpg';
 ---
 
 <section id="home">
@@ -53,6 +54,7 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 				<span class="mb-social-label">GitHub</span>
 			</a>
 			<div id="mb-animated-tile" class=""></div>
+			<div id="mb-copy-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>everything in it's right place</div>
 			<!-- <div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
 				<MVDLogo />
 			</div> -->
@@ -65,9 +67,12 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 				</span>
 			</button>
 			</div> -->
-			<!-- <div id="mb-gif-tile" class="mb-tile">
+			<div id="mb-gif-tile">
 				<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
-			</div> -->
+			</div>
+			<div id="mb-down-tile">
+				<Icon name="heroicons:chevron-down-16-solid" aria-hidden="true" />
+			</div>
 		</div>
 		<div class="screen-about screen" data-mobile-nav-label="home-me">
 			<div class="right">
@@ -131,19 +136,18 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 				grid-row: 27 / -1;
 			}
 			#mb-gif-tile {
-				grid-column: 1 / span 12;
-				grid-row: 35 / -1;
+				grid-column: 1 / span 11;
+				grid-row: 33 / span 4;
 				/* border: 1px solid white; */
 				border-radius: var(--home-border-radius);
 			}
-			#mb-gif-tile {
-				display: block;
-				img {
-					width: 100%;
-					height: 100%;
-					object-fit: cover;
-					border-radius: inherit;
-				}
+			#mb-copy-tile {
+				grid-column: 1 / -4;
+				grid-row: 38 / span 2;
+			}
+			#mb-down-tile {
+				grid-column: -3 / span 2;
+				grid-row: 38 / span 2;
 			}
 		}
 
@@ -523,7 +527,31 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 						border-radius: var(--home-border-radius);
 					}
 				}
+				#mb-copy-tile {
+					--mb-copy-tile-dim: 0.7;
+
+					display: block;
+					height: 100%;
+					width: 100%;
+					border-radius: var(--home-border-radius);
+					background-color: var(--main-1k);
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					padding: 0.5rem;
+					font-family: 'inter';
+					letter-spacing: 0.25rem;
+					font-size: 12px;
+					background-image:
+						linear-gradient(rgba(0, 0, 0, var(--mb-copy-tile-dim, 0)), rgba(0, 0, 0, var(--mb-copy-tile-dim, 0))),
+						var(--mb-copy-tile-bg);
+					background-position: left 50% top 48%;
+					color: var(--neutral-100);
+				}
 				.mb-social-link {
+					--mb-social-radial-x: 0%;
+					--mb-social-radial-y: 0%;
+
 					height: 100%;
 					width: 100%;
 					border-radius: var(--home-border-radius);
@@ -533,7 +561,7 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 					justify-content: space-between;
 					padding: 0.5rem;
 					position: relative;
-					background-color: rgba(255, 255, 255, 0.03);
+					background-color: var(--main-1k);
 
 					&::before {
 						content: '';
@@ -541,7 +569,11 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 						border-radius: var(--home-border-radius);
 						inset: 0;
 						background:
-							radial-gradient(120% 120% at 0% 0%, rgba(255, 255, 255, 0.08), transparent 55%),
+							radial-gradient(
+								120% 120% at var(--mb-social-radial-x) var(--mb-social-radial-y),
+								rgba(255, 255, 255, 0.08),
+								transparent 55%
+							),
 							linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 62%);
 						pointer-events: none;
 					}
@@ -553,6 +585,9 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 						color: var(--neutral-400);
 					}
 				}
+				.mb-social-link[data-brand='li'] {
+					--mb-social-radial-x: 100%;
+				}
 			}
 		}
 		:root {
@@ -562,6 +597,26 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 			height: var(--mb-social-icon-size);
 			width: var(--mb-social-icon-size);
 			color: var(--neutral-300);
+		}
+		#mb-down-tile {
+			/* display: none; */
+			display: flex;
+			font-size: 28px;
+			background: var(--main-1k);
+			justify-content: center;
+			align-items: center;
+			background: var(--neutral-400);
+			border-radius: var(--home-border-radius);
+			color: var(--neutral-100);
+		}
+		#mb-gif-tile {
+			display: block;
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				border-radius: inherit;
+			}
 		}
 		#mb-logo-tile {
 			/* border: 1px solid white; */
