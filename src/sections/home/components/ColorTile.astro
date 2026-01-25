@@ -1,4 +1,26 @@
 ---
+import { Icon } from 'astro-icon/components';
 ---
 
-<div id="mb-color-tile" class="mb-tile" aria-hidden="true"></div>
+<button id="mb-color-tile" class="mb-tile" type="button">
+	<Icon name="f7:paintbrush-fill" aria-hidden="true" />
+</button>
+<script>
+	import iro from '@jaames/iro';
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const tile = document.getElementById('mb-color-tile');
+	});
+</script>
+<style>
+	#mb-color-tile {
+		/* border: 1px solid orangered; */
+		border-radius: var(--home-border-radius);
+		font-size: 42px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: var(--main-1k);
+		color: var(--main-400);
+	}
+</style>

@@ -33,6 +33,9 @@ importers:
         specifier: ^0.5.24
         version: 0.5.24
     devDependencies:
+      '@iconify-json/f7':
+        specifier: ^1.2.2
+        version: 1.2.2
       '@iconify-json/fa7-brands':
         specifier: ^1.2.1
         version: 1.2.1
@@ -265,6 +268,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@iconify-json/f7@1.2.2':
+    resolution: {integrity: sha512-7+RhvnncD+LRu0smuHOun4emOUu48XUGG6G0tYYbrXS7n4Io2xntx6nxa09/iI41t9hnH2oHHU3Dg7Ee60Ovow==}
 
   '@iconify-json/fa7-brands@1.2.1':
     resolution: {integrity: sha512-LbOn96p41X63dIdag/vfuYnXQZcKjo0o9XZTzU58/HJOyV1rWb2TwitSgB1xiAcOMwswmvgXQV/+blZc+101dg==}
@@ -1937,6 +1943,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.12':
     optional: true
+
+  '@iconify-json/f7@1.2.2':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify-json/fa7-brands@1.2.1':
     dependencies:

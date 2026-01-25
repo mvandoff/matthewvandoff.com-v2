@@ -32,7 +32,7 @@
 		grid-row: 33 / span 4;
 	}
 	#mb-color-tile {
-		grid-column: 13 / -1;
+		grid-column: 13 / span 4;
 		grid-row: 33 / span 4;
 	}
 	#mb-copy-tile {
