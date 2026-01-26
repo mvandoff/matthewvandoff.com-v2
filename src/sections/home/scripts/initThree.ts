@@ -31,10 +31,10 @@ const resolveCssColorVar = (varName: string, fallback: number) => {
 };
 
 function getFogColors() {
-	const highlight = resolveCssColorVar('--main-200', fallbackFogColors.highlightColor);
-	const midtone = resolveCssColorVar('--main-500', fallbackFogColors.midtoneColor);
-	const lowlight = resolveCssColorVar('--main-700', fallbackFogColors.lowlightColor);
-	const base = resolveCssColorVar('--main-900', fallbackFogColors.baseColor);
+	const highlight = resolveCssColorVar('--main-100', fallbackFogColors.highlightColor);
+	const midtone = resolveCssColorVar('--main-400', fallbackFogColors.midtoneColor);
+	const lowlight = resolveCssColorVar('--main-600', fallbackFogColors.lowlightColor);
+	const base = resolveCssColorVar('--main-950', fallbackFogColors.baseColor);
 
 	return {
 		highlightColor: highlight,
