@@ -56,17 +56,27 @@ const deadZone = 0.05;
 			cursor: grab;
 			appearance: none;
 			-webkit-tap-highlight-color: transparent;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			user-select: none;
+
+			transition: border 0.2s ease;
+		}
+
+		#joystick-tile,
+		#joystick-tile * {
+			-webkit-user-drag: none;
 			user-select: none;
 		}
 		#joystick-tile:active {
 			cursor: grabbing;
 		}
 		#joystick-tile:focus-visible {
-			outline: 2px solid rgba(226, 232, 240, 0.6);
+			outline: 2px solid hsl(from var(--neutral-200) h s l / 0.6);
 			outline-offset: 2px;
 		}
 		#joystick-tile.is-active {
-			border-color: rgba(99, 102, 241, 0.55);
+			border-color: hsl(from var(--main-700) h s l / 0.55);
 		}
 		#joystick-tile .mb-joystick__pad {
 			--mb-joystick-thumb-x: 0px;
@@ -75,8 +85,8 @@ const deadZone = 0.05;
 			width: min(100%, calc(var(--block-size) * 3.2));
 			aspect-ratio: 1 / 1;
 			border-radius: calc(var(--home-border-radius) * 0.75);
-			background: rgba(2, 6, 23, 0.45);
-			border: 1px solid rgba(255, 255, 255, 0.1);
+			background: hsl(from var(--main-1k) h s l / 0.1);
+			border: 1px solid hsl(from var(--neutral-50) h s l / 0.1);
 			position: relative;
 			display: grid;
 			place-items: center;
@@ -87,7 +97,7 @@ const deadZone = 0.05;
 		#joystick-tile .mb-joystick__pad::after {
 			content: '';
 			position: absolute;
-			background: rgba(255, 255, 255, 0.08);
+			background: hsl(from var(--neutral-50) h s l / 0.08);
 			border-radius: 999px;
 		}
 
@@ -105,11 +115,15 @@ const deadZone = 0.05;
 			width: calc(var(--block-size) * 0.9);
 			height: calc(var(--block-size) * 0.9);
 			border-radius: 999px;
-			background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08));
-			border: 1px solid rgba(255, 255, 255, 0.12);
+			background: radial-gradient(
+				circle at 35% 35%,
+				hsl(from var(--neutral-50) h s l / 0.28),
+				hsl(from var(--neutral-50) h s l / 0.08)
+			);
+			border: 1px solid hsl(from var(--neutral-50) h s l / 0.12);
 			box-shadow:
-				0 8px 18px rgba(0, 0, 0, 0.25),
-				inset 0 1px 0 rgba(255, 255, 255, 0.18);
+				0 8px 18px hsl(from var(--neutral-950) h s l / 0.25),
+				inset 0 1px 0 hsl(from var(--neutral-50) h s l / 0.18);
 			transform: translate3d(var(--mb-joystick-thumb-x), var(--mb-joystick-thumb-y), 0);
 			transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 			will-change: transform;
