@@ -1,0 +1,129 @@
+---
+const maxTiltDeg = 9;
+const maxTranslatePx = 7;
+const deadZone = 0.05;
+---
+
+<button
+	id="joystick-tile"
+	class="mb-tile mb-tile-surface"
+	type="button"
+	aria-label="Tilt intro card"
+	data-max-tilt-deg={maxTiltDeg}
+	data-max-translate-px={maxTranslatePx}
+	data-dead-zone={deadZone}
+>
+	<span class="mb-joystick__pad" data-joystick-pad aria-hidden="true">
+		<span class="mb-joystick__thumb" data-joystick-thumb aria-hidden="true"></span>
+	</span>
+</button>
+
+<script>
+	import { initJoyStickTile } from 'sections/home/components/scripts/initJoyStickTile';
+
+	const initOnLoad = () => initJoyStickTile();
+	document.addEventListener('DOMContentLoaded', initOnLoad, { once: true });
+	document.addEventListener('astro:page-load', initOnLoad);
+</script>
+
+<style is:global>
+	@media screen and (max-width: 1280px) {
+		.screen-hero .intro-container {
+			--mb-hero-tilt-x: 0deg;
+			--mb-hero-tilt-y: 0deg;
+			--mb-hero-tilt-tx: 0px;
+			--mb-hero-tilt-ty: 0px;
+
+			transform: perspective(900px) translate3d(var(--mb-hero-tilt-tx), var(--mb-hero-tilt-ty), 0)
+				rotateX(var(--mb-hero-tilt-x)) rotateY(var(--mb-hero-tilt-y));
+			transform-origin: center;
+			backface-visibility: hidden;
+			will-change: transform;
+			transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+		}
+
+		.screen-hero .intro-container[data-tilt-active='true'] {
+			transition: none;
+		}
+
+		#joystick-tile {
+			--mb-tile-linear-start: var(--neutral-950);
+			--mb-tile-linear-end: hsl(from var(--neutral-950) h s l / 0.55);
+
+			border: solid 1px transparent;
+			display: grid;
+			place-items: center;
+			cursor: grab;
+			appearance: none;
+			-webkit-tap-highlight-color: transparent;
+			user-select: none;
+		}
+		#joystick-tile:active {
+			cursor: grabbing;
+		}
+		#joystick-tile:focus-visible {
+			outline: 2px solid rgba(226, 232, 240, 0.6);
+			outline-offset: 2px;
+		}
+		#joystick-tile.is-active {
+			border-color: rgba(99, 102, 241, 0.55);
+		}
+		#joystick-tile .mb-joystick__pad {
+			--mb-joystick-thumb-x: 0px;
+			--mb-joystick-thumb-y: 0px;
+
+			width: min(100%, calc(var(--block-size) * 3.2));
+			aspect-ratio: 1 / 1;
+			border-radius: calc(var(--home-border-radius) * 0.75);
+			background: rgba(2, 6, 23, 0.45);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			position: relative;
+			display: grid;
+			place-items: center;
+			touch-action: none;
+		}
+
+		#joystick-tile .mb-joystick__pad::before,
+		#joystick-tile .mb-joystick__pad::after {
+			content: '';
+			position: absolute;
+			background: rgba(255, 255, 255, 0.08);
+			border-radius: 999px;
+		}
+
+		#joystick-tile .mb-joystick__pad::before {
+			width: 60%;
+			height: 1px;
+		}
+
+		#joystick-tile .mb-joystick__pad::after {
+			height: 60%;
+			width: 1px;
+		}
+
+		#joystick-tile .mb-joystick__thumb {
+			width: calc(var(--block-size) * 0.9);
+			height: calc(var(--block-size) * 0.9);
+			border-radius: 999px;
+			background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08));
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			box-shadow:
+				0 8px 18px rgba(0, 0, 0, 0.25),
+				inset 0 1px 0 rgba(255, 255, 255, 0.18);
+			transform: translate3d(var(--mb-joystick-thumb-x), var(--mb-joystick-thumb-y), 0);
+			transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+			will-change: transform;
+		}
+
+		#joystick-tile.is-active .mb-joystick__thumb {
+			transition: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.screen-hero .intro-container,
+		#joystick-tile .mb-joystick__thumb {
+			transition: none !important;
+		}
+	}
+</style>
