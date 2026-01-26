@@ -38,6 +38,12 @@ const { title } = Astro.props;
 		<main>
 			<slot />
 		</main>
+
+		<script>
+			import { initMainHue } from 'scripts/global/mainHue';
+
+			initMainHue();
+		</script>
 	</body>
 
 
