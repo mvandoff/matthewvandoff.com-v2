@@ -2,6 +2,15 @@ const MOBILE_LAYOUT_QUERY = '(max-width: 1280px)';
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 const READY_ATTR = 'data-joystick-ready';
 
+const TILE_ID = 'joystick-tile';
+const CARD_SELECTOR = '.screen-hero .intro-container';
+const TILT_TARGETS_SELECTOR = '.intro-container, .img-container, .mb-tile, .mb-social-link';
+
+const DEFAULT_MAX_TILT_DEG = 9;
+const DEFAULT_MAX_TRANSLATE_PX = 7;
+const DEFAULT_DEAD_ZONE = 0.05;
+const DEFAULT_PERSPECTIVE_PX = 400;
+
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 const applyDeadZone = (value: number, deadZone: number) => {
@@ -11,33 +20,44 @@ const applyDeadZone = (value: number, deadZone: number) => {
 	return sign * clamp(scaled, 0, 1);
 };
 
-type InitOptions = {
-	tileId?: string;
-	cardSelector?: string;
-};
-
-export function initJoyStickTile(options: InitOptions = {}) {
+export function initJoyStickTile() {
 	if (!window.matchMedia(MOBILE_LAYOUT_QUERY).matches) return;
 	if (window.matchMedia(REDUCED_MOTION_QUERY).matches) return;
 
-	const tileId = options.tileId ?? 'joystick-tile';
-	const cardSelector = options.cardSelector ?? '.screen-hero .intro-container';
-
-	const tile = document.getElementById(tileId);
+	const tile = document.getElementById(TILE_ID);
 	const pad = tile?.querySelector<HTMLElement>('[data-joystick-pad]');
 	const thumb = tile?.querySelector<HTMLElement>('[data-joystick-thumb]');
-	const card = document.querySelector<HTMLElement>(cardSelector);
+	const card = document.querySelector<HTMLElement>(CARD_SELECTOR);
 	if (!tile || !pad || !thumb || !card) return;
 	if (tile.hasAttribute(READY_ATTR)) return;
 	tile.setAttribute(READY_ATTR, 'true');
 
-	const maxTiltDeg = Number(tile.dataset.maxTiltDeg ?? 9);
-	const maxTranslatePx = Number(tile.dataset.maxTranslatePx ?? 7);
-	const deadZone = Number(tile.dataset.deadZone ?? 0.05);
+	const maxTiltDeg = Number(tile.dataset.maxTiltDeg ?? DEFAULT_MAX_TILT_DEG);
+	const maxTranslatePx = Number(tile.dataset.maxTranslatePx ?? DEFAULT_MAX_TRANSLATE_PX);
+	const deadZone = Number(tile.dataset.deadZone ?? DEFAULT_DEAD_ZONE);
+	const perspectivePx = Number(tile.dataset.perspectivePx ?? DEFAULT_PERSPECTIVE_PX);
+	const identityTransform = `perspective(${perspectivePx}px) translate3d(0px, 0px, 0) rotateX(0deg) rotateY(0deg)`;
+
+	const tiltTargets = Array.from(document.querySelectorAll<HTMLElement>(TILT_TARGETS_SELECTOR)).filter(
+		(target) => target !== tile,
+	);
+	for (const target of tiltTargets) {
+		target.style.transformOrigin = 'center';
+		target.style.backfaceVisibility = 'hidden';
+		target.style.willChange = 'transform';
+	}
+
+	const resetAnimations = new Map<HTMLElement, Animation>();
+	const cancelResetAnimation = (target: HTMLElement) => {
+		const animation = resetAnimations.get(target);
+		if (!animation) return;
+		animation.cancel();
+		resetAnimations.delete(target);
+	};
 
 	let activePointerId: number | null = null;
 
-	const setCardTilt = (xNormRaw: number, yNormRaw: number, padRect: DOMRect, thumbRect: DOMRect) => {
+	const setTilt = (xNormRaw: number, yNormRaw: number, padRect: DOMRect, thumbRect: DOMRect) => {
 		const xNorm = applyDeadZone(clamp(xNormRaw, -1, 1), deadZone);
 		const yNorm = applyDeadZone(clamp(yNormRaw, -1, 1), deadZone);
 
@@ -45,6 +65,13 @@ export function initJoyStickTile(options: InitOptions = {}) {
 		card.style.setProperty('--mb-hero-tilt-y', `${-xNorm * maxTiltDeg}deg`);
 		card.style.setProperty('--mb-hero-tilt-tx', `${xNorm * maxTranslatePx}px`);
 		card.style.setProperty('--mb-hero-tilt-ty', `${-yNorm * maxTranslatePx}px`);
+
+		for (const target of tiltTargets) {
+			cancelResetAnimation(target);
+			target.style.transform = `perspective(${perspectivePx}px) translate3d(${xNorm * maxTranslatePx}px, ${
+				-yNorm * maxTranslatePx
+			}px, 0) rotateX(${yNorm * maxTiltDeg}deg) rotateY(${-xNorm * maxTiltDeg}deg)`;
+		}
 
 		const thumbRadiusX = thumbRect.width / 2;
 		const thumbRadiusY = thumbRect.height / 2;
@@ -60,6 +87,29 @@ export function initJoyStickTile(options: InitOptions = {}) {
 		card.style.setProperty('--mb-hero-tilt-y', '0deg');
 		card.style.setProperty('--mb-hero-tilt-tx', '0px');
 		card.style.setProperty('--mb-hero-tilt-ty', '0px');
+
+		for (const target of tiltTargets) {
+			cancelResetAnimation(target);
+			if (!target.style.transform) continue;
+			const fromTransform = target.style.transform;
+			const animation = target.animate([{ transform: fromTransform }, { transform: identityTransform }], {
+				duration: 360,
+				easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+				fill: 'forwards',
+			});
+			target.style.transform = identityTransform;
+			animation.addEventListener(
+				'finish',
+				() => {
+					animation.cancel();
+					target.style.transform = '';
+					resetAnimations.delete(target);
+				},
+				{ once: true },
+			);
+			resetAnimations.set(target, animation);
+		}
+
 		thumb.style.setProperty('--mb-joystick-thumb-x', '0px');
 		thumb.style.setProperty('--mb-joystick-thumb-y', '0px');
 		tile.classList.remove('is-active');
@@ -77,7 +127,7 @@ export function initJoyStickTile(options: InitOptions = {}) {
 
 		const xNorm = (clientX - centerX) / radiusX;
 		const yNorm = (centerY - clientY) / radiusY;
-		setCardTilt(xNorm, yNorm, padRect, thumbRect);
+		setTilt(xNorm, yNorm, padRect, thumbRect);
 	};
 
 	const onPointerDown = (event: PointerEvent) => {
@@ -108,4 +158,3 @@ export function initJoyStickTile(options: InitOptions = {}) {
 	pad.addEventListener('lostpointercapture', reset);
 	window.addEventListener('blur', reset);
 }
-
