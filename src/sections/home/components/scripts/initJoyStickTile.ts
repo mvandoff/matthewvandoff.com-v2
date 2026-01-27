@@ -4,12 +4,13 @@ const READY_ATTR = 'data-joystick-ready';
 
 const TILE_ID = 'joystick-tile';
 const CARD_SELECTOR = '.screen-hero .intro-container';
-const TILT_TARGETS_SELECTOR = '.intro-container, .img-container, .mb-tile, .mb-social-link';
+const TILT_TARGETS_SELECTOR = '.intro-container, .img-container, #mb-liquid-tile';
 
 const DEFAULT_MAX_TILT_DEG = 9;
 const DEFAULT_MAX_TRANSLATE_PX = 7;
 const DEFAULT_DEAD_ZONE = 0.05;
 const DEFAULT_PERSPECTIVE_PX = 400;
+const RESET_TILT_DURATION_MS = 1000;
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
@@ -83,6 +84,9 @@ export function initJoyStickTile() {
 	};
 
 	const reset = () => {
+		if (activePointerId === null) return;
+		activePointerId = null;
+
 		card.style.setProperty('--mb-hero-tilt-x', '0deg');
 		card.style.setProperty('--mb-hero-tilt-y', '0deg');
 		card.style.setProperty('--mb-hero-tilt-tx', '0px');
@@ -93,16 +97,15 @@ export function initJoyStickTile() {
 			if (!target.style.transform) continue;
 			const fromTransform = target.style.transform;
 			const animation = target.animate([{ transform: fromTransform }, { transform: identityTransform }], {
-				duration: 360,
+				duration: RESET_TILT_DURATION_MS,
 				easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
 				fill: 'forwards',
 			});
-			target.style.transform = identityTransform;
 			animation.addEventListener(
 				'finish',
 				() => {
-					animation.cancel();
 					target.style.transform = '';
+					animation.cancel();
 					resetAnimations.delete(target);
 				},
 				{ once: true },
@@ -114,7 +117,6 @@ export function initJoyStickTile() {
 		thumb.style.setProperty('--mb-joystick-thumb-y', '0px');
 		tile.classList.remove('is-active');
 		delete card.dataset.tiltActive;
-		activePointerId = null;
 	};
 
 	const updateFromClientPoint = (clientX: number, clientY: number) => {
@@ -149,12 +151,26 @@ export function initJoyStickTile() {
 	const onPointerUp = (event: PointerEvent) => {
 		if (activePointerId === null || event.pointerId !== activePointerId) return;
 		reset();
+		try {
+			if (pad.hasPointerCapture(event.pointerId)) pad.releasePointerCapture(event.pointerId);
+		} catch {
+			// no-op
+		}
 	};
 
 	pad.addEventListener('pointerdown', onPointerDown);
 	pad.addEventListener('pointermove', onPointerMove);
 	pad.addEventListener('pointerup', onPointerUp);
-	pad.addEventListener('pointercancel', reset);
-	pad.addEventListener('lostpointercapture', reset);
-	window.addEventListener('blur', reset);
+	pad.addEventListener('pointercancel', (event) => {
+		if (activePointerId === null || event.pointerId !== activePointerId) return;
+		reset();
+	});
+	pad.addEventListener('lostpointercapture', (event) => {
+		if (activePointerId === null || event.pointerId !== activePointerId) return;
+		reset();
+	});
+	window.addEventListener('blur', () => {
+		if (activePointerId === null) return;
+		reset();
+	});
 }

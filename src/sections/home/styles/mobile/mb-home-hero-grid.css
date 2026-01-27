@@ -30,6 +30,7 @@
 	#mb-gif-tile {
 		grid-column: 1 / span 11;
 		grid-row: 33 / span 4;
+		/* display: none !important; */
 	}
 	#mb-color-tile {
 		grid-column: 13 / span 5;
