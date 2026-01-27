@@ -32,6 +32,7 @@
 	.screen-hero {
 		--hero-border: rgba(255, 255, 255, 0.09);
 
+		overflow-x: hidden;
 		.left-image-layer {
 			display: block;
 
