@@ -4,12 +4,12 @@ const READY_ATTR = 'data-joystick-ready';
 
 const TILE_ID = 'joystick-tile';
 const CARD_SELECTOR = '.screen-hero .intro-container';
-const TILT_TARGETS_SELECTOR = '.intro-container, .img-container, #mb-liquid-tile';
+const TILT_TARGETS_SELECTOR = '.intro-container, .img-container';
 
 const DEFAULT_MAX_TILT_DEG = 9;
 const DEFAULT_MAX_TRANSLATE_PX = 7;
 const DEFAULT_DEAD_ZONE = 0.05;
-const DEFAULT_PERSPECTIVE_PX = 400;
+const DEFAULT_PERSPECTIVE_PX = 100;
 const RESET_TILT_DURATION_MS = 1000;
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -68,10 +68,11 @@ export function initJoyStickTile() {
 		card.style.setProperty('--mb-hero-tilt-ty', `${-yNorm * maxTranslatePx}px`);
 
 		for (const target of tiltTargets) {
+			const yNormForTarget = target.matches('.img-container') ? -yNorm : yNorm;
 			cancelResetAnimation(target);
 			target.style.transform = `perspective(${perspectivePx}px) translate3d(${xNorm * maxTranslatePx}px, ${
-				-yNorm * maxTranslatePx
-			}px, 0) rotateX(${yNorm * maxTiltDeg}deg) rotateY(${-xNorm * maxTiltDeg}deg)`;
+				-yNormForTarget * maxTranslatePx
+			}px, 0) rotateX(${yNormForTarget * maxTiltDeg}deg) rotateY(${-xNorm * maxTiltDeg}deg)`;
 		}
 
 		const thumbRadiusX = thumbRect.width / 2;
