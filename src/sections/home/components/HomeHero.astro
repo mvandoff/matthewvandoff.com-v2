@@ -7,10 +7,12 @@ import ColorTile from 'sections/home/components/ColorTile.astro';
 import JoyStickTile from 'sections/home/components/JoyStickTile.astro';
 import SocialLink from 'sections/home/components/SocialLink.astro';
 import MbSocialLink from 'sections/home/components/MbSocialLink.astro';
+import StatusBulb from 'sections/home/components/StatusBulb.astro';
 import MVDLogo from 'components/MVDLogo.astro';
 import { Icon } from 'astro-icon/components';
 import keyboardCat from 'assets/gif/keyboard-cat.gif';
 import kidA from 'assets/images/kid-a.jpg';
+import TerrainTile from 'sections/home/components/TerrainTile.astro';
 ---
 
 <div class="screen-hero screen" data-mobile-nav-label="welcome">
@@ -20,6 +22,7 @@ import kidA from 'assets/images/kid-a.jpg';
 		</div>
 	</div>
 	<div class="left left-grid intro-container">
+		<StatusBulb />
 		<div class="left-intro">
 			<h1>
 				matthew <span class="last-name">van&nbsp;doff</span>
@@ -58,6 +61,7 @@ import kidA from 'assets/images/kid-a.jpg';
 	</div>
 	<ColorTile />
 	<JoyStickTile />
+	<TerrainTile />
 	<div id="img-tile" class="mb-tile">IMG</div>
 	<div id="mb-copy-tile" class="mb-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>
 		everything in it's right place

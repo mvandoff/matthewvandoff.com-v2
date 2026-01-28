@@ -30,7 +30,7 @@
 		background-clip: padding-box, border-box;
 	}
 	.screen-hero {
-		--hero-border: rgba(255, 255, 255, 0.09);
+		--hero-border: hsl(from var(--neutral-50) h s l / 0.09);
 
 		overflow-x: hidden;
 		.left-image-layer {
@@ -52,6 +52,8 @@
 		.intro-container {
 			padding: clamp(14px, 4vw, 16px);
 			border-radius: var(--home-border-radius);
+			position: relative;
+			isolation: isolate;
 
 			.left-intro {
 				gap: 0.85rem;
@@ -76,7 +78,7 @@
 				font-size: 12px;
 				letter-spacing: 0.22rem;
 				text-transform: uppercase;
-				color: rgba(226, 232, 240, 0.82);
+				color: hsl(from var(--neutral-200) h s l / 0.82);
 				width: max-content;
 			}
 			.last-name {
@@ -86,7 +88,7 @@
 			#headline {
 				margin-top: 0;
 				padding-top: 0.9rem;
-				border-top: 1px solid rgba(255, 255, 255, 0.07);
+				border-top: 1px solid hsl(from var(--neutral-50) h s l / 0.07);
 				border-radius: 0;
 				background: transparent;
 				box-shadow: none;
@@ -110,7 +112,10 @@
 			letter-spacing: 0.25rem;
 			font-size: 12px;
 			background-image:
-				linear-gradient(rgba(0, 0, 0, var(--kid-a-bg-a, 0)), rgba(0, 0, 0, var(--kid-a-bg-a, 0))),
+				linear-gradient(
+					hsl(from var(--neutral-950) h s l / var(--kid-a-bg-a, 0)),
+					hsl(from var(--neutral-950) h s l / var(--kid-a-bg-a, 0))
+				),
 				var(--mb-copy-tile-bg);
 			background-position: left 50% top 48%;
 			color: var(--neutral-100);
@@ -134,11 +139,15 @@
 		background: var(--neutral-400);
 		color: var(--neutral-100);
 		background-image:
-			linear-gradient(rgba(0, 0, 0, var(--kid-a-bg-a, 0)), rgba(0, 0, 0, var(--kid-a-bg-a, 0))), var(--mb-copy-tile-bg);
+			linear-gradient(
+					hsl(from var(--neutral-950) h s l / var(--kid-a-bg-a, 0)),
+					hsl(from var(--neutral-950) h s l / var(--kid-a-bg-a, 0))
+				),
+				var(--mb-copy-tile-bg);
 		background-position: left calc(80%) top 48%;
 	}
 	#mb-down-tile:focus-visible {
-		outline: 2px solid rgba(226, 232, 240, 0.6);
+		outline: 2px solid hsl(from var(--neutral-200) h s l / 0.6);
 		outline-offset: 2px;
 	}
 	#mb-gif-tile img {

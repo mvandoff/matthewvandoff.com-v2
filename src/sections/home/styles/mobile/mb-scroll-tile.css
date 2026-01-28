@@ -1,5 +1,5 @@
 :root {
-	--mb-scroll-tile-bg: rgb(12, 12, 12);
+	--mb-scroll-tile-bg: var(--neutral-950);
 	--mb-scroll-tile-grid-line-alpha: 0.06;
 	--mb-scroll-tile-grid-opacity: 0.12;
 	--mb-scroll-tile-scan-alpha: 0.09;
@@ -41,8 +41,16 @@
 	/* Subtle block grid texture. */
 	#mb-scroll-tile::before {
 		background-image:
-			linear-gradient(to right, rgba(226, 232, 240, var(--mb-scroll-tile-grid-line-alpha)) 1px, transparent 1px),
-			linear-gradient(to bottom, rgba(226, 232, 240, var(--mb-scroll-tile-grid-line-alpha)) 1px, transparent 1px);
+			linear-gradient(
+				to right,
+				hsl(from var(--neutral-200) h s l / var(--mb-scroll-tile-grid-line-alpha)) 1px,
+				transparent 1px
+			),
+			linear-gradient(
+				to bottom,
+				hsl(from var(--neutral-200) h s l / var(--mb-scroll-tile-grid-line-alpha)) 1px,
+				transparent 1px
+			);
 		background-size: var(--block-size) var(--block-size);
 		opacity: var(--mb-scroll-tile-grid-opacity);
 	}
@@ -51,7 +59,7 @@
 		background: linear-gradient(
 			to bottom,
 			transparent 0%,
-			rgba(226, 232, 240, var(--mb-scroll-tile-scan-alpha)) 50%,
+			hsl(from var(--neutral-200) h s l / var(--mb-scroll-tile-scan-alpha)) 50%,
 			transparent 100%
 		);
 		opacity: var(--mb-scroll-tile-scan-opacity);
@@ -72,7 +80,7 @@
 		border: 0;
 		padding: 0;
 		cursor: pointer;
-		color: rgba(226, 232, 240, 0.82);
+		color: hsl(from var(--neutral-200) h s l / 0.82);
 		font-family: 'Inter', sans-serif;
 		text-transform: uppercase;
 		letter-spacing: 0.22rem;

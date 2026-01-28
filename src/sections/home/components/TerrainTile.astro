@@ -1,0 +1,287 @@
+<button
+	id="mb-terrain-tile"
+	class="mb-tile mb-tile-surface"
+	type="button"
+	aria-label="Regenerate terrain art"
+>
+	<span class="mb-terrain-tile__art" data-terrain-art aria-hidden="true"></span>
+</button>
+
+<script>
+	const TILE_ID = 'mb-terrain-tile';
+	const ART_ATTR = 'data-terrain-art';
+	const READY_ATTR = 'data-terrain-ready';
+
+	const VIEW_W = 320;
+	const VIEW_H = 220;
+	const BASELINE_Y = 148;
+
+	const X_COUNT = 32;
+	const Z_COUNT = 20;
+
+	const clamp01 = (value) => Math.min(1, Math.max(0, value));
+	const lerp = (a, b, t) => a + (b - a) * t;
+	const fade = (t) => t * t * t * (t * (t * 6 - 15) + 10);
+
+	const randomSeed = () => {
+		try {
+			const cryptoObj = globalThis.crypto;
+			if (cryptoObj?.getRandomValues) {
+				const buf = new Uint32Array(1);
+				cryptoObj.getRandomValues(buf);
+				return buf[0] >>> 0;
+			}
+		} catch {
+			// ignore
+		}
+		return (Math.random() * 2 ** 32) >>> 0;
+	};
+
+	const hash2D = (x, z, seed) => {
+		let h = (seed ^ Math.imul(x, 0x27d4eb2d) ^ Math.imul(z, 0x165667b1)) >>> 0;
+		h = Math.imul(h ^ (h >>> 15), 1 | h);
+		h ^= h + Math.imul(h ^ (h >>> 7), 61 | h);
+		return ((h ^ (h >>> 14)) >>> 0) / 4294967296;
+	};
+
+	const valueNoise2D = (x, z, seed) => {
+		const x0 = Math.floor(x);
+		const z0 = Math.floor(z);
+		const xf = x - x0;
+		const zf = z - z0;
+
+		const u = fade(xf);
+		const v = fade(zf);
+
+		const v00 = hash2D(x0, z0, seed);
+		const v10 = hash2D(x0 + 1, z0, seed);
+		const v01 = hash2D(x0, z0 + 1, seed);
+		const v11 = hash2D(x0 + 1, z0 + 1, seed);
+
+		const xA = lerp(v00, v10, u);
+		const xB = lerp(v01, v11, u);
+		return lerp(xA, xB, v) * 2 - 1;
+	};
+
+	const fbm2D = (x, z, seed) => {
+		let sum = 0;
+		let amp = 0.55;
+		let freq = 1;
+		let norm = 0;
+
+		for (let i = 0; i < 4; i++) {
+			sum += valueNoise2D(x * freq, z * freq, seed + i * 1013) * amp;
+			norm += amp;
+			amp *= 0.5;
+			freq *= 2;
+		}
+
+		return sum / Math.max(1e-6, norm);
+	};
+
+	const project = (x, y, z) => {
+		const cx = VIEW_W * 0.5;
+		const sx = 132;
+		const sy = 132;
+		const depthY = 62;
+		const perspective = 1.25;
+
+		const denom = 1 + z * perspective;
+		const px = cx + (x * sx) / denom;
+		const py = BASELINE_Y - (y * sy) / denom - z * depthY;
+		return [px, py];
+	};
+
+	const buildSvg = (seed) => {
+		const uid = `terrain-${seed.toString(16)}`;
+
+		const points = [];
+
+		const xOffset = (hash2D(11, 7, seed) - 0.5) * 10;
+		const zOffset = (hash2D(19, 3, seed) - 0.5) * 10;
+
+		for (let zi = 0; zi < Z_COUNT; zi++) {
+			const z01 = zi / (Z_COUNT - 1);
+			const row = [];
+
+			for (let xi = 0; xi < X_COUNT; xi++) {
+				const x01 = xi / (X_COUNT - 1);
+				const xN = x01 * 2 - 1;
+				const zN = z01;
+
+				const dx = xN * 0.92;
+				const dz = zN - 0.62;
+
+				let mountain = Math.exp(-(dx * dx * 2.4 + dz * dz * 7.8));
+				mountain = Math.pow(mountain, 1.15);
+
+				const falloff = Math.pow(clamp01(1 - Math.abs(xN)), 1.25);
+
+				const n1 = fbm2D(dx * 2.4 + xOffset, dz * 2.9 + zOffset, seed);
+				const n2 = fbm2D(dx * 5.1 - xOffset, dz * 4.2 - zOffset, seed + 1337);
+
+				let height = mountain * 1.05 + n1 * 0.16 + n2 * 0.07;
+				height *= falloff * (0.72 + mountain * 0.38);
+				height = Math.max(0, height);
+
+				const wx = xN * 1.02;
+				const wz = zN * 1.12;
+				const wy = height;
+
+				row.push(project(wx, wy, wz));
+			}
+
+			points.push(row);
+		}
+
+		const toPath = (pts) => {
+			let d = '';
+			for (let i = 0; i < pts.length; i++) {
+				const [x, y] = pts[i];
+				d += `${i === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)} `;
+			}
+			return d.trim();
+		};
+
+		let rowPaths = '';
+		for (let zi = 0; zi < Z_COUNT; zi++) {
+			const z01 = zi / (Z_COUNT - 1);
+			const opacity = lerp(0.78, 0.22, z01);
+			rowPaths += `<path d="${toPath(points[zi])}" opacity="${opacity.toFixed(3)}" />`;
+		}
+
+		let colPaths = '';
+		for (let xi = 0; xi < X_COUNT; xi++) {
+			const col = [];
+			for (let zi = 0; zi < Z_COUNT; zi++) col.push(points[zi][xi]);
+			const x01 = xi / (X_COUNT - 1);
+			const opacity = lerp(0.55, 0.18, Math.abs(x01 - 0.5) * 2);
+			colPaths += `<path d="${toPath(col)}" opacity="${opacity.toFixed(3)}" />`;
+		}
+
+		const horizonY = BASELINE_Y + 6;
+
+		return `
+<svg viewBox="0 0 ${VIEW_W} ${VIEW_H}" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<linearGradient id="${uid}-fade" x1="0" y1="${BASELINE_Y}" x2="0" y2="${VIEW_H}">
+			<stop offset="0%" stop-color="white" stop-opacity="0.55" />
+			<stop offset="75%" stop-color="white" stop-opacity="0" />
+		</linearGradient>
+		<mask id="${uid}-mask">
+			<rect x="0" y="${BASELINE_Y}" width="${VIEW_W}" height="${VIEW_H - BASELINE_Y}" fill="url(#${uid}-fade)" />
+		</mask>
+	</defs>
+	<g stroke="currentColor" stroke-width="1" fill="none" stroke-linejoin="round" stroke-linecap="round">
+		${rowPaths}
+		${colPaths}
+	</g>
+	<line x1="0" x2="${VIEW_W}" y1="${horizonY}" y2="${horizonY}" stroke="currentColor" stroke-width="1" opacity="0.42" />
+	<g mask="url(#${uid}-mask)" transform="translate(0 ${BASELINE_Y * 2}) scale(1 -1)" opacity="0.23">
+		<g stroke="currentColor" stroke-width="1" fill="none" stroke-linejoin="round" stroke-linecap="round">
+			${rowPaths}
+			${colPaths}
+		</g>
+	</g>
+</svg>`.trim();
+	};
+
+	const render = (tile, seed) => {
+		const art = tile.querySelector(`[${ART_ATTR}]`);
+		if (!art) return;
+		try {
+			art.innerHTML = buildSvg(seed);
+		} catch {
+			art.textContent = '';
+		}
+		tile.dataset.seed = String(seed);
+	};
+
+	const initTerrainTile = () => {
+		const tile = document.getElementById(TILE_ID);
+		if (!(tile instanceof HTMLButtonElement)) return;
+		if (tile.hasAttribute(READY_ATTR)) return;
+		tile.setAttribute(READY_ATTR, 'true');
+
+		let seed = randomSeed();
+		render(tile, seed);
+
+		let ignoreNextClick = false;
+
+		tile.addEventListener('pointerdown', (event) => {
+			if (event.pointerType === 'mouse' && event.button !== 0) return;
+			ignoreNextClick = true;
+			seed = randomSeed();
+			render(tile, seed);
+		});
+
+		tile.addEventListener('click', () => {
+			if (ignoreNextClick) {
+				ignoreNextClick = false;
+				return;
+			}
+			seed = randomSeed();
+			render(tile, seed);
+		});
+	};
+
+	document.addEventListener('DOMContentLoaded', initTerrainTile, { once: true });
+	document.addEventListener('astro:page-load', initTerrainTile);
+</script>
+
+<style is:global>
+	@media screen and (max-width: 1280px) {
+		#mb-terrain-tile {
+			--mb-tile-linear-start: hsl(from var(--neutral-950) h s l / 0.85);
+			--mb-tile-linear-end: hsl(from var(--neutral-950) h s l / 0.35);
+
+			padding: 0;
+			display: grid;
+			place-items: center;
+			overflow: hidden;
+			cursor: pointer;
+			appearance: none;
+			touch-action: manipulation;
+			-webkit-tap-highlight-color: transparent;
+			border: 1px solid transparent;
+			color: rgba(255, 255, 255, 0.62);
+			transition:
+				transform 120ms ease,
+				border-color 200ms ease;
+		}
+
+		#mb-terrain-tile:active {
+			transform: scale(0.985);
+		}
+
+		#mb-terrain-tile:focus-visible {
+			outline: 2px solid hsl(from var(--neutral-200) h s l / 0.6);
+			outline-offset: 2px;
+		}
+
+		#mb-terrain-tile:hover {
+			border-color: hsl(from var(--neutral-50) h s l / 0.12);
+		}
+
+		#mb-terrain-tile .mb-terrain-tile__art {
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			filter:
+				drop-shadow(0 10px 18px rgba(0, 0, 0, 0.42))
+				drop-shadow(0 0 10px rgba(255, 255, 255, 0.08));
+		}
+
+		#mb-terrain-tile svg {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#mb-terrain-tile {
+			transition: none !important;
+		}
+	}
+</style>

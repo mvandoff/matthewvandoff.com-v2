@@ -99,6 +99,25 @@
 
 	--block-cols: 26;
 
+	/* Status colors */
+	--status-success: hsl(142 71% 45%);
+	--status-success-highlight: hsla(142 95% 95% / 0.92);
+	--status-success-outline: hsla(142 71% 45% / 0.55);
+	--status-success-tooltip-accent: hsla(142 71% 45% / 0.14);
+	--status-success-text: hsl(142 69% 58%);
+
+	--status-warning: hsl(45 93% 47%);
+	--status-warning-highlight: hsla(48 100% 96% / 0.92);
+	--status-warning-outline: hsla(45 93% 47% / 0.55);
+	--status-warning-tooltip-accent: hsla(45 93% 47% / 0.16);
+	--status-warning-text: hsl(48 96% 74%);
+
+	--status-error: hsl(0 84% 60%);
+	--status-error-highlight: hsla(0 100% 97% / 0.92);
+	--status-error-outline: hsla(0 84% 60% / 0.55);
+	--status-error-tooltip-accent: hsla(0 84% 60% / 0.14);
+	--status-error-text: hsl(0 90% 74%);
+
 	transition: background var(--overlay-transition-time) ease;
 	background-color: black;
 }

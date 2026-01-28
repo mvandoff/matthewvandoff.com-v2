@@ -54,7 +54,7 @@ if (!brand) {
 		/* border: 1px solid var(--bg-block-grid-line-color); */
 		--social-hover-color: var(--main-200);
 		--social-focus-outline-color: var(--main-400);
-		--social-hover-bg-color: rgba(255, 255, 255, 0.02);
+		--social-hover-bg-color: hsl(from var(--neutral-50) h s l / 0.02);
 		--social-wave-color: var(--main-950);
 		--social-wave-border-color: hsla(45, 100%, 50%, 0.06);
 		--social-trail-color: var(--bg-block-color);
@@ -64,9 +64,9 @@ if (!brand) {
 		border-radius: 2px;
 		display: flex;
 		align-items: center;
-		color: var(--slate-400);
-		background-color: rgba(255, 255, 255, 0.02);
-		border: 1px solid rgba(255, 255, 255, 0.08);
+		color: var(--neutral-400);
+		background-color: hsl(from var(--neutral-50) h s l / 0.02);
+		border: 1px solid hsl(from var(--neutral-50) h s l / 0.08);
 		position: relative;
 		overflow: hidden;
 		isolation: isolate;
@@ -238,8 +238,8 @@ if (!brand) {
 			height: auto;
 			min-height: 56px;
 			border-radius: 2px;
-			background-color: rgba(255, 255, 255, 0.02);
-			border: 1px solid rgba(255, 255, 255, 0.1);
+			background-color: hsl(from var(--neutral-50) h s l / 0.02);
+			border: 1px solid hsl(from var(--neutral-50) h s l / 0.1);
 		}
 		.social-trail-grid {
 			--social-trail-radius: 2px;

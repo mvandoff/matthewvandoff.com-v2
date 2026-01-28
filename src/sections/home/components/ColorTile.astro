@@ -126,7 +126,7 @@ import { Icon } from 'astro-icon/components';
 		will-change: width;
 
 		&:focus-visible {
-			outline: 2px solid rgba(226, 232, 240, 0.6);
+			outline: 2px solid hsl(from var(--neutral-200) h s l / 0.6);
 			outline-offset: 2px;
 		}
 		&.is-open {
@@ -135,8 +135,8 @@ import { Icon } from 'astro-icon/components';
 			--mb-tile-linear-start: var(--mb-tile-linear-start-open);
 			--mb-tile-linear-end: var(--mb-tile-linear-end-open);
 			box-shadow:
-				0 18px 34px rgba(0, 0, 0, 0.32),
-				0 8px 14px rgba(0, 0, 0, 0.22);
+				0 18px 34px hsl(from var(--neutral-950) h s l / 0.32),
+				0 8px 14px hsl(from var(--neutral-950) h s l / 0.22);
 		}
 	}
 
@@ -181,7 +181,7 @@ import { Icon } from 'astro-icon/components';
 		top: 8px;
 		right: 8px;
 		z-index: 2;
-		box-shadow: 0 0 0 2px rgba(2, 6, 23, 0.55);
+		box-shadow: 0 0 0 2px hsl(from var(--neutral-950) h s l / 0.55);
 		transition: transform 1000ms var(--mb-color-tile-ease);
 	}
 	#mb-color-tile.is-open .mb-color-tile__dot {

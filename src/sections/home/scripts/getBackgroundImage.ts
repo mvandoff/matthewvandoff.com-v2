@@ -1,4 +1,4 @@
-const lineColor = 'rgba(69, 69, 69, 0.07)';
+const lineColor = 'hsl(from var(--neutral-500) h s l / 0.07)';
 export function getBackgroundImage() {
 	return `repeating-linear-gradient(
 			45deg,
@@ -47,7 +47,7 @@ export function getBackgroundImage() {
 		radial-gradient(circle at 40% 20%,
   rgba(15, 19, 53, 0.8) 0%,
   rgba(0, 200, 255, 0.10) 26%,
-  rgba(0, 0, 0, 0) 58%)
+  transparent 58%)
 		`;
 }
 
