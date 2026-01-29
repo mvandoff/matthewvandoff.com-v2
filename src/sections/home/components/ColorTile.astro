@@ -23,15 +23,19 @@ import { Icon } from 'astro-icon/components';
 </button>
 <script>
 	import iro from '@jaames/iro';
-	import { getBaseHue, prepareDynamicPalette, setBaseHue, writeStoredHue, MAIN_HUE_EVENT } from 'scripts/global/mainHue';
+	import {
+		getBaseHue,
+		prepareDynamicPalette,
+		setBaseHue,
+		writeStoredHue,
+		MAIN_HUE_EVENT,
+	} from 'scripts/global/mainHue';
 
 	// Palette strategy: keep literal values in CSS, then rewrite them once into
 	// calc(var(--main-hue-base) +/- offset) so the slider only changes one var.
 	const OPEN_CLASS = 'is-open';
 	const IRO_READY_ATTR = 'data-iro-ready';
-	const IRO_WIDTH = 175;
-
-	const getTile = () => document.getElementById('mb-color-tile');
+	const IRO_WIDTH = 270;
 
 	const setOpen = (tile: HTMLElement, open: boolean) => {
 		tile.classList.toggle(OPEN_CLASS, open);
@@ -84,11 +88,9 @@ import { Icon } from 'astro-icon/components';
 	};
 
 	document.addEventListener('DOMContentLoaded', () => {
-		const tile = getTile();
-		if (!tile) return;
+		const tile = document.getElementById('mb-color-tile')!;
 
-		tile.addEventListener('click', (event) => {
-			if (event.target instanceof Element && event.target.closest('[data-hue-slider]')) return;
+		tile.addEventListener('click', () => {
 			setOpen(tile, !tile.classList.contains(OPEN_CLASS));
 		});
 		document.addEventListener('pointerdown', (event) => {
@@ -100,8 +102,8 @@ import { Icon } from 'astro-icon/components';
 </script>
 <style>
 	#mb-color-tile {
-		--mb-color-tile-handle-width: calc(var(--block-size) * 5);
-		--mb-color-tile-slide-over: calc(var(--block-size) * 12);
+		--mb-color-tile-handle-width: calc(var(--block-size) * 4);
+		--mb-color-tile-slide-over-width: calc(var(--block-size) * 18);
 		--mb-color-tile-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 		--mb-tile-linear-start: var(--main-950);
@@ -130,7 +132,7 @@ import { Icon } from 'astro-icon/components';
 			outline-offset: 2px;
 		}
 		&.is-open {
-			width: calc(100% + var(--mb-color-tile-slide-over));
+			width: calc(100% + var(--mb-color-tile-slide-over-width));
 			z-index: 50;
 			--mb-tile-linear-start: var(--mb-tile-linear-start-open);
 			--mb-tile-linear-end: var(--mb-tile-linear-end-open);
@@ -182,7 +184,7 @@ import { Icon } from 'astro-icon/components';
 		right: 8px;
 		z-index: 2;
 		box-shadow: 0 0 0 2px hsl(from var(--neutral-950) h s l / 0.55);
-		transition: transform 1000ms var(--mb-color-tile-ease);
+		transition: transform 1s var(--mb-color-tile-ease);
 	}
 	#mb-color-tile.is-open .mb-color-tile__dot {
 		transform: scale(0.85);

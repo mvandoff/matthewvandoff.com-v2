@@ -11,8 +11,6 @@ import StatusBulb from 'sections/home/components/StatusBulb.astro';
 import MVDLogo from 'components/MVDLogo.astro';
 import { Icon } from 'astro-icon/components';
 import keyboardCat from 'assets/gif/keyboard-cat.gif';
-import kidA from 'assets/images/kid-a.jpg';
-import TerrainTile from 'sections/home/components/TerrainTile.astro';
 ---
 
 <div class="screen-hero screen" data-mobile-nav-label="welcome">
@@ -61,23 +59,13 @@ import TerrainTile from 'sections/home/components/TerrainTile.astro';
 	</div>
 	<ColorTile />
 	<JoyStickTile />
-	<TerrainTile />
 	<div id="img-tile" class="mb-tile">IMG</div>
-	<div id="mb-copy-tile" class="mb-tile" style={`--mb-copy-tile-bg: url('${kidA.src}')`}>
-		everything in it's right place
-	</div>
-	<button
-		id="mb-down-tile"
-		class="mb-tile"
-		type="button"
-		aria-label="Scroll down"
-		style={`--mb-copy-tile-bg: url('${kidA.src}')`}
-	>
-		<Icon name="heroicons:chevron-down-16-solid" aria-hidden="true" />
-	</button>
-	<!-- <div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
+
+	<a href="/work" id="mb-work-tile" class="mb-tile mb-tile-surface">Work</a>
+
+	<div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
 		<MVDLogo />
-	</div> -->
+	</div>
 	<!-- <div id="mb-scroll-tile" class="mb-tile">
 		<button class="mb-scroll-cue" type="button" aria-label="Scroll down">
 		<span class="mb-scroll-cue__chevrons" aria-hidden="true">
