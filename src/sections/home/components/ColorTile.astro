@@ -105,7 +105,7 @@ import { Icon } from 'astro-icon/components';
 		--mb-color-tile-handle-width: calc(var(--block-size) * 4);
 		--mb-color-tile-slide-over-width: calc(var(--block-size) * 18);
 		--mb-color-tile-ease: cubic-bezier(0.22, 1, 0.36, 1);
-
+		--mb-color-tile-transition-time: 700ms;
 		--mb-tile-linear-start: var(--main-950);
 		--mb-tile-linear-end: hsl(from var(--main-950) h s l / 0.5);
 		--mb-tile-linear-start-open: var(--main-800);
@@ -122,23 +122,48 @@ import { Icon } from 'astro-icon/components';
 		cursor: pointer;
 		-webkit-tap-highlight-color: transparent;
 		transition:
-			width 520ms var(--mb-color-tile-ease),
-			box-shadow 520ms var(--mb-color-tile-ease),
-			border-color 520ms var(--mb-color-tile-ease);
+			width var(--mb-color-tile-transition-time) var(--mb-color-tile-ease),
+			box-shadow var(--mb-color-tile-transition-time) var(--mb-color-tile-ease);
 		will-change: width;
+		z-index: 50;
 
+		/* Gradient border comes from layered backgrounds + background-clip on .mb-tile-surface. */
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			border-radius: inherit;
+			border: solid 1px transparent;
+			background:
+				radial-gradient(
+					circle at var(--mb-tile-radial-x) var(--mb-tile-radial-y),
+					var(--neutral-900),
+					var(--neutral-950)
+				),
+				linear-gradient(
+					to var(--mb-tile-linear-dir),
+					var(--mb-tile-linear-start-open),
+					var(--mb-tile-linear-end-open) 80%
+				);
+			background-origin: border-box;
+			background-clip: padding-box, border-box;
+			opacity: 0;
+			pointer-events: none;
+			transition: opacity var(--mb-color-tile-transition-time) var(--mb-color-tile-ease);
+			z-index: 0;
+		}
 		&:focus-visible {
 			outline: 2px solid hsl(from var(--neutral-200) h s l / 0.6);
 			outline-offset: 2px;
 		}
 		&.is-open {
 			width: calc(100% + var(--mb-color-tile-slide-over-width));
-			z-index: 50;
-			--mb-tile-linear-start: var(--mb-tile-linear-start-open);
-			--mb-tile-linear-end: var(--mb-tile-linear-end-open);
 			box-shadow:
 				0 18px 34px hsl(from var(--neutral-950) h s l / 0.32),
 				0 8px 14px hsl(from var(--neutral-950) h s l / 0.22);
+		}
+		&.is-open::after {
+			opacity: 1;
 		}
 	}
 
@@ -156,6 +181,7 @@ import { Icon } from 'astro-icon/components';
 			opacity 320ms var(--mb-color-tile-ease),
 			transform 520ms var(--mb-color-tile-ease);
 		padding-left: 0.5rem;
+		z-index: 1;
 	}
 	#mb-color-tile.is-open .mb-color-tile__drawer {
 		opacity: 1;
@@ -173,6 +199,7 @@ import { Icon } from 'astro-icon/components';
 		width: var(--mb-color-tile-handle-width);
 		display: grid;
 		place-items: center;
+		z-index: 1;
 	}
 	.mb-color-tile__dot {
 		position: absolute;
@@ -184,7 +211,7 @@ import { Icon } from 'astro-icon/components';
 		right: 8px;
 		z-index: 2;
 		box-shadow: 0 0 0 2px hsl(from var(--neutral-950) h s l / 0.55);
-		transition: transform 1s var(--mb-color-tile-ease);
+		transition: transform var(--mb-color-tile-transition-time) var(--mb-color-tile-ease);
 	}
 	#mb-color-tile.is-open .mb-color-tile__dot {
 		transform: scale(0.85);
