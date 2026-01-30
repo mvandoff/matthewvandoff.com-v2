@@ -6,11 +6,11 @@ import HomeImage from 'sections/home/components/HomeImage.astro';
 import ColorTile from 'sections/home/components/ColorTile.astro';
 import JoyStickTile from 'sections/home/components/JoyStickTile.astro';
 import SocialLink from 'sections/home/components/SocialLink.astro';
-import MbSocialLink from 'sections/home/components/MbSocialLink.astro';
 import StatusBulb from 'sections/home/components/StatusBulb.astro';
 import MVDLogo from 'components/MVDLogo.astro';
 import { Icon } from 'astro-icon/components';
 import keyboardCat from 'assets/gif/keyboard-cat.gif';
+import Button from 'sections/home/components/Button.astro';
 ---
 
 <div class="screen-hero screen" data-mobile-nav-label="welcome">
@@ -39,40 +39,26 @@ import keyboardCat from 'assets/gif/keyboard-cat.gif';
 			<SocialLink href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="github" />
 		</div>
 	</div>
-	<MbSocialLink
+
+	<Button
 		href="https://www.linkedin.com/in/matthew-vandoff/"
 		icon="fa7-brands:linkedin"
 		label="LinkedIn"
 		brand="li"
-		iconId="mb-li-icon"
+		focusCorner="ne"
 	/>
-	<MbSocialLink
-		href="https://github.com/mvandoff"
-		icon="fa7-brands:github"
-		label="GitHub"
-		brand="gh"
-		iconId="mb-gh-icon"
-	/>
+	<Button href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="gh" />
+
 	<div id="mb-liquid-tile" class="mb-tile"></div>
 	<div id="mb-gif-tile" class="mb-tile">
 		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
 	</div>
+
 	<ColorTile />
 	<JoyStickTile />
-	<div id="img-tile" class="mb-tile">IMG</div>
 
 	<a href="/work" id="mb-work-tile" class="mb-tile mb-tile-surface">Work</a>
-
 	<div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
 		<MVDLogo />
 	</div>
-	<!-- <div id="mb-scroll-tile" class="mb-tile">
-		<button class="mb-scroll-cue" type="button" aria-label="Scroll down">
-		<span class="mb-scroll-cue__chevrons" aria-hidden="true">
-			<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
-			<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
-			<span class="mb-scroll-cue__chevron"><Icon name="heroicons:chevron-down" /></span>
-		</span>
-	</button>
-	</div> -->
 </div>

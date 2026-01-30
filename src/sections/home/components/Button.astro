@@ -1,0 +1,75 @@
+---
+import { Icon } from 'astro-icon/components';
+
+type FocusCorner = 'ne' | 'nw' | 'se' | 'sw';
+
+type Props = {
+	href: string;
+	icon: string;
+	label: string;
+	brand: 'li' | 'gh';
+	iconId?: string;
+	focusCorner?: FocusCorner;
+};
+
+const { href, icon, label, brand, iconId, focusCorner = 'nw' } = Astro.props as Props;
+const cornerVars: Record<FocusCorner, { radialX: string; radialY: string; linearDir: string }> = {
+	nw: { radialX: '0%', radialY: '0%', linearDir: 'bottom right' },
+	ne: { radialX: '100%', radialY: '0%', linearDir: 'bottom left' },
+	sw: { radialX: '0%', radialY: '100%', linearDir: 'top right' },
+	se: { radialX: '100%', radialY: '100%', linearDir: 'top left' },
+};
+const { radialX, radialY, linearDir } = cornerVars[focusCorner];
+const styleVars = `--mb-tile-radial-x: ${radialX}; --mb-tile-radial-y: ${radialY}; --mb-tile-linear-dir: ${linearDir};`;
+---
+
+<a class="mb-social-link mb-tile-surface" data-brand={brand} href={href} aria-label={label} style={styleVars}>
+	<span class="mb-social-brand-icon" aria-hidden="true">
+		<Icon name={icon} id={iconId} />
+	</span>
+	<span class="mb-social-label">{label}</span>
+</a>
+
+<style>
+	.mb-social-link {
+		--mb-tile-linear-start: hsl(from var(--main-950) h s l / 0.7);
+		--mb-tile-linear-end: hsl(from var(--main-900) h s l / 0.1);
+		--icon-size: 38px;
+
+		display: none;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-around;
+		position: relative;
+
+		.mb-social-label {
+			font-family: 'Inter', sans-serif;
+			font-size: 10px;
+			letter-spacing: 0.15em;
+			color: var(--neutral-400);
+		}
+		.mb-social-brand-icon {
+			height: var(--icon-size);
+			color: var(--neutral-300);
+
+			svg {
+				height: var(--icon-size);
+				width: var(--icon-size);
+			}
+		}
+		/* &::after {
+			content: '⇱';
+			position: absolute;
+			top: -2px;
+			right: 0;
+			rotate: 90deg;
+			font-size: 18px;
+			color: hsl(from var(--neutral-200) h s l / 0.5);
+		} */
+	}
+	@media screen and (max-width: 1280px) {
+		.mb-social-link {
+			display: flex;
+		}
+	}
+</style>
