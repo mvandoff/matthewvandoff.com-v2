@@ -4,15 +4,16 @@ import { Icon } from 'astro-icon/components';
 type FocusCorner = 'ne' | 'nw' | 'se' | 'sw';
 
 type Props = {
-	href: string;
+	href?: string;
 	icon: string;
 	label: string;
-	brand: 'li' | 'gh';
-	iconId?: string;
 	focusCorner?: FocusCorner;
+	id?: string;
+	className?: string;
+	type?: 'standard' | 'external' | 'internal';
 };
 
-const { href, icon, label, brand, iconId, focusCorner = 'nw' } = Astro.props as Props;
+const { id, className, type = 'standard', href, icon, label, focusCorner = 'nw' } = Astro.props as Props;
 const cornerVars: Record<FocusCorner, { radialX: string; radialY: string; linearDir: string }> = {
 	nw: { radialX: '0%', radialY: '0%', linearDir: 'bottom right' },
 	ne: { radialX: '100%', radialY: '0%', linearDir: 'bottom left' },
@@ -21,26 +22,40 @@ const cornerVars: Record<FocusCorner, { radialX: string; radialY: string; linear
 };
 const { radialX, radialY, linearDir } = cornerVars[focusCorner];
 const styleVars = `--mb-tile-radial-x: ${radialX}; --mb-tile-radial-y: ${radialY}; --mb-tile-linear-dir: ${linearDir};`;
+
+const ICONS = {
+	external: 'heroicons:arrow-small-up-20-solid',
+	internal: 'heroicons:arrow-small-up-20-solid',
+};
 ---
 
-<a class="mb-social-link mb-tile-surface" data-brand={brand} href={href} aria-label={label} style={styleVars}>
+<a id={id} class:list={[className, 'tile-btn mb-tile-surface']} href={href} aria-label={label} style={styleVars}>
+	{
+		type !== 'standard' && (
+			<span class="badge-icon" data-type={type}>
+				<Icon name={ICONS[type]} />
+			</span>
+		)
+	}
 	<span class="mb-social-brand-icon" aria-hidden="true">
-		<Icon name={icon} id={iconId} />
+		<Icon name={icon} />
 	</span>
 	<span class="mb-social-label">{label}</span>
 </a>
 
 <style>
-	.mb-social-link {
-		--mb-tile-linear-start: hsl(from var(--main-950) h s l / 0.7);
-		--mb-tile-linear-end: hsl(from var(--main-900) h s l / 0.1);
+	.tile-btn {
+		--mb-tile-linear-start: hsl(from var(--main-950) h s l / 0.9);
+		--mb-tile-linear-end: hsl(from var(--main-900) h s l / 0.2);
 		--icon-size: 38px;
+		--badge-icon-size: 18px;
 
 		display: none;
 		flex-direction: column;
 		align-items: center;
 		justify-content: space-around;
 		position: relative;
+		/* z-index: 10; */
 
 		.mb-social-label {
 			font-family: 'Inter', sans-serif;
@@ -57,18 +72,31 @@ const styleVars = `--mb-tile-radial-x: ${radialX}; --mb-tile-radial-y: ${radialY
 				width: var(--icon-size);
 			}
 		}
-		/* &::after {
-			content: '⇱';
+		.badge-icon {
 			position: absolute;
-			top: -2px;
-			right: 0;
-			rotate: 90deg;
-			font-size: 18px;
-			color: hsl(from var(--neutral-200) h s l / 0.5);
-		} */
+			top: -1px;
+			right: 3px;
+			width: var(--badge-icon-size);
+			color: var(--neutral-600);
+
+			svg {
+				width: var(--badge-icon-size);
+				height: var(--badge-icon-size);
+			}
+
+			&[data-type='external'] {
+				rotate: 45deg;
+			}
+			&[data-type='internal'] {
+				rotate: 90deg;
+			}
+		}
+		&#work-btn {
+			--icon-size: 32px;
+		}
 	}
 	@media screen and (max-width: 1280px) {
-		.mb-social-link {
+		.tile-btn {
 			display: flex;
 		}
 	}

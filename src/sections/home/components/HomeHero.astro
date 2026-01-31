@@ -44,21 +44,47 @@ import Button from 'sections/home/components/Button.astro';
 		href="https://www.linkedin.com/in/matthew-vandoff/"
 		icon="fa7-brands:linkedin"
 		label="LinkedIn"
-		brand="li"
-		focusCorner="ne"
+		focusCorner="se"
+		type="external"
+		id="li-btn"
 	/>
-	<Button href="https://github.com/mvandoff" icon="fa7-brands:github" label="GitHub" brand="gh" />
+	<Button
+		href="https://github.com/mvandoff"
+		icon="fa7-brands:github"
+		label="GitHub"
+		id="gh-btn"
+		type="external"
+		focusCorner="sw"
+	/>
+	<Button
+		href="/work"
+		id="work-btn"
+		className="mb-tile-surface"
+		label="Work"
+		icon="lucide:code-xml"
+		type="internal"
+		focusCorner="se"
+	/>
 
 	<div id="mb-liquid-tile" class="mb-tile"></div>
 	<div id="mb-gif-tile" class="mb-tile">
 		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
 	</div>
 
+	<!-- <Button
+		href="/work"
+		id="about-btn"
+		className="mb-tile-surface"
+		label="About"
+		icon="lucide:code-xml"
+		type="internal"
+		focusCorner="se"
+	/> -->
+
 	<ColorTile />
 	<JoyStickTile />
 
-	<a href="/work" id="mb-work-tile" class="mb-tile mb-tile-surface">Work</a>
-	<div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
+	<!-- <div id="mb-logo-tile" class="mb-tile" aria-hidden="true">
 		<MVDLogo />
-	</div>
+	</div> -->
 </div>
