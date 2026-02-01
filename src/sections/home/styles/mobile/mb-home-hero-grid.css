@@ -9,7 +9,7 @@
 	}
 	#mb-side-rail {
 		grid-column: 1 / 2;
-		grid-row: 1 / 38;
+		grid-row: 1 / 26;
 	}
 	#mb-side-rail-2 {
 		grid-column: 1 / 2;
@@ -46,7 +46,7 @@
 	}
 
 	#mb-gif-tile {
-		grid-column: 3 / span round(down, calc((100vw - (var(--block-size) * 22)) / var(--block-size)));
+		grid-column: 1 / span round(down, calc((100vw - (var(--block-size) * 20)) / var(--block-size)));
 		grid-row: 27 / 38;
 	}
 }
