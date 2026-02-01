@@ -8,14 +8,15 @@ import JoyStickTile from 'sections/home/components/JoyStickTile.astro';
 import SocialLink from 'sections/home/components/SocialLink.astro';
 import StatusBulb from 'sections/home/components/StatusBulb.astro';
 import Liquid from 'sections/home/components/Liquid.astro';
-// import MVDLogo from 'components/MVDLogo.astro';
-// import { Icon } from 'astro-icon/components';
-// import keyboardCat from 'assets/gif/keyboard-cat.gif';
+import keyboardCat from 'assets/gif/keyboard-cat.gif';
 import Button from 'sections/home/components/Button.astro';
 ---
 
 <div class="screen-hero screen" data-mobile-nav-label="welcome">
 	<Liquid />
+
+	<div id="mb-side-rail" class="mb-tile liquid"></div>
+	<div id="mb-side-rail-2" class="mb-tile liquid"></div>
 	<div class="left-image-layer left-grid">
 		<div class="left-image">
 			<HomeImage />
@@ -59,15 +60,11 @@ import Button from 'sections/home/components/Button.astro';
 		focusCorner="sw"
 	/>
 	<Button href="/work" id="work-btn" label="Work" icon="lucide:code-xml" type="internal" focusCorner="se" />
-
-	<div id="mb-liquid-tile" class="mb-tile liquid"></div>
-	<!-- <div id="mb-gif-tile" class="mb-tile">
-		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
-	</div> -->
-
 	<Button id="about-tile" label="About" icon="ci:info-square" type="scroll" focusCorner="ne" />
-	<div id="liquid-square" class="liquid"></div>
-
 	<ColorTile />
 	<JoyStickTile />
+
+	<div id="mb-gif-tile" class="mb-tile">
+		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
+	</div>
 </div>

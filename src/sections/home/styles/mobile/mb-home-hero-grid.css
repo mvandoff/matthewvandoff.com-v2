@@ -7,78 +7,46 @@
 		grid-column: 3 / -1;
 		grid-row: 13 / 26;
 	}
-	#mb-liquid-tile {
+	#mb-side-rail {
 		grid-column: 1 / 2;
-		grid-row: 1 / -4;
+		grid-row: 1 / 38;
 	}
-	:root {
-		--btn-grid-col-start: 3;
-		--btn-grid-col-step: 6;
-		--btn-grid-col-span: 5;
-		--btn-grid-row-start: 27;
-		--btn-grid-row-step: 6;
-		--btn-grid-row-span: 5;
+	#mb-side-rail-2 {
+		grid-column: 1 / 2;
+		grid-row: 27 / span 11;
+		display: none;
 	}
 
-	#li-btn,
-	#gh-btn,
-	#work-btn,
-	#mb-color-tile,
-	#mb-gif-tile,
-	#about-tile,
-	#joystick-tile {
-		--btn-grid-col-slot: 1;
-		--btn-grid-row-slot: 1;
-		--btn-grid-col-span-override: var(--btn-grid-col-span);
-		--btn-grid-row-span-override: var(--btn-grid-row-span);
-		grid-column: calc(var(--btn-grid-col-start) + (var(--btn-grid-col-slot) - 1) * var(--btn-grid-col-step)) / span
-			var(--btn-grid-col-span-override);
-		grid-row: calc(var(--btn-grid-row-start) + (var(--btn-grid-row-slot) - 1) * var(--btn-grid-row-step)) / span
-			var(--btn-grid-row-span-override);
-	}
-
+	/* Tile Grid */
 	#li-btn {
-		--btn-grid-col-slot: 1;
-		--btn-grid-row-slot: 1;
+		grid-column: -18 / span 5;
+		grid-row: 27 / span 5;
 	}
 	#gh-btn {
-		--btn-grid-col-slot: 2;
-		--btn-grid-row-slot: 1;
+		grid-column: -12 / span 5;
+		grid-row: 27 / span 5;
 	}
 	#work-btn {
-		--btn-grid-col-slot: 3;
-		--btn-grid-row-slot: 1;
-	}
-	#mb-color-tile {
-		--btn-grid-col-slot: 3;
-		--btn-grid-row-slot: 2;
-	}
-	#mb-gif-tile {
-		--btn-grid-col-slot: 4;
-		--btn-grid-row-slot: 1;
-		--btn-grid-col-span-override: 4;
-		--btn-grid-row-span-override: 11;
-		display: none !important;
+		grid-column: -12 / span 5;
+		grid-row: 33 / span 5;
+		/* grid-column: -6 / span 5;
+		grid-row: 27 / span 5; */
 	}
 	#about-tile {
-		--btn-grid-col-slot: 1;
-		--btn-grid-row-slot: 2;
+		grid-column: -18 / span 5;
+		grid-row: 33 / span 5;
 	}
 	#joystick-tile {
-		--btn-grid-col-slot: 2;
-		--btn-grid-row-slot: 2;
+		grid-column: -6 / span 5;
+		grid-row: 33 / span 5;
 	}
-	#liquid-square {
-		/* --btn-grid-col-slot: 4; */
-		/* --btn-grid-row-slot: 2; */
-		width: 100%;
-		height: 100%;
-		grid-column: 21 / span 5;
+	#mb-color-tile {
+		grid-column: -6 / span 5;
 		grid-row: 27 / span 5;
-		border-radius: 4px;
 	}
-	/* #mb-logo-tile {
-		grid-column: 9 / span 7;
-		grid-row: 33 / span 6;
-	} */
+
+	#mb-gif-tile {
+		grid-column: 3 / span round(down, calc((100vw - (var(--block-size) * 22)) / var(--block-size)));
+		grid-row: 27 / 38;
+	}
 }
