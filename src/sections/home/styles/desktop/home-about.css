@@ -32,19 +32,9 @@
 		align-items: center;
 	}
 	.blurbs {
-		/* background: red; */
 		grid-column: 1 / -1;
 		grid-row: var(--right-row-blurbs) / span var(--right-row-blurbs-span);
 		height: calc(var(--right-row-blurbs-span) * var(--block-size));
-
-		.blurb {
-			font-size: 16px;
-			border-radius: 0.5rem;
-			line-height: 28px;
-			font-family: 'Inter', sans-serif;
-			color: var(--neutral-400);
-			padding-left: 1rem;
-		}
 	}
 	.timeline-slot {
 		grid-column: 1 / -1;

@@ -10,6 +10,7 @@ import './styles/mobile/mb-home-layout.css';
 import HomeHero from 'sections/home/components/HomeHero.astro';
 import HomeAbout from 'sections/home/components/HomeAbout.astro';
 import HomeSvgFilters from 'sections/home/components/HomeSvgFilters.astro';
+import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 ---
 
 <section id="home">
@@ -17,6 +18,7 @@ import HomeSvgFilters from 'sections/home/components/HomeSvgFilters.astro';
 	<div class="home-content">
 		<HomeHero />
 		<HomeAbout />
+		<MobileTimeline />
 		<HomeSvgFilters />
 	</div>
 </section>
@@ -30,5 +32,11 @@ import HomeSvgFilters from 'sections/home/components/HomeSvgFilters.astro';
 		initHomeMobileNav();
 		initHome();
 		initAboutBtn();
+
+		const homeSection = document.getElementById('home')!;
+		homeSection.scrollTo({
+			top: homeSection?.clientHeight * 2,
+			behavior: 'instant',
+		});
 	});
 </script>

@@ -16,3 +16,11 @@ main {
 	background: hsl(from var(--neutral-950) h s l / 0.31);
 	max-width: calc(32 * var(--block-size));
 }
+.blurb {
+	font-size: 16px;
+	border-radius: 0.5rem;
+	line-height: 28px;
+	font-family: 'Inter', sans-serif;
+	color: var(--neutral-300);
+	padding-left: 1rem;
+}

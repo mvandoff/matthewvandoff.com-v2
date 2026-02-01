@@ -10,6 +10,7 @@ import MobileTimelineScreen from 'sections/home/mobile/MobileTimelineScreen.astr
 		end="present"
 		description="Worked on the frontend team for Insight, a full scale ERP solution for manufacturers, migrating a monolithic legacy application to a modern React web app as well as developing new cutting-edge features."
 		link="https://www.cyncly.com/"
+		id="cyncly"
 	/>
 	<MobileTimelineScreen
 		company="Game Builds"
@@ -19,6 +20,7 @@ import MobileTimelineScreen from 'sections/home/mobile/MobileTimelineScreen.astr
 		end="2024"
 		description="Helped build, launch and maintain www.diablobuilds.com which was an online resource and community for the popular online video game Diablo IV, featuring an advanced character builder with in depth analytics and customization."
 		link="https://www.instagram.com/diablobuilds"
+		id="gb"
 	/>
 	<MobileTimelineScreen
 		company="Applied Visions"
@@ -27,5 +29,16 @@ import MobileTimelineScreen from 'sections/home/mobile/MobileTimelineScreen.astr
 		end="2023"
 		description="Developed two key enterprise applications: a professional networking platform for the insurance industry and an AI-powered project management tool for government clients, as well as mentoring junior developers for the client."
 		link="https://avi.com"
+		id="avi"
 	/>
 </div>
+<style>
+	#mobile-tl {
+		display: none;
+	}
+	@media screen and (max-width: 1280px) {
+		#mobile-tl {
+			display: block;
+		}
+	}
+</style>
