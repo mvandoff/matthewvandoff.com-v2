@@ -52,6 +52,15 @@ const ICONS = {
 </Tag>
 
 <style>
+	:global(
+		.mb-social-label {
+			font-family: 'Inter', sans-serif;
+			font-size: 10px;
+			letter-spacing: 0.15em;
+			color: var(--neutral-400);
+			text-transform: lowercase;
+		})
+		
 	.tile-btn {
 		--icon-size: 38px;
 		--badge-icon-size: 18px;
@@ -63,12 +72,6 @@ const ICONS = {
 		position: relative;
 		/* z-index: 10; */
 
-		.mb-social-label {
-			font-family: 'Inter', sans-serif;
-			font-size: 10px;
-			letter-spacing: 0.15em;
-			color: var(--neutral-400);
-		}
 		.mb-social-brand-icon {
 			height: var(--icon-size);
 			color: var(--neutral-300);
@@ -104,7 +107,7 @@ const ICONS = {
 			}
 		}
 		&#work-btn {
-			--icon-size: 32px;
+			--icon-size: 34px;
 		}
 		&#about-tile {
 			--icon-size: 35px;

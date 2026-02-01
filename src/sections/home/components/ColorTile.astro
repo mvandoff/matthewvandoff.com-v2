@@ -17,102 +17,25 @@ import { Icon } from 'astro-icon/components';
 		</span>
 	</span>
 	<span class="mb-color-tile__handle" aria-hidden="true">
-		<Icon name="f7:paintbrush-fill" />
+		<Icon name="f7:paintbrush-fill" class="color-icon" />
 		<span class="mb-color-tile__dot"></span>
+		<span class="mb-social-label">Theme</span>
 	</span>
 </button>
-<script>
-	import iro from '@jaames/iro';
-	import {
-		getBaseHue,
-		prepareDynamicPalette,
-		setBaseHue,
-		writeStoredHue,
-		MAIN_HUE_EVENT,
-	} from 'scripts/global/mainHue';
-
-	// Palette strategy: keep literal values in CSS, then rewrite them once into
-	// calc(var(--main-hue-base) +/- offset) so the slider only changes one var.
-	const OPEN_CLASS = 'is-open';
-	const IRO_READY_ATTR = 'data-iro-ready';
-	const IRO_WIDTH = 270;
-
-	const setOpen = (tile: HTMLElement, open: boolean) => {
-		tile.classList.toggle(OPEN_CLASS, open);
-		tile.setAttribute('aria-expanded', open ? 'true' : 'false');
-		tile.setAttribute('aria-label', open ? 'Close accent color' : 'Open accent color');
-
-		if (open) initHueSlider(tile);
-	};
-
-	const initHueSlider = (tile: HTMLElement) => {
-		// Ensure CSS vars are rewritten before the slider starts updating the base hue.
-		prepareDynamicPalette();
-		const sliderHost = tile.querySelector<HTMLElement>('[data-hue-slider]');
-		if (!sliderHost) return;
-		if (sliderHost.hasAttribute(IRO_READY_ATTR)) return;
-
-		const tryInit = () => {
-			const baseHue = getBaseHue();
-			const picker = iro.ColorPicker(sliderHost, {
-				width: IRO_WIDTH,
-				color: { h: baseHue, s: 100, v: 100 },
-				layout: [
-					{
-						component: iro.ui.Slider,
-						options: {
-							sliderType: 'hue',
-							sliderSize: 25,
-							borderWidth: 0,
-							handleRadius: 12,
-						},
-					},
-				],
-			});
-
-			picker.on('color:change', (color: iro.Color) => {
-				// Keep updates minimal: only one CSS var changes on drag.
-				setBaseHue(color.hsl.h);
-				writeStoredHue(color.hsl.h);
-				window.dispatchEvent(
-					new CustomEvent(MAIN_HUE_EVENT, {
-						detail: { hue: color.hsl.h },
-					}),
-				);
-			});
-
-			sliderHost.setAttribute(IRO_READY_ATTR, 'true');
-		};
-
-		requestAnimationFrame(tryInit);
-	};
-
-	document.addEventListener('DOMContentLoaded', () => {
-		const tile = document.getElementById('mb-color-tile')!;
-
-		tile.addEventListener('click', () => {
-			setOpen(tile, !tile.classList.contains(OPEN_CLASS));
-		});
-		document.addEventListener('pointerdown', (event) => {
-			if (!tile.classList.contains(OPEN_CLASS)) return;
-			if (event.target instanceof Node && tile.contains(event.target)) return;
-			setOpen(tile, false);
-		});
-	});
-</script>
 <style>
 	#mb-color-tile {
-		--mb-color-tile-handle-width: calc(var(--block-size) * 4);
+		--mb-color-tile-handle-width: calc(var(--block-size) * 5); /* Should be the same as width of the button */
 		--mb-color-tile-slide-over-width: calc(var(--block-size) * 18);
 		--mb-color-tile-ease: cubic-bezier(0.22, 1, 0.36, 1);
 		--mb-color-tile-transition-time: 700ms;
 		--mb-tile-linear-start-open: var(--main-800);
 		--mb-tile-linear-end-open: hsl(from var(--main-900) h s l / 1);
-		--mb-tile-radial-y: 100%;
+		--mb-tile-radial-x: 100%;
+		--mb-tile-radial-y: 0;
+		--mb-tile-linear-dir: bottom left;
 
 		display: block;
-		padding: 0;
-		font-size: 32px;
+		font-size: 27px;
 		color: var(--neutral-300);
 		position: relative;
 		justify-self: end;
@@ -196,9 +119,17 @@ import { Icon } from 'astro-icon/components';
 		right: 0;
 		bottom: 0;
 		width: var(--mb-color-tile-handle-width);
-		display: grid;
-		place-items: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 		z-index: 1;
+		.color-icon {
+			margin-top: 4px;
+		}
+		.mb-social-label {
+			margin-top: 11px;
+		}
 	}
 	.mb-color-tile__dot {
 		position: absolute;
@@ -224,3 +155,82 @@ import { Icon } from 'astro-icon/components';
 		}
 	}
 </style>
+<script>
+	import iro from '@jaames/iro';
+	import {
+		getBaseHue,
+		prepareDynamicPalette,
+		setBaseHue,
+		writeStoredHue,
+		MAIN_HUE_EVENT,
+	} from 'scripts/global/mainHue';
+
+	// Palette strategy: keep literal values in CSS, then rewrite them once into
+	// calc(var(--main-hue-base) +/- offset) so the slider only changes one var.
+	const OPEN_CLASS = 'is-open';
+	const IRO_READY_ATTR = 'data-iro-ready';
+	const IRO_WIDTH = 270;
+
+	const setOpen = (tile: HTMLElement, open: boolean) => {
+		tile.classList.toggle(OPEN_CLASS, open);
+		tile.setAttribute('aria-expanded', open ? 'true' : 'false');
+		tile.setAttribute('aria-label', open ? 'Close accent color' : 'Open accent color');
+
+		if (open) initHueSlider(tile);
+	};
+
+	const initHueSlider = (tile: HTMLElement) => {
+		// Ensure CSS vars are rewritten before the slider starts updating the base hue.
+		prepareDynamicPalette();
+		const sliderHost = tile.querySelector<HTMLElement>('[data-hue-slider]');
+		if (!sliderHost) return;
+		if (sliderHost.hasAttribute(IRO_READY_ATTR)) return;
+
+		const tryInit = () => {
+			const baseHue = getBaseHue();
+			const picker = iro.ColorPicker(sliderHost, {
+				width: IRO_WIDTH,
+				color: { h: baseHue, s: 100, v: 100 },
+				layout: [
+					{
+						component: iro.ui.Slider,
+						options: {
+							sliderType: 'hue',
+							sliderSize: 25,
+							borderWidth: 0,
+							handleRadius: 12,
+						},
+					},
+				],
+			});
+
+			picker.on('color:change', (color: iro.Color) => {
+				// Keep updates minimal: only one CSS var changes on drag.
+				setBaseHue(color.hsl.h);
+				writeStoredHue(color.hsl.h);
+				window.dispatchEvent(
+					new CustomEvent(MAIN_HUE_EVENT, {
+						detail: { hue: color.hsl.h },
+					}),
+				);
+			});
+
+			sliderHost.setAttribute(IRO_READY_ATTR, 'true');
+		};
+
+		requestAnimationFrame(tryInit);
+	};
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const tile = document.getElementById('mb-color-tile')!;
+
+		tile.addEventListener('click', () => {
+			setOpen(tile, !tile.classList.contains(OPEN_CLASS));
+		});
+		document.addEventListener('pointerdown', (event) => {
+			if (!tile.classList.contains(OPEN_CLASS)) return;
+			if (event.target instanceof Node && tile.contains(event.target)) return;
+			setOpen(tile, false);
+		});
+	});
+</script>
