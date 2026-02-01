@@ -1,6 +1,5 @@
 ---
 import 'sections/home/styles/desktop/home-about.css';
-import 'sections/home/styles/mobile/mb-home-about.css';
 import Timeline from 'sections/home/components/Timeline.astro';
 import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 ---
@@ -19,9 +18,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 			<p class="blurb">
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit fringilla lacus id sagittis. Duis
 				aliquam, odio vel fermentum iaculis, metus ligula ultricies risus, et sodales metus augue eget nibh. Donec
-				dapibus at est ac auctor. Phasellus rutrum scelerisque luctus. Orci varius natoque penatibus et magnis dis
-				parturient montes, nascetur ridiculus mus. Cras eu risus eu eros sagittis feugiat a eget metus. Praesent neque
-				ex, efficitur at libero aliquet, interdum venenatis nisi.
+				dapibus at est ac auctor. Phasellus rutrum scelerisque luctus.
 			</p>
 		</div>
 		<div class="timeline-slot">
@@ -30,3 +27,36 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 	</div>
 </div>
 <!-- <MobileTimeline /> -->
+<style>
+	@media screen and (max-width: 1280px) {
+		.screen-about .right {
+			grid-column: 2 / -2;
+			grid-row: 1 / -1;
+		}
+		.right {
+			margin-left: 0;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: end;
+			gap: calc(var(--block-size) * 0.5);
+			padding-right: 0;
+			padding-bottom: 0;
+			padding-bottom: calc(var(--block-size) * 2);
+		}
+		.right .home-h3-container,
+		.right .blurbs,
+		.right .timeline-slot {
+			grid-column: auto;
+			grid-row: auto;
+			height: auto;
+		}
+		.right .home-h3-container {
+			display: none;
+		}
+		.right h3,
+		.right .blurbs .blurb {
+			padding-left: 0;
+		}
+	}
+</style>
