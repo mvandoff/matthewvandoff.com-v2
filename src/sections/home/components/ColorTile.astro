@@ -25,13 +25,13 @@ import { Icon } from 'astro-icon/components';
 <style>
 	#mb-color-tile {
 		--mb-color-tile-handle-width: calc(var(--block-size) * 5); /* Should be the same as width of the button */
-		--mb-color-tile-slide-over-width: calc(var(--block-size) * 18);
+		--mb-color-tile-slide-over-width: calc(var(--block-size) * 16);
 		--mb-color-tile-ease: cubic-bezier(0.22, 1, 0.36, 1);
 		--mb-color-tile-transition-time: 700ms;
 		--mb-tile-linear-start-open: var(--main-800);
 		--mb-tile-linear-end-open: hsl(from var(--main-900) h s l / 1);
 		--mb-tile-radial-x: 100%;
-		--mb-tile-radial-y: 0;
+		--mb-tile-radial-y: 100%;
 		--mb-tile-linear-dir: bottom left;
 
 		display: block;
@@ -47,7 +47,7 @@ import { Icon } from 'astro-icon/components';
 			width var(--mb-color-tile-transition-time) var(--mb-color-tile-ease),
 			box-shadow var(--mb-color-tile-transition-time) var(--mb-color-tile-ease);
 		will-change: width;
-		z-index: 50;
+		z-index: 50 !important;
 
 		/* Gradient border comes from layered backgrounds + background-clip on .mb-tile-surface. */
 		&::after {
@@ -169,7 +169,7 @@ import { Icon } from 'astro-icon/components';
 	// calc(var(--main-hue-base) +/- offset) so the slider only changes one var.
 	const OPEN_CLASS = 'is-open';
 	const IRO_READY_ATTR = 'data-iro-ready';
-	const IRO_WIDTH = 270;
+	const IRO_WIDTH = 240;
 
 	const setOpen = (tile: HTMLElement, open: boolean) => {
 		tile.classList.toggle(OPEN_CLASS, open);
