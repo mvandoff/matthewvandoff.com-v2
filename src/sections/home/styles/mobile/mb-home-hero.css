@@ -9,6 +9,8 @@
 		--mb-tile-radial-x: 0%;
 		--mb-tile-radial-y: 0%;
 		--mb-tile-linear-dir: bottom right;
+		--mb-tile-linear-start: hsl(from var(--main-950) h s l / 0.9);
+		--mb-tile-linear-end: hsl(from var(--main-900) h s l / 0.2);
 
 		height: 100%;
 		width: 100%;
