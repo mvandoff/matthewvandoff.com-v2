@@ -23,6 +23,7 @@ const cornerVars: Record<FocusCorner, { radialX: string; radialY: string; linear
 const { radialX, radialY, linearDir } = cornerVars[focusCorner];
 const styleVars = `--mb-tile-radial-x: ${radialX}; --mb-tile-radial-y: ${radialY}; --mb-tile-linear-dir: ${linearDir};`;
 const Tag = href ? 'a' : 'button';
+const labelId = id ? `${id}-label` : undefined;
 
 const ICONS = {
 	external: 'heroicons:arrow-small-up-20-solid',
@@ -34,7 +35,7 @@ const ICONS = {
 <Tag
 	id={id}
 	class:list={[className, 'tile-btn mb-tile-surface']}
-	aria-label={label}
+	aria-labelledby={labelId}
 	style={styleVars}
 	{...href ? { href } : { type: 'button' }}
 >
@@ -48,7 +49,7 @@ const ICONS = {
 	<span class="mb-social-brand-icon" aria-hidden="true">
 		<Icon name={icon} />
 	</span>
-	<span class="mb-social-label">{label}</span>
+	<span class="mb-social-label" id={labelId}>{label}</span>
 </Tag>
 
 <style>

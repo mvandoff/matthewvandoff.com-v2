@@ -8,11 +8,12 @@ const deadZone = 0.05;
 	id="joystick-tile"
 	class="mb-tile mb-tile-surface"
 	type="button"
-	aria-label="Tilt intro card"
+	aria-labelledby="joystick-tile-label"
 	data-max-tilt-deg={maxTiltDeg}
 	data-max-translate-px={maxTranslatePx}
 	data-dead-zone={deadZone}
 >
+	<span class="sr-only" id="joystick-tile-label">Tilt intro card</span>
 	<span class="mb-joystick__pad" data-joystick-pad aria-hidden="true">
 		<span class="mb-joystick__thumb" data-joystick-thumb aria-hidden="true"></span>
 	</span>

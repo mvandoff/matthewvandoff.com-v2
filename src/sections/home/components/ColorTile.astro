@@ -9,17 +9,17 @@ import { Icon } from 'astro-icon/components';
 	class="mb-tile mb-tile-surface"
 	type="button"
 	aria-expanded="false"
-	aria-label="Open accent color"
+	aria-labelledby="mb-color-tile-label"
 >
 	<span class="mb-color-tile__drawer" aria-hidden="true">
 		<span class="mb-color-tile__drawer-inner">
 			<span class="mb-color-tile__hue-slider" data-hue-slider></span>
 		</span>
 	</span>
-	<span class="mb-color-tile__handle" aria-hidden="true">
-		<Icon name="f7:paintbrush-fill" class="color-icon" />
-		<span class="mb-color-tile__dot"></span>
-		<span class="mb-social-label">Theme</span>
+	<span class="mb-color-tile__handle">
+		<Icon name="f7:paintbrush-fill" class="color-icon" aria-hidden="true" />
+		<span class="mb-color-tile__dot" aria-hidden="true"></span>
+		<span class="mb-social-label" id="mb-color-tile-label">Theme</span>
 	</span>
 </button>
 <style>
@@ -174,7 +174,6 @@ import { Icon } from 'astro-icon/components';
 	const setOpen = (tile: HTMLElement, open: boolean) => {
 		tile.classList.toggle(OPEN_CLASS, open);
 		tile.setAttribute('aria-expanded', open ? 'true' : 'false');
-		tile.setAttribute('aria-label', open ? 'Close accent color' : 'Open accent color');
 
 		if (open) initHueSlider(tile);
 	};
