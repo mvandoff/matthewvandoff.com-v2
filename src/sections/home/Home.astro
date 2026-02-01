@@ -22,15 +22,15 @@ import HomeSvgFilters from 'sections/home/components/HomeSvgFilters.astro';
 </section>
 
 <script>
+	import { initAboutBtn } from 'sections/home/scripts/initAboutBtn';
 	import { initHome } from 'sections/home/scripts/initHome';
 	import { initHomeMobileNav } from 'sections/home/scripts/initHomeMobileNav';
-	import { initHomeScrollCue } from 'sections/home/scripts/initHomeScrollCue';
 	import { initThree } from 'sections/home/scripts/initThree';
 
 	document.addEventListener('DOMContentLoaded', () => {
 		initHomeMobileNav();
 		initHome();
-		initHomeScrollCue();
+		initAboutBtn();
 		initThree();
 	});
 </script>

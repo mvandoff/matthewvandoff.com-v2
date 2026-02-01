@@ -5,7 +5,6 @@ type FocusCorner = 'ne' | 'nw' | 'se' | 'sw';
 
 type Props = {
 	href?: string;
-	onClick?: string;
 	icon: string;
 	label: string;
 	focusCorner?: FocusCorner;
@@ -14,7 +13,7 @@ type Props = {
 	type?: 'standard' | 'external' | 'internal' | 'scroll';
 };
 
-const { id, className, type = 'standard', href, onClick, icon, label, focusCorner = 'nw' } = Astro.props as Props;
+const { id, className, type = 'standard', href, icon, label, focusCorner = 'nw' } = Astro.props as Props;
 const cornerVars: Record<FocusCorner, { radialX: string; radialY: string; linearDir: string }> = {
 	nw: { radialX: '0%', radialY: '0%', linearDir: 'bottom right' },
 	ne: { radialX: '100%', radialY: '0%', linearDir: 'bottom left' },
@@ -37,7 +36,6 @@ const ICONS = {
 	class:list={[className, 'tile-btn mb-tile-surface']}
 	aria-label={label}
 	style={styleVars}
-	onclick={onClick}
 	{...href ? { href } : { type: 'button' }}
 >
 	{
