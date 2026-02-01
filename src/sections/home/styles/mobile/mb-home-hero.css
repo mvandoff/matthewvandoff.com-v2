@@ -93,12 +93,6 @@
 				line-height: 1.6;
 			}
 		}
-		#mb-liquid-tile {
-			canvas {
-				border-radius: var(--home-border-radius);
-			}
-		}
-
 		#mb-gif-tile {
 			/* border: 1px solid white; */
 			border-radius: var(--home-border-radius);
