@@ -13,6 +13,8 @@ export function initHomeMobileNav() {
 
 	const labeledScreens = Array.from(homeSection.querySelectorAll<HTMLElement>('.screen[data-mobile-nav-label]'));
 	if (labeledScreens.length === 0) return;
+	const experienceScreens = labeledScreens.filter((screen) => screen.dataset.mobileNavLabel === 'experience');
+	const experienceTotal = experienceScreens.length;
 
 	const messageSwap = createMobileNavMessageSwap({
 		container: mobileNav,
@@ -47,6 +49,17 @@ export function initHomeMobileNav() {
 
 	if (!messageSwap) return;
 
+	const experienceMessage = document.getElementById('experience-msg-mobile');
+	const setExperienceMessage = (element: Element) => {
+		if (!experienceMessage || experienceTotal === 0) return;
+		const index = experienceScreens.indexOf(element as HTMLElement);
+		if (index < 0) return;
+		const nextText = `experience ${index + 1}/${experienceTotal}`;
+		if (experienceMessage.textContent !== nextText) {
+			experienceMessage.textContent = nextText;
+		}
+	};
+
 	// Track visibility ratios so we can pick the most visible screen.
 	const ratios = new Map<Element, number>();
 	const updateActiveLabel = () => {
@@ -66,6 +79,9 @@ export function initHomeMobileNav() {
 		}
 
 		const label = (bestElement as HTMLElement).dataset.mobileNavLabel ?? '';
+		if (label === 'experience') {
+			setExperienceMessage(bestElement);
+		}
 		const nextIndex = LABEL_INDEX[label];
 		messageSwap.setActive(typeof nextIndex === 'number' ? nextIndex : null);
 	};
