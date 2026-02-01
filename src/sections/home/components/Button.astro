@@ -5,15 +5,16 @@ type FocusCorner = 'ne' | 'nw' | 'se' | 'sw';
 
 type Props = {
 	href?: string;
+	onClick?: string;
 	icon: string;
 	label: string;
 	focusCorner?: FocusCorner;
 	id?: string;
 	className?: string;
-	type?: 'standard' | 'external' | 'internal';
+	type?: 'standard' | 'external' | 'internal' | 'scroll';
 };
 
-const { id, className, type = 'standard', href, icon, label, focusCorner = 'nw' } = Astro.props as Props;
+const { id, className, type = 'standard', href, onClick, icon, label, focusCorner = 'nw' } = Astro.props as Props;
 const cornerVars: Record<FocusCorner, { radialX: string; radialY: string; linearDir: string }> = {
 	nw: { radialX: '0%', radialY: '0%', linearDir: 'bottom right' },
 	ne: { radialX: '100%', radialY: '0%', linearDir: 'bottom left' },
@@ -22,14 +23,23 @@ const cornerVars: Record<FocusCorner, { radialX: string; radialY: string; linear
 };
 const { radialX, radialY, linearDir } = cornerVars[focusCorner];
 const styleVars = `--mb-tile-radial-x: ${radialX}; --mb-tile-radial-y: ${radialY}; --mb-tile-linear-dir: ${linearDir};`;
+const Tag = href ? 'a' : 'button';
 
 const ICONS = {
 	external: 'heroicons:arrow-small-up-20-solid',
 	internal: 'heroicons:arrow-small-up-20-solid',
+	scroll: 'heroicons:arrow-small-up-20-solid',
 };
 ---
 
-<a id={id} class:list={[className, 'tile-btn mb-tile-surface']} href={href} aria-label={label} style={styleVars}>
+<Tag
+	id={id}
+	class:list={[className, 'tile-btn mb-tile-surface']}
+	aria-label={label}
+	style={styleVars}
+	onclick={onClick}
+	{...href ? { href } : { type: 'button' }}
+>
 	{
 		type !== 'standard' && (
 			<span class="badge-icon" data-type={type}>
@@ -41,7 +51,7 @@ const ICONS = {
 		<Icon name={icon} />
 	</span>
 	<span class="mb-social-label">{label}</span>
-</a>
+</Tag>
 
 <style>
 	.tile-btn {
@@ -89,10 +99,19 @@ const ICONS = {
 			}
 			&[data-type='internal'] {
 				rotate: 90deg;
+				top: -2px;
+			}
+			&[data-type='scroll'] {
+				rotate: 180deg;
+				top: -3px;
+				right: 1px;
 			}
 		}
 		&#work-btn {
 			--icon-size: 32px;
+		}
+		&#about-tile {
+			--icon-size: 35px;
 		}
 	}
 	@media screen and (max-width: 1280px) {

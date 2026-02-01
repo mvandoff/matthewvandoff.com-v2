@@ -36,6 +36,9 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.6
         version: 0.9.6(prettier-plugin-astro@0.14.1)(prettier@3.8.0)(typescript@5.9.3)
+      '@iconify-json/ci':
+        specifier: ^1.2.2
+        version: 1.2.2
       '@iconify-json/f7':
         specifier: ^1.2.2
         version: 1.2.2
@@ -316,6 +319,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@iconify-json/ci@1.2.2':
+    resolution: {integrity: sha512-RKqJ2nb48Hk2doM1ljZHRrNCiuzlXhji9xtnPm4VwmTcjUDOkkbrQSHyE7JNRducsP6uVNwDz4J3AaWZG1PxTg==}
 
   '@iconify-json/f7@1.2.2':
     resolution: {integrity: sha512-7+RhvnncD+LRu0smuHOun4emOUu48XUGG6G0tYYbrXS7n4Io2xntx6nxa09/iI41t9hnH2oHHU3Dg7Ee60Ovow==}
@@ -2295,6 +2301,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.12':
     optional: true
+
+  '@iconify-json/ci@1.2.2':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify-json/f7@1.2.2':
     dependencies:
