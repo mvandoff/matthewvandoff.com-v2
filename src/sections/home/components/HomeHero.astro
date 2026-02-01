@@ -56,30 +56,14 @@ import Button from 'sections/home/components/Button.astro';
 		type="external"
 		focusCorner="sw"
 	/>
-	<Button
-		href="/work"
-		id="work-btn"
-		className="mb-tile-surface"
-		label="Work"
-		icon="lucide:code-xml"
-		type="internal"
-		focusCorner="se"
-	/>
+	<Button href="/work" id="work-btn" label="Work" icon="lucide:code-xml" type="internal" focusCorner="se" />
 
 	<div id="mb-liquid-tile" class="mb-tile"></div>
 	<div id="mb-gif-tile" class="mb-tile">
 		<img src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
 	</div>
 
-	<!-- <Button
-		href="/work"
-		id="about-btn"
-		className="mb-tile-surface"
-		label="About"
-		icon="lucide:code-xml"
-		type="internal"
-		focusCorner="se"
-	/> -->
+	<Button href="/work" id="about-tile" label="About" icon="lucide:info" type="internal" focusCorner="se" />
 
 	<ColorTile />
 	<JoyStickTile />

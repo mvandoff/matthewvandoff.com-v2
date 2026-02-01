@@ -47,8 +47,8 @@ const deadZone = 0.05;
 		}
 
 		#joystick-tile {
-			--mb-tile-linear-start: var(--neutral-950);
-			--mb-tile-linear-end: hsl(from var(--neutral-950) h s l / 0.55);
+			--mb-tile-linear-start: hsl(from var(--main-950) h s l / 0.9);
+			--mb-tile-linear-end: hsl(from var(--main-900) h s l / 0.2);
 
 			border: solid 1px transparent;
 			display: grid;
@@ -60,7 +60,6 @@ const deadZone = 0.05;
 			-webkit-user-select: none;
 			user-select: none;
 
-			transition: border 0.2s ease;
 		}
 
 		#joystick-tile,
@@ -75,9 +74,6 @@ const deadZone = 0.05;
 			outline: 2px solid hsl(from var(--neutral-200) h s l / 0.6);
 			outline-offset: 2px;
 		}
-		#joystick-tile.is-active {
-			border-color: hsl(from var(--main-700) h s l / 0.55);
-		}
 		#joystick-tile .mb-joystick__pad {
 			--mb-joystick-thumb-x: 0px;
 			--mb-joystick-thumb-y: 0px;
@@ -87,10 +83,14 @@ const deadZone = 0.05;
 			border-radius: calc(var(--home-border-radius) * 0.75);
 			background: hsl(from var(--main-1k) h s l / 0.1);
 			border: 1px solid hsl(from var(--neutral-50) h s l / 0.1);
+			transition: border-color 0.2s ease;
 			position: relative;
 			display: grid;
 			place-items: center;
 			touch-action: none;
+		}
+		#joystick-tile.is-active .mb-joystick__pad {
+			border-color: hsl(from var(--main-700) h s l / 0.55);
 		}
 
 		#joystick-tile .mb-joystick__pad::before,

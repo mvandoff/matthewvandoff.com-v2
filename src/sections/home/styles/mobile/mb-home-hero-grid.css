@@ -11,6 +11,10 @@
 		grid-column: 1 / 2;
 		grid-row: 1 / 26;
 	}
+	:root {
+		--tiles-col-start: 1;
+	}
+
 	#li-btn {
 		grid-column: 1 / span 5;
 		grid-row: 27 / span 5;
@@ -19,21 +23,26 @@
 		grid-column: 7 / span 5;
 		grid-row: 27 / span 5;
 	}
-	#mb-gif-tile {
-		grid-column: 4 / span 5;
-		grid-row: 33 / span 5;
-	}
-	#mb-color-tile {
-		grid-column: 19 / span 4;
-		grid-row: 27 / span 5;
-	}
-	#joystick-tile {
-		grid-column: 17 / span 5;
-		grid-row: 33 / span 5;
-	}
 	#work-btn {
 		grid-column: 13 / span 5;
 		grid-row: 27 / span 5;
+	}
+	#mb-color-tile {
+		grid-column: 13 / span 5;
+		grid-row: 33 / span 5;
+	}
+	#mb-gif-tile {
+		grid-column: 19 / span 4;
+		grid-row: 33 / span 5;
+		display: none !important;
+	}
+	#about-tile {
+		grid-column: 1 / span 5;
+		grid-row: 33 / span 5;
+	}
+	#joystick-tile {
+		grid-column: 7 / span 5;
+		grid-row: 33 / span 5;
 	}
 	/* #mb-logo-tile {
 		grid-column: 9 / span 7;
