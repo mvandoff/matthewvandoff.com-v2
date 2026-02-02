@@ -33,7 +33,7 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 			margin-left: var(--block-size) !important;
 			justify-content: center;
 			width: 100%;
-			max-width: min(360px, 80vw);
+
 			/* border: 1px solid orangered; */
 
 			.mb-tl-block-header {
@@ -58,6 +58,7 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 			}
 			.mobile-tl-desc {
 				padding: 0;
+				max-width: min(420px, 80vw);
 			}
 		}
 	}

@@ -15,6 +15,7 @@
 	#home .screen {
 		height: calc(100dvh - var(--mobile-nav-height));
 		width: min(100%, calc(var(--block-size) * 40));
+		max-width: 575px;
 		margin: 0 auto;
 		margin-top: var(--mobile-nav-height);
 		scroll-snap-align: start;

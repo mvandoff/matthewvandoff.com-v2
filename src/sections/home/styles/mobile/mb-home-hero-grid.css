@@ -46,7 +46,7 @@
 	}
 
 	#mb-gif-tile {
-		grid-column: 1 / span round(down, calc((100vw - (var(--block-size) * 20)) / var(--block-size)));
+		grid-column: 1 / span min(round(down, calc((100vw - (var(--block-size) * 20)) / var(--block-size))), 17);
 		grid-row: 27 / 38;
 	}
 }
