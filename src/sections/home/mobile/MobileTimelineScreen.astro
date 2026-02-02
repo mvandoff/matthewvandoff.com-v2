@@ -18,6 +18,14 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 	<span class="mb-tl-block-header title">{title}</span>
 	<span class="mb-tl-block-header time">{start} - {end}</span>
 	<p class="mobile-tl-desc blurb">{description}</p>
+	{
+		id !== 'gb' && (
+			<a href={link} class="mb-tl-link">
+				{link}
+				<span class="link-symbol">⇱</span>
+			</a>
+		)
+	}
 </div>
 
 <style>
@@ -36,6 +44,22 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 
 			/* border: 1px solid orangered; */
 
+			.mb-tl-link {
+				text-decoration: underline !important;
+				font-family: 'Inter', sans-serif;
+				font-size: 16px;
+				position: relative;
+				width: max-content;
+				color: var(--main-500);
+
+				.link-symbol {
+					rotate: 90deg;
+					position: absolute;
+					right: -1.35rem;
+					font-size: 22px;
+					bottom: -4px;
+				}
+			}
 			.mb-tl-block-header {
 				letter-spacing: 0.2rem;
 				margin: 0.2rem 0;
