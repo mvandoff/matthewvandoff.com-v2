@@ -3,8 +3,10 @@
 		--content-gap: 0;
 		--edge-gap: 0;
 		--layout-left: 0;
-		margin-top: var(--mobile-nav-height) !important;
+		margin-top: 0 !important;
 		scroll-snap-type: y mandatory;
+		position: absolute;
+		top: var(--mobile-nav-height);
 	}
 	.home-content {
 		box-sizing: border-box;
@@ -17,7 +19,6 @@
 		width: min(100%, calc(var(--block-size) * 40));
 		max-width: 575px;
 		margin: 0 auto;
-		margin-top: var(--mobile-nav-height);
 		scroll-snap-align: start;
 		scroll-snap-stop: always;
 		box-sizing: border-box;
