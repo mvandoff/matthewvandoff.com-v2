@@ -1,5 +1,6 @@
 import { gsap } from 'gsap';
 import { createMobileNavMessageSwap } from 'components/MobileNav/scripts/mobileNavMessageSwap';
+import { getHomeMobileScreenObserver } from './mobileScreenObserver';
 
 const LABEL_INDEX: Record<string, number> = {
 	welcome: 0,
@@ -9,11 +10,12 @@ const LABEL_INDEX: Record<string, number> = {
 
 export function initHomeMobileNav() {
 	const mobileNav = document.getElementById('mobile-nav');
-	const homeSection = document.getElementById('home');
-	if (!mobileNav || !homeSection) return;
+	if (!mobileNav) return;
 
-	const labeledScreens = Array.from(homeSection.querySelectorAll<HTMLElement>('.screen[data-mobile-nav-label]'));
-	if (labeledScreens.length === 0) return;
+	const screenObserver = getHomeMobileScreenObserver();
+	if (!screenObserver) return;
+
+	const labeledScreens = screenObserver.getScreens();
 	const experienceScreens = labeledScreens.filter((screen) => screen.dataset.mobileNavLabel === 'experience');
 	const experienceTotal = experienceScreens.length;
 
@@ -165,45 +167,17 @@ export function initHomeMobileNav() {
 		currentExperienceValue = nextValue;
 	};
 
-	// Track visibility ratios so we can pick the most visible screen.
-	const ratios = new Map<Element, number>();
-	const updateActiveLabel = () => {
-		let bestElement: Element | null = null;
-		let bestRatio = 0;
-
-		ratios.forEach((ratio, element) => {
-			if (ratio > bestRatio) {
-				bestRatio = ratio;
-				bestElement = element;
-			}
-		});
-
-		if (!bestElement || bestRatio < 0.35) {
+	screenObserver.subscribe((activeScreen) => {
+		if (!activeScreen) {
 			messageSwap.setActive(null);
 			return;
 		}
 
-		const label = (bestElement as HTMLElement).dataset.mobileNavLabel ?? '';
+		const label = activeScreen.dataset.mobileNavLabel ?? '';
 		if (label === 'experience') {
-			setExperienceMessage(bestElement);
+			setExperienceMessage(activeScreen);
 		}
 		const nextIndex = LABEL_INDEX[label];
 		messageSwap.setActive(typeof nextIndex === 'number' ? nextIndex : null);
-	};
-
-	// Use the Home section as the scroll container root on mobile.
-	const observer = new IntersectionObserver(
-		(entries) => {
-			entries.forEach((entry) => {
-				ratios.set(entry.target, entry.intersectionRatio);
-			});
-			updateActiveLabel();
-		},
-		{
-			root: homeSection,
-			threshold: [0, 0.35, 0.6, 0.85],
-		},
-	);
-
-	labeledScreens.forEach((screen) => observer.observe(screen));
+	});
 }

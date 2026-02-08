@@ -27,9 +27,11 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 	import { initAboutBtn } from 'sections/home/scripts/initAboutBtn';
 	import { initHome } from 'sections/home/scripts/initHome';
 	import { initHomeMobileNav } from 'sections/home/scripts/initHomeMobileNav';
+	import { initMobileTimelineScramble } from 'sections/home/scripts/initMobileTimelineScramble';
 
 	document.addEventListener('DOMContentLoaded', () => {
 		initHomeMobileNav();
+		initMobileTimelineScramble();
 		initHome();
 		initAboutBtn();
 	});
