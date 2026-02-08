@@ -14,18 +14,20 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 ---
 
 <div id={id} class="mobile-tl-block screen" data-mobile-nav-label="experience">
-	<span class="mb-tl-block-header company">{company}</span>
-	<span class="mb-tl-block-header title">{title}</span>
-	<span class="mb-tl-block-header time">{start} - {end}</span>
-	<p class="mobile-tl-desc blurb">{description}</p>
-	{
-		id !== 'gb' && (
-			<a href={link} class="mb-tl-link">
-				{link}
-				<span class="link-symbol">⇱</span>
-			</a>
-		)
-	}
+	<div class="mobile-tl-block-content">
+		<span class="mb-tl-block-header company">{company}</span>
+		<span class="mb-tl-block-header title">{title}</span>
+		<span class="mb-tl-block-header time">{start} - {end}</span>
+		<p class="mobile-tl-desc blurb">{description}</p>
+		{
+			id !== 'gb' && (
+				<a href={link} class="mb-tl-link">
+					{link}
+					<span class="link-symbol">⇱</span>
+				</a>
+			)
+		}
+	</div>
 </div>
 
 <style>
@@ -34,16 +36,20 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 	}
 	@media screen and (max-width: 1280px) {
 		.mobile-tl-block {
-			display: flex;
-			flex-direction: column;
-			display: flex !important;
 			margin: 0 !important;
-			margin-left: var(--block-size) !important;
-			justify-content: center;
 			width: 100%;
+			display: flex !important;
 
 			/* border: 1px solid orangered; */
 
+			.mobile-tl-block-content {
+				display: flex;
+				flex-direction: column;
+				display: flex !important;
+				width: 100%;
+				justify-content: center;
+				margin-left: var(--block-size) !important;
+			}
 			.mb-tl-link {
 				text-decoration: underline !important;
 				font-family: 'Inter', sans-serif;

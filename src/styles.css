@@ -154,7 +154,7 @@ body {
 }
 
 /* WebKit browsers */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
 	width: var(--scrollbar-size);
 	height: var(--scrollbar-size);
 }
@@ -164,12 +164,11 @@ body {
 }
 ::-webkit-scrollbar-thumb {
 	background: linear-gradient(180deg, var(--scrollbar-thumb), var(--scrollbar-thumb-2));
-	border-radius: 10px;
 	border: 2px solid rgba(0, 0, 0, 0.25);
 }
 ::-webkit-scrollbar-thumb:hover {
 	background: linear-gradient(180deg, var(--scrollbar-thumb-hover), var(--scrollbar-thumb));
-}
+} */
 body {
 	color: white;
 	/* font-family: 'DotGothic16', sans-serif; */
