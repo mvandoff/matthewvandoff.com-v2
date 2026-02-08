@@ -40,7 +40,7 @@ export function initHome() {
 	if (!blockContainerEl) throw new Error('#block-grid element not found');
 	// Capture non-null ref for use inside callbacks (TS won’t narrow captured variables).
 	const blockContainer = blockContainerEl;
-	const homeContentEl = homeSectionEl.querySelector<HTMLElement>('.home-content');
+	const homeContentEl = homeSectionEl.querySelector<HTMLElement>('#home-content');
 	const homeContent = homeContentEl ?? homeSection;
 	const mainNav = document.querySelector<HTMLElement>('#main-nav')!;
 	const homeMeDistortEl = document.querySelector<HTMLElement>('#home [data-scroll-distort="me"]');

@@ -26,7 +26,7 @@
 	--left-row-links-span: 1;
 	/* border: 2px solid red; */
 }
-.home-content {
+#home-content {
 	position: relative;
 	margin: 0;
 	margin-left: var(--layout-left);

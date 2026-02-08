@@ -15,7 +15,7 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 
 <section id="home">
 	<div id="block-grid" aria-hidden="true"></div>
-	<div class="home-content">
+	<div id="home-content">
 		<HomeHero />
 		<HomeAbout />
 		<MobileTimeline />
@@ -32,11 +32,5 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 		initHomeMobileNav();
 		initHome();
 		initAboutBtn();
-
-		const homeSection = document.getElementById('home')!;
-		homeSection.scrollTo({
-			top: homeSection?.clientHeight * 2,
-			behavior: 'instant',
-		});
 	});
 </script>
