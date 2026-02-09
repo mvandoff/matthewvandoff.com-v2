@@ -34,5 +34,18 @@ import MobileTimeline from 'sections/home/mobile/MobileTimeline.astro';
 		initMobileTimelineScramble();
 		initHome();
 		initAboutBtn();
+
+		// const homeContent = document.getElementById('home-content')!;
+		// if (!window.matchMedia('(max-width: 1280px)').matches) return;
+
+		// requestAnimationFrame(() => {
+		// 	const originalSnapType = homeContent.style.scrollSnapType;
+		// 	homeContent.style.scrollSnapType = 'none';
+		// 	homeContent.scrollTo({ top: homeContent.scrollHeight, behavior: 'auto' });
+
+		// 	requestAnimationFrame(() => {
+		// 		homeContent.style.scrollSnapType = originalSnapType;
+		// 	});
+		// });
 	});
 </script>

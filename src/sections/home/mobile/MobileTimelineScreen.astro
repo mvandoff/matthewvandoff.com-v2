@@ -1,4 +1,6 @@
 ---
+import keyboardCat from 'assets/gif/keyboard-cat.gif';
+
 type Props = {
 	company: string;
 	start: string;
@@ -28,6 +30,14 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 			)
 		}
 	</div>
+	{
+		company === 'Applied Visions' && (
+			<button class="top-btn">
+				<img class="cat" src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
+				<span class="">back to top</span>
+			</button>
+		)
+	}
 </div>
 
 <style>
@@ -36,11 +46,11 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 	}
 	@media screen and (max-width: 1280px) {
 		.mobile-tl-block {
-			margin: 0 !important;
+			margin: 0 auto !important;
 			width: 100%;
 			display: flex !important;
-
-			/* border: 1px solid orangered; */
+			position: relative;
+			justify-content: center;
 
 			.mobile-tl-block-content {
 				display: flex;
@@ -77,9 +87,6 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 				&.company {
 					background: var(--main-900);
 				}
-				&.title {
-					/* background: var(--main-900); */
-				}
 				&.time {
 					font-size: 12px;
 					color: var(--neutral-400);
@@ -90,6 +97,142 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 				padding: 0;
 				max-width: min(420px, 80vw);
 			}
+
+			.top-btn {
+				display: flex;
+				align-items: center;
+				position: absolute;
+				bottom: 1rem;
+				height: 75px;
+				width: 275px;
+				isolation: isolate;
+				cursor: pointer;
+				user-select: none;
+				-webkit-tap-highlight-color: transparent;
+
+				background:
+					linear-gradient(180deg, hsl(0 0% 98% / 0.35), hsl(0 0% 0% / 0.08)),
+					repeating-linear-gradient(45deg, hsl(0 0% 100% / 0.16) 0 6px, hsl(0 0% 0% / 0.06) 6px 12px), hsl(0 0% 75% / 1);
+				gap: 10px;
+				--top-btn-bevel-light: hsl(0 0% 82% / 1);
+				--top-btn-bevel-dark: hsl(0 0% 25% / 1);
+				border: 2px solid hsl(0 0% 0% / 0.85);
+				box-shadow:
+					inset 2px 2px 0 var(--top-btn-bevel-light),
+					inset -2px -2px 0 var(--top-btn-bevel-dark),
+					0 0 0 1px hsl(0 0% 100% / 0.12),
+					4px 4px 0 hsl(0 0% 0% / 0.6);
+				transition:
+					transform 80ms ease,
+					box-shadow 80ms ease;
+
+				&::before {
+					content: '';
+					position: absolute;
+					inset: -8px;
+					z-index: -1;
+					background: conic-gradient(
+						from 90deg,
+						#ff2d2d,
+						#ff8a00,
+						#ffe600,
+						#22ff5a,
+						#2bd9ff,
+						#4d6bff,
+						#b72bff,
+						#ff2d2d
+					);
+					box-shadow:
+						0 0 0 2px hsl(0 0% 0% / 0.75),
+						0 0 16px hsl(190 100% 60% / 0.35);
+					animation: topbtn-rainbow 2.2s linear infinite;
+				}
+
+				&::after {
+					content: 'SEE MENU FOR MORE';
+					position: absolute;
+					top: -14px;
+					right: -14px;
+					z-index: 2;
+					padding: 2px 8px 3px;
+					border: 2px solid hsl(0 0% 0% / 1);
+					background: radial-gradient(circle at 30% 30%, #fff, #ffe600 55%, #ff2d2d 100%);
+					box-shadow:
+						0 0 0 2px hsl(0 0% 100% / 0.85),
+						3px 3px 0 hsl(0 0% 0% / 0.6);
+					color: hsl(0 0% 0% / 1);
+					font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+					letter-spacing: 0.08em;
+					font-size: 15px;
+					line-height: 1;
+					transform: rotate(10deg);
+					text-shadow: 1px 1px 0 hsl(0 0% 100% / 0.6);
+					animation: topbtn-new 900ms ease-in-out infinite;
+				}
+
+				&:active {
+					transform: translate(2px, 2px);
+					box-shadow:
+						inset 2px 2px 0 var(--top-btn-bevel-dark),
+						inset -2px -2px 0 var(--top-btn-bevel-light),
+						0 0 0 1px hsl(0 0% 100% / 0.12);
+				}
+
+				.cat {
+					width: 60%;
+					height: 100%;
+					border: 2px solid hsl(0 0% 0% / 0.7);
+					background: hsl(0 0% 100% / 0.25);
+					box-shadow: 2px 2px 0 hsl(0 0% 0% / 0.5);
+					image-rendering: pixelated;
+				}
+				span {
+					width: 100%;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', 'Comic Sans MS', 'Arial Black', sans-serif;
+					color: black;
+					font-weight: bold;
+					text-transform: uppercase;
+					font-size: 22px;
+					letter-spacing: 0.07em;
+					text-shadow:
+						1px 1px 0 hsl(0 0% 100% / 0.5),
+						-1px -1px 0 hsl(0 0% 0% / 0.1);
+				}
+			}
+
+			@keyframes topbtn-rainbow {
+				to {
+					transform: rotate(1turn);
+				}
+			}
+
+			/* @keyframes topbtn-new {
+				0%,
+				100% {
+					transform: rotate(10deg) scale(1);
+					filter: saturate(1);
+				}
+				50% {
+					transform: rotate(6deg) scale(1.06);
+					filter: saturate(1.2);
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.top-btn {
+					transition: none;
+				}
+				.top-btn::before,
+				.top-btn::after {
+					animation: none;
+				}
+				.top-btn:active {
+					transform: none;
+				}
+			} */
 		}
 	}
 </style>
