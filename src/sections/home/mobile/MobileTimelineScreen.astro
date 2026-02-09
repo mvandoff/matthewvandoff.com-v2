@@ -32,7 +32,7 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 	</div>
 	{
 		company === 'Applied Visions' && (
-			<button class="top-btn">
+			<button id="top-btn">
 				<img class="cat" src={keyboardCat.src} alt="Keyboard cat playing a keyboard" loading="lazy" decoding="async" />
 				<span class="">back to top</span>
 			</button>
@@ -55,6 +55,7 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 			.mobile-tl-block-content {
 				display: flex;
 				flex-direction: column;
+				justify-content: center;
 				display: flex !important;
 				width: 100%;
 				justify-content: center;
@@ -98,11 +99,11 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 				max-width: min(420px, 80vw);
 			}
 
-			.top-btn {
+			#top-btn {
 				display: flex;
 				align-items: center;
 				position: absolute;
-				bottom: 1rem;
+				bottom: 2rem;
 				height: 75px;
 				width: 275px;
 				isolation: isolate;
@@ -235,4 +236,14 @@ const { start, end, id, title, company, description, link, icon } = Astro.props;
 			} */
 		}
 	}
+	#avi .mobile-tl-block-content {
+		margin-top: -6rem;
+	}
 </style>
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.getElementById('top-btn')?.addEventListener('click', () => {
+			document.getElementById('home-content')?.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+	});
+</script>
