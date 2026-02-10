@@ -1,6 +1,13 @@
 import { gsap } from 'gsap';
+import { CustomEase } from 'gsap/CustomEase';
 import { createMobileNavMessageSwap } from 'components/MobileNav/scripts/mobileNavMessageSwap';
 import { getHomeMobileScreenObserver } from './mobileScreenObserver';
+
+const NAV_HIDE_DURATION = 0.75;
+const NAV_SHOW_DURATION = 1.5;
+const NAV_EASE_NAME = 'home-mobile-nav-osmo-ease';
+const NAV_EASE_CURVE = '0.625, 0.05, 0, 1';
+type Direction = 1 | -1;
 
 const LABEL_INDEX: Record<string, number> = {
 	welcome: 0,
@@ -8,104 +15,138 @@ const LABEL_INDEX: Record<string, number> = {
 	experience: 2,
 };
 
+const HOME_MOBILE_MESSAGES = [
+	['welcome-msg-mobile', 'welcome'],
+	['about-me-msg-mobile', 'about'],
+	['experience-msg-mobile', 'experience'],
+].map(([id, text]) => ({
+	id,
+	text,
+	className: 'mobile-nav-msg--spinner',
+	showFromYPercent: 100,
+	hideToYPercent: -100,
+}));
+
+const getOffsets = (direction: Direction) => (direction > 0 ? { fromY: 100, toY: -100 } : { fromY: -100, toY: 100 });
+
+function createDigit(value: number, className: string) {
+	const digit = document.createElement('span');
+	digit.className = `mobile-nav-counter__digit ${className}`;
+	digit.dataset.expDigit = 'true';
+	digit.textContent = String(value);
+	return digit;
+}
+
 export function initHomeMobileNav() {
-	const mobileNav = document.getElementById('mobile-nav');
-	if (!mobileNav) return;
+	gsap.registerPlugin(CustomEase);
+	if (!gsap.parseEase(NAV_EASE_NAME)) {
+		CustomEase.create(NAV_EASE_NAME, NAV_EASE_CURVE);
+	}
 
-	const screenObserver = getHomeMobileScreenObserver();
-	if (!screenObserver) return;
-
+	const mobileNav = document.getElementById('mobile-nav') as HTMLElement;
+	const screenObserver = getHomeMobileScreenObserver()!;
 	const labeledScreens = screenObserver.getScreens();
 	const experienceScreens = labeledScreens.filter((screen) => screen.dataset.mobileNavLabel === 'experience');
 	const experienceTotal = experienceScreens.length;
-
 	const messageSwap = createMobileNavMessageSwap({
 		container: mobileNav,
 		groupId: 'home',
 		activeIndex: 0,
-		showDuration: 0.8,
-		hideDuration: 0.5,
-		messages: [
-			{
-				id: 'welcome-msg-mobile',
-				text: 'welcome',
-				className: 'mobile-nav-msg--spinner',
-				showFromYPercent: -100,
-				hideToYPercent: -100,
-			},
-			{
-				id: 'about-me-msg-mobile',
-				text: 'about',
-				className: 'mobile-nav-msg--spinner',
-				showFromYPercent: -100,
-				hideToYPercent: -100,
-			},
-			{
-				id: 'experience-msg-mobile',
-				text: 'experience',
-				className: 'mobile-nav-msg--spinner',
-				showFromYPercent: -100,
-				hideToYPercent: -100,
-			},
-		],
-	});
+		showDuration: NAV_SHOW_DURATION,
+		hideDuration: NAV_HIDE_DURATION,
+		ease: NAV_EASE_NAME,
+		messages: HOME_MOBILE_MESSAGES,
+	})!;
 
-	if (!messageSwap) return;
-
-	const experienceMessage = document.getElementById('experience-msg-mobile');
+	const experienceMessage = document.getElementById('experience-msg-mobile') as HTMLElement;
+	experienceMessage.innerHTML = `experience <span class="mobile-nav-counter-wrap"><span class="mobile-nav-counter" data-exp-counter><span class="mobile-nav-counter__digit is-current" data-exp-digit>1</span></span><span class="mobile-nav-counter__slash">/</span><span class="mobile-nav-counter__total" data-exp-total>${experienceTotal}</span></span>`;
+	const experienceCounter = experienceMessage.querySelector<HTMLElement>('[data-exp-counter]')!;
+	experienceCounter.style.setProperty('--counter-digits', String(Math.max(1, String(experienceTotal).length)));
 	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	let currentScreenIndex: number | null = null;
+	let currentLabelIndex: number | null = messageSwap.getActiveIndex();
 	let currentExperienceValue: number | null = null;
+	let labelTween: GSAPTimeline | null = null;
 	let counterTween: GSAPTimeline | null = null;
 
-	const ensureExperienceMarkup = (value: number) => {
-		if (!experienceMessage) return null;
-		let counter = experienceMessage.querySelector<HTMLElement>('[data-exp-counter]');
-		let total = experienceMessage.querySelector<HTMLElement>('[data-exp-total]');
-		if (!counter || !total) {
-			experienceMessage.innerHTML = `experience <span class="mobile-nav-counter-wrap"><span class="mobile-nav-counter" data-exp-counter><span class="mobile-nav-counter__digit is-current" data-exp-digit>${value}</span></span><span class="mobile-nav-counter__slash">/</span><span class="mobile-nav-counter__total" data-exp-total>${experienceTotal}</span></span>`;
-			counter = experienceMessage.querySelector<HTMLElement>('[data-exp-counter]');
-			total = experienceMessage.querySelector<HTMLElement>('[data-exp-total]');
-		}
-		if (counter) {
-			const digits = Math.max(1, String(experienceTotal).length);
-			counter.style.setProperty('--counter-digits', String(digits));
-		}
-		if (total) {
-			total.textContent = String(experienceTotal);
-		}
-		return { counter, total };
+	const setLabelImmediate = (nextIndex: number | null) => {
+		messageSwap.setActive(nextIndex, { immediate: true });
+		currentLabelIndex = nextIndex;
 	};
+	const setCounterImmediate = (value: number) => experienceCounter.replaceChildren(createDigit(value, 'is-current'));
 
-	const setCounterImmediate = (counter: HTMLElement, value: number) => {
-		counter.replaceChildren();
-		const digit = document.createElement('span');
-		digit.className = 'mobile-nav-counter__digit is-current';
-		digit.dataset.expDigit = 'true';
-		digit.textContent = String(value);
-		counter.appendChild(digit);
-	};
-
-	const animateCounterTo = (counter: HTMLElement, value: number, direction: number) => {
-		const currentDigit =
-			counter.querySelector<HTMLElement>('.mobile-nav-counter__digit.is-current') ??
-			counter.querySelector<HTMLElement>('.mobile-nav-counter__digit');
-
-		if (!currentDigit) {
-			setCounterImmediate(counter, value);
+	const animateLabelTo = (nextIndex: number | null, direction: Direction) => {
+		if (nextIndex === currentLabelIndex) return;
+		if (prefersReducedMotion || nextIndex === null || currentLabelIndex === null) {
+			setLabelImmediate(nextIndex);
 			return;
 		}
 
-		if (counterTween) counterTween.kill();
+		const currentEl = messageSwap.elements[currentLabelIndex]!;
+		const nextEl = messageSwap.elements[nextIndex]!;
+		const { fromY, toY } = getOffsets(direction);
+		labelTween?.kill();
 
-		counter.querySelectorAll<HTMLElement>('.mobile-nav-counter__digit.is-next').forEach((el) => el.remove());
+		messageSwap.elements.forEach((el, index) => {
+			gsap.killTweensOf(el);
+			if (index !== currentLabelIndex && index !== nextIndex) {
+				el.style.display = 'none';
+				gsap.set(el, { autoAlpha: 0, pointerEvents: 'none' });
+			}
+		});
 
-		const nextDigit = document.createElement('span');
-		nextDigit.className = 'mobile-nav-counter__digit is-next';
-		nextDigit.dataset.expDigit = 'true';
-		nextDigit.textContent = String(value);
-		counter.appendChild(nextDigit);
+		currentEl.style.display = 'flex';
+		nextEl.style.display = 'flex';
+		gsap.set(currentEl, { yPercent: 0, autoAlpha: 1, pointerEvents: 'none' });
+		gsap.set(nextEl, { yPercent: fromY, autoAlpha: 0, pointerEvents: 'auto' });
+		currentLabelIndex = nextIndex;
 
-		gsap.set(nextDigit, { yPercent: direction > 0 ? 100 : -100, autoAlpha: 1 });
+		labelTween = gsap.timeline({
+			onComplete: () => {
+				currentEl.style.display = 'none';
+				gsap.set(currentEl, { autoAlpha: 0, pointerEvents: 'none' });
+				gsap.set(nextEl, { yPercent: 0, autoAlpha: 1, pointerEvents: 'auto' });
+				labelTween = null;
+			},
+			onInterrupt: () => {
+				labelTween = null;
+			},
+		});
+
+		labelTween.to(currentEl, { yPercent: toY, autoAlpha: 0, duration: NAV_HIDE_DURATION, ease: NAV_EASE_NAME }, 0);
+		labelTween.to(nextEl, { yPercent: 0, autoAlpha: 1, duration: NAV_SHOW_DURATION, ease: NAV_EASE_NAME }, 0);
+	};
+
+	const setExperienceMessage = (screen: HTMLElement) => {
+		const screenIndex = experienceScreens.indexOf(screen);
+		const nextValue = screenIndex + 1;
+		experienceMessage.setAttribute('aria-label', `experience ${nextValue}/${experienceTotal}`);
+		experienceMessage.setAttribute('aria-live', 'polite');
+
+		if (currentExperienceValue === null) {
+			setCounterImmediate(nextValue);
+			currentExperienceValue = nextValue;
+			return;
+		}
+		if (currentExperienceValue === nextValue) return;
+		if (prefersReducedMotion) {
+			setCounterImmediate(nextValue);
+			currentExperienceValue = nextValue;
+			return;
+		}
+
+		const currentDigit =
+			experienceCounter.querySelector<HTMLElement>('.mobile-nav-counter__digit.is-current') ??
+			experienceCounter.querySelector<HTMLElement>('.mobile-nav-counter__digit')!;
+
+		counterTween?.kill();
+		experienceCounter.querySelectorAll<HTMLElement>('.mobile-nav-counter__digit.is-next').forEach((el) => el.remove());
+
+		const nextDigit = createDigit(nextValue, 'is-next');
+		experienceCounter.appendChild(nextDigit);
+
+		const { fromY, toY } = getOffsets(nextValue > currentExperienceValue ? 1 : -1);
+		gsap.set(nextDigit, { yPercent: fromY, autoAlpha: 0 });
 		gsap.set(currentDigit, { yPercent: 0, autoAlpha: 1 });
 
 		counterTween = gsap.timeline({
@@ -114,70 +155,38 @@ export function initHomeMobileNav() {
 				nextDigit.classList.remove('is-next');
 				nextDigit.classList.add('is-current');
 				gsap.set(nextDigit, { yPercent: 0, autoAlpha: 1 });
+				counterTween = null;
+			},
+			onInterrupt: () => {
+				counterTween = null;
 			},
 		});
 
-		counterTween.to(
-			currentDigit,
-			{
-				yPercent: direction > 0 ? -100 : 100,
-				autoAlpha: 0,
-				duration: 0.5,
-				ease: 'power2.inOut',
-			},
-			0,
-		);
-		counterTween.to(
+		counterTween.to(currentDigit, { yPercent: toY, autoAlpha: 0, duration: NAV_HIDE_DURATION, ease: NAV_EASE_NAME }, 0);
+		counterTween.fromTo(
 			nextDigit,
-			{
-				yPercent: 0,
-				duration: 0.5,
-				ease: 'power2.inOut',
-			},
+			{ yPercent: fromY, autoAlpha: 0 },
+			{ yPercent: 0, autoAlpha: 1, duration: NAV_SHOW_DURATION, ease: NAV_EASE_NAME },
 			0,
 		);
-	};
-
-	const setExperienceMessage = (element: Element) => {
-		if (!experienceMessage || experienceTotal === 0) return;
-		const index = experienceScreens.indexOf(element as HTMLElement);
-		if (index < 0) return;
-		const nextValue = index + 1;
-		const nextText = `experience ${nextValue}/${experienceTotal}`;
-		experienceMessage.setAttribute('aria-label', nextText);
-		experienceMessage.setAttribute('aria-live', 'polite');
-
-		const markup = ensureExperienceMarkup(nextValue);
-		if (!markup?.counter) return;
-
-		if (currentExperienceValue === null) {
-			setCounterImmediate(markup.counter, nextValue);
-			currentExperienceValue = nextValue;
-			return;
-		}
-
-		if (currentExperienceValue === nextValue) return;
-
-		const direction = nextValue > currentExperienceValue ? 1 : -1;
-		if (prefersReducedMotion) {
-			setCounterImmediate(markup.counter, nextValue);
-		} else {
-			animateCounterTo(markup.counter, nextValue, direction);
-		}
 		currentExperienceValue = nextValue;
 	};
 
 	screenObserver.subscribe((activeScreen) => {
 		if (!activeScreen) {
-			messageSwap.setActive(null);
+			labelTween?.kill();
+			setLabelImmediate(null);
+			currentScreenIndex = null;
 			return;
 		}
 
+		const nextScreenIndex = labeledScreens.indexOf(activeScreen);
+		const direction: Direction = currentScreenIndex === null || nextScreenIndex >= currentScreenIndex ? 1 : -1;
+		currentScreenIndex = nextScreenIndex;
 		const label = activeScreen.dataset.mobileNavLabel ?? '';
+		animateLabelTo(LABEL_INDEX[label]!, direction);
 		if (label === 'experience') {
 			setExperienceMessage(activeScreen);
 		}
-		const nextIndex = LABEL_INDEX[label];
-		messageSwap.setActive(typeof nextIndex === 'number' ? nextIndex : null);
 	});
 }
