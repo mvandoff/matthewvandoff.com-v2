@@ -128,7 +128,7 @@ export function createSocialLinkWaveController(params: {
 		state.lastClientY = event.clientY;
 		clearWaveState(state);
 
-		const origin = getOrigin(link, grid, state.lastClientX, state.lastClientY);
+		const origin = getOrigin(grid, state.lastClientX, state.lastClientY);
 		if (!origin) return;
 		runWave({ grid, origin, type, state });
 	}
@@ -192,7 +192,7 @@ export function createSocialLinkWaveController(params: {
 		}
 	}
 
-	function getOrigin(link: HTMLAnchorElement, grid: SocialLinkGrid, clientX: number, clientY: number): BlockCoords | null {
+	function getOrigin(grid: SocialLinkGrid, clientX: number, clientY: number): BlockCoords | null {
 		const rect = grid.linkRect;
 		const x = clamp(clientX - rect.left, 0, Math.max(0, rect.width - 1));
 		const y = clamp(clientY - rect.top, 0, Math.max(0, rect.height - 1));

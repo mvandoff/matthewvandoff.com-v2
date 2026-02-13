@@ -116,7 +116,7 @@ const { pathname } = Astro.url;
 				});
 			});
 
-			navItem.addEventListener('mouseleave', (e) => {
+			navItem.addEventListener('mouseleave', () => {
 				navItems.forEach((ele) => ele.classList.remove('inactive', 'active'));
 			});
 		});
