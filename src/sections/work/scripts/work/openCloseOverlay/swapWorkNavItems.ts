@@ -10,7 +10,7 @@ export function setWorkMobileNavMessageSwap(swap: MobileNavMessageSwap | null) {
 
 export function swapWorkNavItems() {
 	const nextOpen = !open;
-	mobileMessageSwap?.setActive(nextOpen ? 1 : 0);
+	mobileMessageSwap?.setActive(nextOpen ? 1 : 0, { direction: nextOpen ? 1 : -1 });
 
 	document.querySelectorAll('#main-nav a, #menu-btn')?.forEach((navItem) => {
 		gsap.to(navItem, {

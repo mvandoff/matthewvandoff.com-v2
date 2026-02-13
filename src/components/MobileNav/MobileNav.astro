@@ -61,24 +61,13 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 			display: inline-block;
 		}
 		.mobile-nav-counter {
-			position: relative;
 			display: inline-block;
-			overflow: hidden;
-			height: 1em;
-			line-height: 1;
 			min-width: calc(var(--counter-digits, 1) * 1ch);
 			text-align: right;
 			vertical-align: baseline;
 		}
-		.mobile-nav-counter__digit {
-			position: absolute;
-			left: 0;
-			top: 0;
-			width: 100%;
-			will-change: transform, opacity;
-		}
-		.mobile-nav-counter__digit.is-current {
-			position: relative;
+		.mobile-nav-counter__value {
+			display: inline-block;
 		}
 		#work-help-msg-mobile::before,
 		.mobile-nav-msg--spinner::before {

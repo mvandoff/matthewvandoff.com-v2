@@ -1,13 +1,10 @@
 import { gsap } from 'gsap';
+import { CustomEase } from 'gsap/CustomEase';
 
 export type MobileNavMessageConfig = {
 	id: string;
 	text: string;
 	className?: string;
-	showFromYPercent?: number;
-	hideToYPercent?: number;
-	showDuration?: number;
-	hideDuration?: number;
 };
 
 export type MobileNavMessageSwapOptions = {
@@ -17,16 +14,31 @@ export type MobileNavMessageSwapOptions = {
 	activeIndex?: number | null;
 	showDuration?: number;
 	hideDuration?: number;
-	ease?: string;
 	display?: string;
 };
 
+type Direction = 1 | -1;
+
 export type MobileNavMessageSwap = {
-	setActive: (index: number | null, opts?: { immediate?: boolean }) => void;
+	setActive: (index: number | null, opts?: { immediate?: boolean; direction?: Direction }) => void;
 	toggle: () => void;
 	getActiveIndex: () => number | null;
 	elements: HTMLElement[];
 };
+
+const DEFAULT_SHOW_DURATION = 0.85;
+const DEFAULT_HIDE_DURATION = 0.6;
+const MOBILE_NAV_EASE = 'mobile-nav-ease';
+const MOBILE_NAV_EASE_CURVE = '0.625, 0.05, 0, 1';
+const DEFAULT_DISPLAY = 'flex';
+
+const getOffsets = (direction: Direction) => (direction > 0 ? { fromY: 100, toY: -100 } : { fromY: -100, toY: 100 });
+
+gsap.registerPlugin(CustomEase);
+CustomEase.create(MOBILE_NAV_EASE, MOBILE_NAV_EASE_CURVE);
+if (!gsap.parseEase(MOBILE_NAV_EASE)) {
+	throw new Error(`[mobileNavMessageSwap] Missing GSAP ease "${MOBILE_NAV_EASE}".`);
+}
 
 /**
  * Builds a controller that injects a stacked message group into the mobile nav,
@@ -39,10 +51,9 @@ export function createMobileNavMessageSwap(options: MobileNavMessageSwapOptions)
 		messages,
 		container = document.getElementById('mobile-nav'),
 		activeIndex = null,
-		showDuration = 0.85,
-		hideDuration = 0.6,
-		ease = 'power3.out',
-		display = 'flex',
+		showDuration = DEFAULT_SHOW_DURATION,
+		hideDuration = DEFAULT_HIDE_DURATION,
+		display = DEFAULT_DISPLAY,
 	} = options;
 
 	if (!container || messages.length === 0) return null;
@@ -76,16 +87,19 @@ export function createMobileNavMessageSwap(options: MobileNavMessageSwapOptions)
 
 	let currentIndex: number | null = null;
 
-	const setActive = (nextIndex: number | null, opts: { immediate?: boolean } = {}) => {
+	const resolveDirection = (nextIndex: number | null, direction?: Direction): Direction => {
+		if (direction) return direction;
+		if (nextIndex === null || currentIndex === null) return 1;
+		return nextIndex >= currentIndex ? 1 : -1;
+	};
+
+	const setActive = (nextIndex: number | null, opts: { immediate?: boolean; direction?: Direction } = {}) => {
 		if (nextIndex === currentIndex && !opts.immediate) return;
 
+		const { fromY, toY } = getOffsets(resolveDirection(nextIndex, opts.direction));
+
 		elements.forEach((el, index) => {
-			const config = messages[index];
 			const isActive = nextIndex === index;
-			const fromY = config.showFromYPercent ?? -100;
-			const toY = config.hideToYPercent ?? -100;
-			const showMs = config.showDuration ?? showDuration;
-			const hideMs = config.hideDuration ?? hideDuration;
 
 			gsap.killTweensOf(el);
 
@@ -105,14 +119,14 @@ export function createMobileNavMessageSwap(options: MobileNavMessageSwapOptions)
 				gsap.fromTo(
 					el,
 					{ yPercent: fromY, autoAlpha: 0 },
-					{ yPercent: 0, autoAlpha: 1, duration: showMs, ease, pointerEvents: 'auto' },
+					{ yPercent: 0, autoAlpha: 1, duration: showDuration, ease: MOBILE_NAV_EASE, pointerEvents: 'auto' },
 				);
 			} else {
 				gsap.to(el, {
 					yPercent: toY,
 					autoAlpha: 0,
-					duration: hideMs,
-					ease,
+					duration: hideDuration,
+					ease: MOBILE_NAV_EASE,
 					pointerEvents: 'none',
 					onComplete: () => {
 						// Fully remove hidden items from layout to avoid shifts.

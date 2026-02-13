@@ -47,14 +47,10 @@ export function injectWorkNavItems(ctx: WorkContext) {
 				{
 					id: 'work-help-msg-mobile',
 					text: 'select project',
-					showFromYPercent: -100,
-					hideToYPercent: -100,
 				},
 				{
 					id: 'work-scroll-msg-mobile',
 					text: 'scroll to explore',
-					showFromYPercent: 100,
-					hideToYPercent: 100,
 				},
 			],
 		});
