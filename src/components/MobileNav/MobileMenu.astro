@@ -5,13 +5,13 @@ const { pathname } = Astro.url;
 <nav id="mobile-menu" class="closed">
 	<ul>
 		<li><a href="/" class={pathname === '/' ? 'selected' : ''}>home</a></li>
-		<li><a href="/work">work</a></li>
+		<li><a href="/work" class={pathname === '/work' ? 'selected' : ''}>work</a></li>
 	</ul>
 </nav>
 
 <style>
 	#mobile-menu {
-		background: var(--main-800);
+		background: var(--main-900);
 		height: 100svh;
 		position: fixed;
 		width: 100svw;
