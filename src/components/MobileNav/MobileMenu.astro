@@ -2,20 +2,55 @@
 const { pathname } = Astro.url;
 ---
 
-<nav id="mobile-menu" class="closed">
+<nav id="mobile-menu" class="closed" aria-hidden="true">
+	<div class="mobile-menu__fx" aria-hidden="true">
+		<div class="mobile-menu__noise"></div>
+		<div class="mobile-menu__warp mobile-menu__warp--one"></div>
+		<div class="mobile-menu__warp mobile-menu__warp--two"></div>
+	</div>
 	<ul>
-		<li><a href="/" class={pathname === '/' ? 'selected' : ''}>home</a></li>
-		<li><a href="/work" class={pathname === '/work' ? 'selected' : ''}>work</a></li>
+		<li><a href="/" data-label="home" data-mobile-menu-link class={pathname === '/' ? 'selected' : ''}>home</a></li>
+		<li>
+			<a href="/work" data-label="work" data-mobile-menu-link class={pathname === '/work' ? 'selected' : ''}>work</a>
+		</li>
 	</ul>
 </nav>
 
 <style>
 	#mobile-menu {
-		background: var(--main-900);
-		height: 100svh;
+		--mobile-menu-color-base: var(--main-950);
+		--mobile-menu-color-text: var(--main-100);
+		--mobile-menu-color-text-selected: var(--main-200);
+		--mobile-menu-color-warp-highlight: var(--main-300);
+		--mobile-menu-color-accent-soft: var(--main-400);
+		--mobile-menu-color-accent-mid: var(--main-700);
+		--mobile-menu-color-accent-glow: var(--main-500);
+		--mobile-menu-color-accent-strong: var(--main-600);
+		--mobile-menu-color-depth-soft: var(--main-700);
+		--mobile-menu-color-depth-strong: var(--main-800);
+		background:
+			radial-gradient(
+				130% 120% at 15% 12%,
+				hsl(from var(--mobile-menu-color-accent-strong) h s l / 0.25),
+				transparent 60%
+			),
+			radial-gradient(
+				110% 120% at 92% 88%,
+				hsl(from var(--mobile-menu-color-accent-soft) h s l / 0.24),
+				transparent 64%
+			),
+			hsl(from var(--mobile-menu-color-base) h s l / 0.72);
+		backdrop-filter: blur(0px);
+		-webkit-backdrop-filter: blur(0px);
 		position: fixed;
-		width: 100svw;
+		inset: 0;
+		width: 100vw;
+		height: 100vh;
+		/* border: 1px solid red; */
 		z-index: 100;
+		opacity: 0;
+		will-change: clip-path, opacity, transform, backdrop-filter;
+		isolation: isolate;
 
 		ul {
 			display: flex;
@@ -24,11 +59,49 @@ const { pathname } = Astro.url;
 			height: 100%;
 			justify-content: center;
 			align-items: center;
+			position: relative;
+			z-index: 2;
+			transform: translate3d(0, 0, 0);
+		}
+		li {
+			overflow: hidden;
 		}
 		a {
+			display: inline-block;
+			position: relative;
+			color: hsl(from var(--mobile-menu-color-text) h s l / 0.92);
 			font-size: 36px;
+			letter-spacing: 0.2rem;
+			text-shadow: 0 0 18px hsl(from var(--mobile-menu-color-accent-glow) h s l / 0.32);
+			will-change: transform, opacity, filter;
+
+			&::before,
+			&::after {
+				content: attr(data-label);
+				position: absolute;
+				inset: 0;
+				pointer-events: none;
+				opacity: 0;
+				transition: opacity 0.24s ease;
+			}
+			&::before {
+				color: hsl(from var(--mobile-menu-color-accent-soft) h s l / 0.75);
+				clip-path: polygon(0 0, 100% 0, 100% 40%, 0 52%);
+				transform: translate3d(-2px, -1px, 0);
+			}
+			&::after {
+				color: hsl(from var(--mobile-menu-color-accent-strong) h s l / 0.72);
+				clip-path: polygon(0 56%, 100% 44%, 100% 100%, 0 100%);
+				transform: translate3d(3px, 1px, 0);
+			}
+			&:hover::before,
+			&:hover::after,
+			&:focus-visible::before,
+			&:focus-visible::after {
+				opacity: 0.45;
+			}
 			&.selected {
-				color: var(--main-200);
+				color: var(--mobile-menu-color-text-selected);
 			}
 		}
 		&.closed {
@@ -36,6 +109,53 @@ const { pathname } = Astro.url;
 		}
 		&.open {
 			display: block;
+			pointer-events: auto;
 		}
+	}
+	.mobile-menu__fx {
+		position: absolute;
+		inset: -14%;
+		pointer-events: none;
+		z-index: 1;
+		filter: saturate(1.1);
+	}
+	.mobile-menu__noise {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		background:
+			repeating-linear-gradient(
+				to bottom,
+				hsl(from var(--mobile-menu-color-text) h s l / 0.08) 0 2px,
+				transparent 2px 5px
+			),
+			repeating-linear-gradient(
+				to right,
+				hsl(from var(--mobile-menu-color-accent-soft) h s l / 0.03) 0 1px,
+				transparent 1px 8px
+			);
+		mix-blend-mode: screen;
+		will-change: background-position, opacity;
+	}
+	.mobile-menu__warp {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		will-change: transform, opacity, filter;
+		mix-blend-mode: screen;
+	}
+	.mobile-menu__warp--one {
+		background:
+			radial-gradient(
+				circle at 26% 22%,
+				hsl(from var(--mobile-menu-color-warp-highlight) h s l / 0.3),
+				transparent 46%
+			),
+			radial-gradient(circle at 64% 68%, hsl(from var(--mobile-menu-color-depth-soft) h s l / 0.24), transparent 58%);
+	}
+	.mobile-menu__warp--two {
+		background:
+			radial-gradient(circle at 72% 26%, hsl(from var(--mobile-menu-color-accent-mid) h s l / 0.34), transparent 50%),
+			radial-gradient(circle at 36% 74%, hsl(from var(--mobile-menu-color-depth-strong) h s l / 0.29), transparent 52%);
 	}
 </style>
