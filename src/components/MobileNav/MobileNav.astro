@@ -124,7 +124,6 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 			pointerEvents: 'none',
 			clipPath: 'inset(0 0 100% 0)',
 			backdropFilter: 'blur(0px)',
-			WebkitBackdropFilter: 'blur(0px)',
 		});
 		if (menuList) gsap.set(menuList, { filter: 'blur(10px)', scale: 1.025 });
 		if (noiseLayer) gsap.set(noiseLayer, { autoAlpha: 0, backgroundPosition: '0px 0px' });
@@ -158,7 +157,7 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 
 		menuTimeline
 			.to(menu, { autoAlpha: 1, clipPath: 'inset(0 0 0% 0)', duration: 0.62, ease: 'power4.out' }, 0)
-			.to(menu, { backdropFilter: 'blur(9px)', WebkitBackdropFilter: 'blur(9px)', duration: 0.52 }, 0);
+			.to(menu, { backdropFilter: 'blur(9px)', duration: 0.52 }, 0);
 
 		if (noiseLayer) {
 			menuTimeline
@@ -169,7 +168,17 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 
 		menuTimeline.to(
 			warpLayers,
-			{ autoAlpha: 0.9, filter: 'blur(0px)', scale: 1.15, xPercent: 0, yPercent: 0, rotate: 0, duration: 0.9, stagger: 0.05, ease: 'sine.out' },
+			{
+				autoAlpha: 0.9,
+				filter: 'blur(0px)',
+				scale: 1.15,
+				xPercent: 0,
+				yPercent: 0,
+				rotate: 0,
+				duration: 0.9,
+				stagger: 0.05,
+				ease: 'sine.out',
+			},
 			0.02,
 		);
 
