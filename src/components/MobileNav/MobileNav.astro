@@ -105,125 +105,113 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 		const noiseLayer = menu.querySelector<HTMLElement>('.mobile-menu__noise');
 		const warpLayers = gsap.utils.toArray<HTMLElement>('.mobile-menu__warp', menu);
 		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		let isMenuOpen = btn.classList.contains('open');
 
-		let isAnimating = false;
-
-		const setMenuState = (isOpen: boolean) => {
+		const setButtonState = (isOpen: boolean) => {
 			btn.textContent = isOpen ? '[ close ]' : '[ menu ]';
 			btn.classList.toggle('open', isOpen);
 			btn.classList.toggle('closed', !isOpen);
 			btn.setAttribute('aria-expanded', String(isOpen));
+		};
+
+		const setMenuVisibilityClass = (isVisible: boolean) => {
+			menu.classList.toggle('open', isVisible);
+			menu.classList.toggle('closed', !isVisible);
+		};
+
+		gsap.set(menu, {
+			autoAlpha: 0,
+			pointerEvents: 'none',
+			clipPath: 'inset(0 0 100% 0)',
+			backdropFilter: 'blur(0px)',
+			WebkitBackdropFilter: 'blur(0px)',
+		});
+		if (menuList) gsap.set(menuList, { filter: 'blur(10px)', scale: 1.025 });
+		if (noiseLayer) gsap.set(noiseLayer, { autoAlpha: 0, backgroundPosition: '0px 0px' });
+		gsap.set(warpLayers, {
+			autoAlpha: 0,
+			filter: 'blur(28px)',
+			scale: 0.82,
+			xPercent: (index: number) => (index % 2 === 0 ? -18 : 18),
+			yPercent: (index: number) => (index % 2 === 0 ? -10 : 8),
+			rotate: (index: number) => (index % 2 === 0 ? -6 : 6),
+		});
+		gsap.set(links, { autoAlpha: 0, yPercent: 30, filter: 'blur(8px)' });
+
+		const menuTimeline = gsap.timeline({
+			paused: true,
+			defaults: { ease: 'power3.out' },
+			onComplete: () => {
+				setMenuVisibilityClass(true);
+				gsap.set(menu, { pointerEvents: 'auto' });
+			},
+			onReverseComplete: () => {
+				if (isMenuOpen) {
+					setMenuVisibilityClass(true);
+					gsap.set(menu, { pointerEvents: 'auto' });
+					return;
+				}
+				setMenuVisibilityClass(false);
+				gsap.set(menu, { pointerEvents: 'none' });
+			},
+		});
+
+		menuTimeline
+			.to(menu, { autoAlpha: 1, clipPath: 'inset(0 0 0% 0)', duration: 0.62, ease: 'power4.out' }, 0)
+			.to(menu, { backdropFilter: 'blur(9px)', WebkitBackdropFilter: 'blur(9px)', duration: 0.52 }, 0);
+
+		if (noiseLayer) {
+			menuTimeline
+				.to(noiseLayer, { autoAlpha: 0.38, duration: 0.14, ease: 'none' }, 0.04)
+				.to(noiseLayer, { backgroundPosition: '0px 180px', duration: 0.86, ease: 'none' }, 0)
+				.to(noiseLayer, { autoAlpha: 0.18, duration: 0.28 }, 0.56);
+		}
+
+		menuTimeline.to(
+			warpLayers,
+			{ autoAlpha: 0.9, filter: 'blur(0px)', scale: 1.15, xPercent: 0, yPercent: 0, rotate: 0, duration: 0.9, stagger: 0.05, ease: 'sine.out' },
+			0.02,
+		);
+
+		if (menuList) menuTimeline.to(menuList, { filter: 'blur(0px)', scale: 1, duration: 0.42 }, 0.22);
+
+		menuTimeline.to(links, { autoAlpha: 1, yPercent: 0, filter: 'blur(0px)', duration: 0.58, stagger: 0.08 }, 0.3);
+
+		const setMenuState = (isOpen: boolean) => {
+			isMenuOpen = isOpen;
+			setButtonState(isOpen);
 			menu.setAttribute('aria-hidden', String(!isOpen));
-			menu.classList.toggle('open', isOpen);
-			menu.classList.toggle('closed', !isOpen);
+		};
+
+		const animateMenu = (isOpen: boolean) => {
+			setMenuState(isOpen);
+			if (isOpen) {
+				setMenuVisibilityClass(true);
+				gsap.set(menu, { pointerEvents: 'auto' });
+				menuTimeline.play();
+				return;
+			}
+			gsap.set(menu, { pointerEvents: 'none' });
+			menuTimeline.reverse();
 		};
 
 		const setOpenImmediate = (isOpen: boolean) => {
-			gsap.killTweensOf([menu, menuList, noiseLayer, ...warpLayers, ...links]);
 			setMenuState(isOpen);
-			gsap.set(menu, {
-				autoAlpha: isOpen ? 1 : 0,
-				pointerEvents: isOpen ? 'auto' : 'none',
-				clearProps: 'clipPath,transform,filter,backdropFilter',
-			});
-			if (menuList) {
-				gsap.set(menuList, { clearProps: 'filter,transform' });
-			}
-			gsap.set([noiseLayer, ...warpLayers, ...links], { clearProps: 'all' });
+			menuTimeline.pause(isOpen ? menuTimeline.duration() : 0);
+			setMenuVisibilityClass(isOpen);
+			gsap.set(menu, { autoAlpha: isOpen ? 1 : 0, pointerEvents: isOpen ? 'auto' : 'none' });
 		};
 
-		const animateOpen = () => {
-			if (isAnimating) return;
-			isAnimating = true;
-			btn.disabled = true;
-			setMenuState(true);
-
-			gsap.killTweensOf([menu, menuList, noiseLayer, ...warpLayers, ...links]);
-			gsap.set(menu, {
-				autoAlpha: 1,
-				pointerEvents: 'auto',
-				clipPath: 'inset(0 0 100% 0)',
-				backdropFilter: 'blur(0px)',
-				WebkitBackdropFilter: 'blur(0px)',
-			});
-			if (menuList) gsap.set(menuList, { filter: 'blur(10px)', scale: 1.025 });
-			gsap.set(noiseLayer, { autoAlpha: 0, backgroundPosition: '0px 0px' });
-			gsap.set(warpLayers, {
-				autoAlpha: 0,
-				filter: 'blur(28px)',
-				scale: 0.82,
-				xPercent: (index: number) => (index % 2 === 0 ? -18 : 18),
-				yPercent: (index: number) => (index % 2 === 0 ? -10 : 8),
-				rotate: (index: number) => (index % 2 === 0 ? -6 : 6),
-			});
-			gsap.set(links, { autoAlpha: 0, yPercent: 30, filter: 'blur(8px)' });
-
-			gsap.timeline({
-				defaults: { ease: 'power3.out' },
-				onComplete: () => {
-					isAnimating = false;
-					btn.disabled = false;
-					gsap.set(menu, { clearProps: 'transform,filter' });
-					if (menuList) gsap.set(menuList, { clearProps: 'filter,transform' });
-				},
-			})
-				.to(menu, { clipPath: 'inset(0 0 0% 0)', duration: 0.62, ease: 'power4.out' }, 0)
-				.to(menu, { backdropFilter: 'blur(9px)', WebkitBackdropFilter: 'blur(9px)', duration: 0.52 }, 0)
-				.to(noiseLayer, { autoAlpha: 0.38, duration: 0.14, ease: 'none' }, 0.04)
-				.to(noiseLayer, { backgroundPosition: '0px 180px', duration: 0.86, ease: 'none' }, 0)
-				.to(
-					warpLayers,
-					{ autoAlpha: 0.9, filter: 'blur(0px)', scale: 1.15, xPercent: 0, yPercent: 0, rotate: 0, duration: 0.9, stagger: 0.05, ease: 'sine.out' },
-					0.02,
-				)
-				.to(menuList, { filter: 'blur(0px)', scale: 1, duration: 0.42 }, 0.22)
-				.to(links, { autoAlpha: 1, yPercent: 0, filter: 'blur(0px)', duration: 0.58, stagger: 0.08 }, 0.3)
-				.to(noiseLayer, { autoAlpha: 0.18, duration: 0.28 }, 0.56);
-		};
-
-		const animateClose = () => {
-			if (isAnimating) return;
-			isAnimating = true;
-			btn.disabled = true;
-			btn.textContent = '[ menu ]';
-			btn.classList.add('closed');
-			btn.classList.remove('open');
-			btn.setAttribute('aria-expanded', 'false');
-			menu.setAttribute('aria-hidden', 'true');
-			gsap.set(menu, { pointerEvents: 'none' });
-
-			gsap.killTweensOf([menu, menuList, noiseLayer, ...warpLayers, ...links]);
-
-			gsap.timeline({
-				defaults: { ease: 'power2.inOut' },
-				onComplete: () => {
-					menu.classList.remove('open');
-					menu.classList.add('closed');
-					isAnimating = false;
-					btn.disabled = false;
-					gsap.set(menu, {
-						autoAlpha: 0,
-						clearProps: 'clipPath,transform,filter,backdropFilter,WebkitBackdropFilter',
-					});
-					if (menuList) gsap.set(menuList, { clearProps: 'filter,transform' });
-					gsap.set([noiseLayer, ...warpLayers, ...links], { clearProps: 'all' });
-				},
-			})
-				.to(links, { autoAlpha: 0, yPercent: -24, filter: 'blur(9px)', duration: 0.24, stagger: { each: 0.04, from: 'end' } }, 0)
-				.to(noiseLayer, { autoAlpha: 0.5, duration: 0.08, ease: 'none' }, 0)
-				.to(warpLayers, { autoAlpha: 0, filter: 'blur(26px)', scale: 0.8, xPercent: (index: number) => (index % 2 === 0 ? -18 : 18), yPercent: (index: number) => (index % 2 === 0 ? 12 : -12), duration: 0.34 }, 0.02)
-				.to(menu, { clipPath: 'inset(100% 0 0 0)', autoAlpha: 0, backdropFilter: 'blur(0px)', WebkitBackdropFilter: 'blur(0px)', duration: 0.46, ease: 'power3.in' }, 0.1)
-				.to(noiseLayer, { autoAlpha: 0, duration: 0.14 }, 0.3);
-		};
+		setOpenImmediate(isMenuOpen);
 
 		btn.addEventListener('click', (event) => {
 			event.stopPropagation();
+			const nextOpenState = !isMenuOpen;
 			if (prefersReducedMotion) {
-				setOpenImmediate(!btn.classList.contains('open'));
+				setOpenImmediate(nextOpenState);
 				return;
 			}
-			if (btn.classList.contains('open')) animateClose();
-			else animateOpen();
+			animateMenu(nextOpenState);
 		});
 	};
 
