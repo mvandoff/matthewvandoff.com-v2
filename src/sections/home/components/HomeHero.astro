@@ -21,7 +21,7 @@ import Button from 'sections/home/components/Button.astro';
 			<HomeImage />
 		</div>
 	</div>
-	<div class="left left-grid intro-container">
+	<div class="left left-grid intro-container liquid">
 		<StatusBulb />
 		<div class="left-intro">
 			<h1>
@@ -51,6 +51,7 @@ import Button from 'sections/home/components/Button.astro';
 			focusCorner="se"
 			type="external"
 			id="li-btn"
+			className="liquid"
 		/>
 		<Button
 			href="https://github.com/mvandoff"
@@ -59,10 +60,19 @@ import Button from 'sections/home/components/Button.astro';
 			id="gh-btn"
 			type="external"
 			focusCorner="sw"
+			className="liquid"
 		/>
 		<ColorTile />
-		<Button href="/work" id="work-btn" label="Work" icon="lucide:code-xml" type="internal" focusCorner="ne" />
-		<Button id="about-tile" label="About" icon="ci:info-square" type="scroll" focusCorner="nw" />
+		<Button
+			href="/work"
+			id="work-btn"
+			label="Work"
+			icon="lucide:code-xml"
+			type="internal"
+			focusCorner="ne"
+			className="liquid"
+		/>
+		<Button id="about-tile" label="About" icon="ci:info-square" type="scroll" focusCorner="nw" className="liquid" />
 		<JoyStickTile />
 	</div>
 </div>
