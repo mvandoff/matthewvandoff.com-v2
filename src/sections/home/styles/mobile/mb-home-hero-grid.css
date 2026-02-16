@@ -18,13 +18,14 @@
 	}
 
 	.screen-hero .mb-hero-tile-group {
-		grid-column: 1 / -1;
+		grid-column: 3 / -1;
 		grid-row: 27 / span 11;
 		display: grid;
 		grid-template-columns: repeat(3, calc(var(--block-size) * 5));
 		grid-template-rows: repeat(2, calc(var(--block-size) * 5));
 		column-gap: var(--block-size);
 		row-gap: var(--block-size);
+		width: max-content;
 		justify-self: center;
 		align-self: start;
 	}
