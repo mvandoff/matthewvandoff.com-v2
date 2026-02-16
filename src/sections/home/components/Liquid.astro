@@ -1,3 +1,23 @@
+---
+/**
+ * Liquid system overview (mobile <= 1280px):
+ * - We run one shared Vanta FOG/WebGL scene in `#mb-liquid-stage`.
+ * - The shared stage is revealed through an SVG alpha mask built from `.liquid` targets,
+ *   excluding `.intro-container`.
+ * - `.intro-container` uses a separate local 2D mirror canvas (created by
+ *   `initIntroLiquidMirror`) that copies pixels from the shared stage each frame.
+ *
+ * Why this split exists:
+ * - The joystick tilts `.intro-container`. A single shared masked stage cannot be tilted for
+ *   intro only without moving every other liquid tile.
+ * - Mirroring intro from the shared stage keeps one WebGL instance while allowing intro-only
+ *   transform behavior.
+ *
+ * Opacity contract:
+ * - `data-liquid-opacity` controls liquid intensity for both shared-mask targets and intro mirror.
+ */
+---
+
 <div id="mb-liquid-stage" aria-hidden="true"></div>
 <svg id="mb-liquid-mask" aria-hidden="true" focusable="false">
 	<defs>
@@ -42,12 +62,34 @@
 			width: 100% !important;
 			height: 100% !important;
 		}
+		.screen-hero .intro-container .mb-liquid-local-stage {
+			position: absolute;
+			inset: 0;
+			border-radius: inherit;
+			overflow: hidden;
+			pointer-events: none;
+			z-index: 0;
+		}
+		.screen-hero .intro-container .mb-liquid-local-stage canvas {
+			width: 100%;
+			height: 100%;
+			display: block;
+		}
+		.screen-hero .intro-container > .left-intro,
+		.screen-hero .intro-container > .left-links {
+			position: relative;
+			z-index: 1;
+		}
+		.screen-hero .intro-container > .status-bulb {
+			z-index: 2;
+		}
 	}
 </style>
 
 <script>
 	import * as THREE from 'three';
 	import FOG from 'vanta/dist/vanta.fog.min';
+	import { getLiquidOpacity, initIntroLiquidMirror } from 'sections/home/components/scripts/initIntroLiquidMirror';
 
 	const fallbackFogColors = {
 		highlightColor: 0xb3b3b3,
@@ -115,8 +157,8 @@
 		if (fogEl.hasAttribute(LIQUID_READY_ATTR)) return;
 
 		const scope = fogEl.closest<HTMLElement>('.screen-hero') ?? document.body;
-		// All visible fog regions are declared with the `.liquid` marker class.
-		const getTargets = () => Array.from(scope.querySelectorAll<HTMLElement>('.liquid'));
+		// The intro tile uses a local mirrored liquid stage so it can tilt independently.
+		const getTargets = () => Array.from(scope.querySelectorAll<HTMLElement>('.liquid:not(.intro-container)'));
 		if (getTargets().length === 0) return;
 		fogEl.setAttribute(LIQUID_READY_ATTR, 'true');
 
@@ -151,6 +193,7 @@
 		};
 
 		window.addEventListener(MAIN_HUE_EVENT, scheduleColorUpdate);
+		initIntroLiquidMirror({ scope, sourceStage: fogEl });
 
 		let resizeObserver: ResizeObserver | null = null;
 		// Build mask rectangles that match each liquid target in stage-local coordinates.
@@ -175,7 +218,7 @@
 				rect.setAttribute('height', `${Math.round(targetRect.height)}`);
 				rect.setAttribute('fill', '#fff');
 				// The mask alpha controls how strongly fog appears in this target.
-				rect.setAttribute('fill-opacity', target.dataset.liquidOpacity ?? '1');
+				rect.setAttribute('fill-opacity', `${getLiquidOpacity(target.dataset.liquidOpacity)}`);
 
 				const radius = getRadiusPx(target);
 				if (radius > 0) {
