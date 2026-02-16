@@ -1,3 +1,10 @@
+<div id="cursor-newtab-badge" aria-hidden="true">
+	<div id="cursor-newtab-badge__inner">
+		<span class="cursor-newtab-badge__icon">⇱</span>
+		<span class="cursor-newtab-badge__label">new tab</span>
+	</div>
+</div>
+
 <style is:global>
 	@media (hover: hover) and (pointer: fine) {
 		:root {
@@ -5,32 +12,28 @@
 			--cursor-badge-icon-bg: rgb(99 102 241 / 0.22);
 			--cursor-badge-icon-color: var(--main-200);
 		}
-
 		:root[data-cursor-brand='linkedin'] {
 			--cursor-default: url('/cursor-circle-linkedin.svg') 9 9, auto;
 			--cursor-badge-icon-bg: rgb(10 102 194 / 0.22);
 			--cursor-badge-icon-color: #c0dbf7;
 		}
-
 		:root[data-cursor-brand='github'] {
 			--cursor-default: url('/cursor-circle-github.svg') 9 9, auto;
 			--cursor-badge-icon-bg: rgb(46 160 67 / 0.22);
 			--cursor-badge-icon-color: #b9dec0;
 		}
-
 		html,
 		html * {
 			cursor: var(--cursor-default) !important;
 		}
-
 		html input,
 		html textarea,
 		html select,
 		html [contenteditable='true'] {
 			cursor: text !important;
 		}
-
 		#cursor-newtab-badge {
+			display: block;
 			position: fixed;
 			top: 0;
 			left: 0;
@@ -40,7 +43,6 @@
 			transform: translate3d(var(--cursor-x, -999px), var(--cursor-y, -999px), 0);
 			will-change: transform;
 		}
-
 		#cursor-newtab-badge__inner {
 			display: inline-flex;
 			align-items: center;
@@ -63,12 +65,10 @@
 				transform 120ms ease,
 				filter 120ms ease;
 		}
-
 		#cursor-newtab-badge.is-visible #cursor-newtab-badge__inner {
 			opacity: 1;
 			transform: translate3d(16px, 18px, 0) scale(1);
 		}
-
 		#cursor-newtab-badge .cursor-newtab-badge__icon {
 			display: inline-flex;
 			align-items: center;
@@ -82,7 +82,6 @@
 			line-height: 1;
 			transform: rotate(90deg);
 		}
-
 		#cursor-newtab-badge .cursor-newtab-badge__label {
 			font-family: Inter, sans-serif;
 			font-weight: 650;
@@ -91,21 +90,18 @@
 			color: rgb(255 255 255 / 0.92);
 			white-space: nowrap;
 		}
-
-		@media (prefers-reduced-motion: reduce) {
-			#cursor-newtab-badge__inner {
-				transition: none;
-			}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		#cursor-newtab-badge__inner {
+			transition: none;
+		}
+	}
+	@media screen and (max-width: 1280px) {
+		#cursor-newtab-badge {
+			display: none;
 		}
 	}
 </style>
-
-<div id="cursor-newtab-badge" aria-hidden="true">
-	<div id="cursor-newtab-badge__inner">
-		<span class="cursor-newtab-badge__icon">⇱</span>
-		<span class="cursor-newtab-badge__label">new tab</span>
-	</div>
-</div>
 
 <script>
 	const badge = document.getElementById('cursor-newtab-badge');

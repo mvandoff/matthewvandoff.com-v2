@@ -5,26 +5,21 @@ const { pathname } = Astro.url;
 <nav id="main-nav">
 	<a href="/" class={pathname === '/' ? 'selected' : ''}>[ home ]</a>
 	<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
-	<!-- <a href="#">[ contact ]</a> -->
 </nav>
 
 <style>
 	nav {
-		background: black;
 		display: flex;
+		flex-direction: row;
+		position: fixed;
+		background: black;
 		justify-content: space-between;
 		align-items: center;
 		box-sizing: border-box;
 		width: 100%;
-		padding: 16px 1.5rem;
-		display: flex;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
+		padding: 0 4rem;
 		z-index: 10;
-		flex-direction: row;
-		font-size: 28px;
+		font-size: 24px;
 		transition: background var(--overlay-transition-time) ease;
 
 		a {
