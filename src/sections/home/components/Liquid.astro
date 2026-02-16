@@ -1,7 +1,7 @@
 <div id="mb-liquid-stage" aria-hidden="true"></div>
 <svg id="mb-liquid-mask" aria-hidden="true" focusable="false">
 	<defs>
-		<clipPath id="mb-liquid-clip" clipPathUnits="userSpaceOnUse"></clipPath>
+		<mask id="mb-liquid-alpha-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse"></mask>
 	</defs>
 </svg>
 
@@ -28,8 +28,8 @@
 			inset: 0;
 			pointer-events: none;
 			z-index: 0;
-			-webkit-clip-path: url(#mb-liquid-clip);
-			clip-path: url(#mb-liquid-clip);
+			-webkit-mask: url(#mb-liquid-alpha-mask);
+			mask: url(#mb-liquid-alpha-mask);
 		}
 		#mb-liquid-mask {
 			position: absolute;
@@ -70,6 +70,7 @@
 		return probe;
 	};
 
+	// Resolve CSS vars to computed color strings so Vanta can consume theme colors directly.
 	const resolveCssColorVar = (varName: string, fallback: number) => {
 		const raw = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
 		if (!raw) return fallback;
@@ -109,11 +110,12 @@
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
 		const fogEl = document.querySelector<HTMLElement>('#mb-liquid-stage');
-		const clipPathEl = document.querySelector<SVGClipPathElement>('#mb-liquid-clip');
-		if (!fogEl || !clipPathEl) return;
+		const alphaMaskEl = document.querySelector<SVGMaskElement>('#mb-liquid-alpha-mask');
+		if (!fogEl || !alphaMaskEl) return;
 		if (fogEl.hasAttribute(LIQUID_READY_ATTR)) return;
 
 		const scope = fogEl.closest<HTMLElement>('.screen-hero') ?? document.body;
+		// All visible fog regions are declared with the `.liquid` marker class.
 		const getTargets = () => Array.from(scope.querySelectorAll<HTMLElement>('.liquid'));
 		if (getTargets().length === 0) return;
 		fogEl.setAttribute(LIQUID_READY_ATTR, 'true');
@@ -137,6 +139,7 @@
 		});
 
 		let updateQueued = false;
+		// Throttle theme updates to one frame to avoid repeated Vanta option writes.
 		const scheduleColorUpdate = () => {
 			if (updateQueued) return;
 			updateQueued = true;
@@ -150,10 +153,15 @@
 		window.addEventListener(MAIN_HUE_EVENT, scheduleColorUpdate);
 
 		let resizeObserver: ResizeObserver | null = null;
-		const updateClipPath = () => {
+		// Build mask rectangles that match each liquid target in stage-local coordinates.
+		const updateMask = () => {
 			const stageRect = fogEl.getBoundingClientRect();
 			if (!stageRect.width || !stageRect.height) return;
 			const rects: SVGRectElement[] = [];
+			alphaMaskEl.setAttribute('x', '0');
+			alphaMaskEl.setAttribute('y', '0');
+			alphaMaskEl.setAttribute('width', `${Math.round(stageRect.width)}`);
+			alphaMaskEl.setAttribute('height', `${Math.round(stageRect.height)}`);
 			const targets = getTargets();
 
 			targets.forEach((target) => {
@@ -165,6 +173,9 @@
 				rect.setAttribute('y', `${Math.round(targetRect.top - stageRect.top)}`);
 				rect.setAttribute('width', `${Math.round(targetRect.width)}`);
 				rect.setAttribute('height', `${Math.round(targetRect.height)}`);
+				rect.setAttribute('fill', '#fff');
+				// The mask alpha controls how strongly fog appears in this target.
+				rect.setAttribute('fill-opacity', target.dataset.liquidOpacity ?? '1');
 
 				const radius = getRadiusPx(target);
 				if (radius > 0) {
@@ -176,20 +187,21 @@
 				if (resizeObserver) resizeObserver.observe(target);
 			});
 
-			clipPathEl.replaceChildren(...rects);
+			alphaMaskEl.replaceChildren(...rects);
 		};
 
 		let clipQueued = false;
+		// Coalesce geometry updates from resize + observers into one RAF pass.
 		const scheduleClipUpdate = () => {
 			if (clipQueued) return;
 			clipQueued = true;
 			requestAnimationFrame(() => {
 				clipQueued = false;
-				updateClipPath();
+				updateMask();
 			});
 		};
 
-		updateClipPath();
+		updateMask();
 		resizeObserver = new ResizeObserver(scheduleClipUpdate);
 		resizeObserver.observe(fogEl);
 		window.addEventListener('resize', scheduleClipUpdate);
