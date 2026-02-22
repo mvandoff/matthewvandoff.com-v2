@@ -1,5 +1,60 @@
 import gsap from 'gsap';
 
+/**
+ * Block-grid page transition with an embedded logo.
+ *
+ * Implementation details:
+ * - The overlay is rebuilt as a CSS grid sized from `--transition-block-size` so it always covers the viewport.
+ * - A centered logo rect is computed in viewport space, then snapped to block-aligned width for clean slicing.
+ * - Each generated block checks whether it overlaps that logo rect.
+ * - Overlapping blocks get `.transition-block--logo` plus CSS custom properties that describe:
+ *   - the full logo render size (`--transition-logo-width/height`)
+ *   - that block's offset into the shared logo image (`--transition-logo-pos-x/y`)
+ * - In `Transition.astro`, a `::before` pseudo-element uses the same background image on every logo block
+ *   and shifts `background-position` per block so the blocks assemble into one logo.
+ *
+ * Because the logo is rendered inside the transition blocks (not as a separate overlay element),
+ * the existing GSAP block opacity/autoAlpha staggers automatically make the logo reveal/hide in chunks
+ * during both page-load reveal and nav-click cover transitions.
+ */
+const mvdLogoMaskUrl = new URL('../../assets/images/mvd-logo-mask.svg', import.meta.url).href;
+
+const TRANSITION_STAGGER_FROM: 'random' = 'random';
+
+// Primary animation timing controls for the reveal (page load) and cover (nav click) phases.
+// `staggerAmount` controls the overall wave duration more than the per-block duration does.
+const TRANSITION_TIMING = {
+	pageLoadStartDelay: 0.1,
+	pageLoadBlockDuration: 0.1,
+	pageLoadStaggerAmount: 1,
+	navCoverBlockDuration: 0.001,
+	navCoverStaggerAmount: 0.75,
+} as const;
+
+// Centered logo sizing heuristic for the transition grid.
+// Width is snapped to whole blocks so the sliced logo aligns cleanly with the block grid.
+const TRANSITION_LOGO_LAYOUT = {
+	// Leave a small number of columns free so the logo does not run edge-to-edge.
+	horizontalBlockMargin: 2,
+	// Minimum logo width in block units, split by viewport size.
+	mobileMinBlocks: 5,
+	desktopMinBlocks: 6,
+	// Preferred logo width before clamping, based on viewport width.
+	viewportWidthRatio: 0.5,
+	maxWidthPx: 720,
+	mobileBreakpointPx: 640,
+} as const;
+
+const MVD_LOGO_VIEWBOX_WIDTH = 73;
+const MVD_LOGO_VIEWBOX_HEIGHT = 23;
+
+type Rect = {
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+};
+
 function adjustGrid() {
 	const transition = document.getElementById('transition') as HTMLElement;
 
@@ -9,24 +64,38 @@ function adjustGrid() {
 	const columns = Math.max(1, Math.ceil(viewportWidth / blockSizePx));
 	const rowsNeeded = Math.max(1, Math.ceil(viewportHeight / blockSizePx));
 
-	// Update grid styles
+	// Keep explicit grid tracks in sync with the current viewport so the overlay fully covers the screen.
 	transition.style.gridTemplateColumns = `repeat(${columns}, ${blockSizePx}px)`;
 	transition.style.gridTemplateRows = `repeat(${rowsNeeded}, ${blockSizePx}px)`;
 
-	// Calculate the total number of blocks needed
+	// Compute a centered logo footprint in viewport coordinates before creating blocks.
 	const totalBlocks = columns * rowsNeeded;
+	const logoRect = getCenteredLogoRect({
+		blockSizePx,
+		columns,
+		viewportWidth,
+		viewportHeight,
+	});
 
-	// Clear existing blocks
+	// Rebuild blocks from scratch so resize updates both coverage and logo slicing offsets.
 	transition.innerHTML = '';
+	transition.style.setProperty('--transition-logo-url', `url("${mvdLogoMaskUrl}")`);
 
-	// Generate blocks dynamically
+	// Generate blocks and tag only the ones that should render a slice of the logo image.
 	for (let i = 0; i < totalBlocks; i++) {
 		const block: HTMLDivElement = document.createElement('div');
 		block.classList.add('transition-block');
+		applyLogoSliceStyles({
+			block,
+			blockIndex: i,
+			columns,
+			blockSizePx,
+			logoRect,
+		});
 		transition.appendChild(block);
 	}
 
-	// Set initial state for page load animation - blocks start visible
+	// Page-load reveal expects the overlay to start fully visible.
 	gsap.set('.transition-block', { opacity: 1 });
 }
 
@@ -36,23 +105,105 @@ function getBlockSizePxFromCss(transition: HTMLElement): number {
 	return Number.parseFloat(raw);
 }
 
+// Returns a centered logo rect sized in whole-block increments so slices line up with the grid.
+function getCenteredLogoRect({
+	blockSizePx,
+	columns,
+	viewportWidth,
+	viewportHeight,
+}: {
+	blockSizePx: number;
+	columns: number;
+	viewportWidth: number;
+	viewportHeight: number;
+}): Rect {
+	const maxLogoBlocks = Math.max(3, columns - TRANSITION_LOGO_LAYOUT.horizontalBlockMargin);
+	const minLogoBlocks = Math.min(
+		maxLogoBlocks,
+		viewportWidth < TRANSITION_LOGO_LAYOUT.mobileBreakpointPx
+			? TRANSITION_LOGO_LAYOUT.mobileMinBlocks
+			: TRANSITION_LOGO_LAYOUT.desktopMinBlocks,
+	);
+	const desiredLogoBlocks = Math.max(
+		minLogoBlocks,
+		Math.round(
+			Math.min(viewportWidth * TRANSITION_LOGO_LAYOUT.viewportWidthRatio, TRANSITION_LOGO_LAYOUT.maxWidthPx) /
+				blockSizePx,
+		),
+	);
+	const logoBlocks = Math.min(maxLogoBlocks, desiredLogoBlocks);
+	const width = logoBlocks * blockSizePx;
+	const height = (width * MVD_LOGO_VIEWBOX_HEIGHT) / MVD_LOGO_VIEWBOX_WIDTH;
+
+	return {
+		left: (viewportWidth - width) / 2,
+		top: (viewportHeight - height) / 2,
+		width,
+		height,
+	};
+}
+
+// Applies per-block CSS vars so the block's pseudo-element renders the correct logo slice.
+function applyLogoSliceStyles({
+	block,
+	blockIndex,
+	columns,
+	blockSizePx,
+	logoRect,
+}: {
+	block: HTMLDivElement;
+	blockIndex: number;
+	columns: number;
+	blockSizePx: number;
+	logoRect: Rect;
+}) {
+	const column = blockIndex % columns;
+	const row = Math.floor(blockIndex / columns);
+	const blockLeft = column * blockSizePx;
+	const blockTop = row * blockSizePx;
+
+	if (
+		!rectanglesOverlap(
+			{
+				left: blockLeft,
+				top: blockTop,
+				width: blockSizePx,
+				height: blockSizePx,
+			},
+			logoRect,
+		)
+	) {
+		return;
+	}
+
+	block.classList.add('transition-block--logo');
+	block.style.setProperty('--transition-logo-width', `${logoRect.width}px`);
+	block.style.setProperty('--transition-logo-height', `${logoRect.height}px`);
+	block.style.setProperty('--transition-logo-pos-x', `${logoRect.left - blockLeft}px`);
+	block.style.setProperty('--transition-logo-pos-y', `${logoRect.top - blockTop}px`);
+}
+
+function rectanglesOverlap(a: Rect, b: Rect): boolean {
+	return a.left < b.left + b.width && a.left + a.width > b.left && a.top < b.top + b.height && a.top + a.height > b.top;
+}
+
 /**
  * Transition lifecycle overview:
  *
  * 1) Page load:
- *    - Transition overlay starts fully opaque (blocks cover the screen).
+ *    - Transition overlay starts fully opaque (blocks cover the screen, including logo slices).
  *    - We animate blocks out (opacity -> 0) to reveal the page.
  *
  * 2) In-app navigation:
  *    - Intercept same-origin links.
- *    - Animate blocks in (autoAlpha -> 1) to cover the screen.
+ *    - Animate blocks in (autoAlpha -> 1) to cover the screen (logo slices appear with those blocks).
  *    - Only once the screen is covered do we navigate to the destination URL.
  */
 
 export function initTransition() {
 	/**
-	 * The transition overlay is a CSS grid whose row count depends on viewport dimensions.
-	 * We build the grid dynamically to ensure full coverage across responsive breakpoints.
+	 * Build the grid once on startup so the first paint already has the correct block count
+	 * and per-block logo slicing metadata.
 	 */
 	adjustGrid();
 
@@ -78,10 +229,10 @@ export function initTransition() {
 		'.transition-block',
 		{
 			opacity: 0,
-			duration: 0.1,
-			stagger: { amount: 0.75, from: 'random' },
+			duration: TRANSITION_TIMING.pageLoadBlockDuration,
+			stagger: { amount: TRANSITION_TIMING.pageLoadStaggerAmount, from: TRANSITION_STAGGER_FROM },
 		},
-		0.1,
+		TRANSITION_TIMING.pageLoadStartDelay,
 	);
 	pageLoadTimeline.play(0);
 
@@ -94,9 +245,7 @@ export function initTransition() {
 	 * - Non-_blank targets
 	 * - Links not explicitly opting out via `data-transition-prevent`
 	 */
-	const validLinks: HTMLAnchorElement[] = Array.from(
-		document.querySelectorAll<HTMLAnchorElement>('a[href]'),
-	).filter(
+	const validLinks: HTMLAnchorElement[] = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]')).filter(
 		(link: HTMLAnchorElement) => {
 			const href = link.getAttribute('href')!;
 
@@ -135,9 +284,9 @@ export function initTransition() {
 				{ autoAlpha: 0 },
 				{
 					autoAlpha: 1,
-					duration: 0.001,
+					duration: TRANSITION_TIMING.navCoverBlockDuration,
 					ease: 'linear',
-					stagger: { amount: 0.75, from: 'random' },
+					stagger: { amount: TRANSITION_TIMING.navCoverStaggerAmount, from: TRANSITION_STAGGER_FROM },
 					onComplete: () => {
 						window.location.href = destination;
 					},

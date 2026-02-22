@@ -19,9 +19,21 @@
 	}
 
 	.transition-block {
+		position: relative;
+		overflow: hidden;
 		background-color: var(--transition-bg);
 		width: 100%;
 		height: 100%;
+	}
+
+	.transition-block--logo::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: var(--transition-logo-url);
+		background-repeat: no-repeat;
+		background-size: var(--transition-logo-width) var(--transition-logo-height);
+		background-position: var(--transition-logo-pos-x) var(--transition-logo-pos-y);
 	}
 
 	@media screen and (max-width: 1280px) {
