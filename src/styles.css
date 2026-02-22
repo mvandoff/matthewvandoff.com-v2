@@ -112,6 +112,7 @@
 	--scrollbar-size: 10px;
 	--scrollbar-block-size: 6px;
 
+	--block-size: 64px;
 	--block-cols: 26;
 
 	/* Status colors */

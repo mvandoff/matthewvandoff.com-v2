@@ -1,6 +1,4 @@
 :root {
-	--block-size: 64px;
-
 	--bg-block-color: hsla(239, 85%, 67%, 0.3);
 	--bg-block-fade-in: 500ms;
 	--bg-block-fade-out: 1s;
