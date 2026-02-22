@@ -37,7 +37,7 @@ const TRANSITION_LOGO_LAYOUT = {
 	// Leave a small number of columns free so the logo does not run edge-to-edge.
 	horizontalBlockMargin: 2,
 	// Minimum logo width in block units, split by viewport size.
-	mobileMinBlocks: 5,
+	mobileMinBlocks: 6,
 	desktopMinBlocks: 6,
 	// Preferred logo width before clamping, based on viewport width.
 	viewportWidthRatio: 0.5,
