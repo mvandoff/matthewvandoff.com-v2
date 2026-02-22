@@ -1,12 +1,11 @@
 import gsap from 'gsap';
 
 function adjustGrid() {
-	const transition = document.getElementById('transition');
-	if (!transition) return console.warn('Transition element not found');
+	const transition = document.getElementById('transition') as HTMLElement;
 
-	const blockSizePx = getBlockSizePxFromCss(transition, 64);
-	const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-	const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+	const blockSizePx = getBlockSizePxFromCss(transition);
+	const viewportWidth = window.innerWidth;
+	const viewportHeight = window.innerHeight;
 	const columns = Math.max(1, Math.ceil(viewportWidth / blockSizePx));
 	const rowsNeeded = Math.max(1, Math.ceil(viewportHeight / blockSizePx));
 
@@ -31,14 +30,9 @@ function adjustGrid() {
 	gsap.set('.transition-block', { opacity: 1 });
 }
 
-function getBlockSizePxFromCss(transition: HTMLElement, fallbackPx: number): number {
-	const computedStyle = window.getComputedStyle(transition);
-	const raw = computedStyle.getPropertyValue('grid-auto-columns').trim();
-	if (!raw) return fallbackPx;
-	const match = raw.match(/^(-?\d*\.?\d+)px$/);
-	if (!match) return fallbackPx;
-	const value = Number(match[1]);
-	return Number.isFinite(value) && value > 0 ? value : fallbackPx;
+function getBlockSizePxFromCss(transition: HTMLElement): number {
+	const raw = window.getComputedStyle(transition).getPropertyValue('grid-auto-columns');
+	return Number.parseFloat(raw);
 }
 
 /**
@@ -99,28 +93,21 @@ export function initTransition() {
 	 * - Non-_blank targets
 	 * - Links not explicitly opting out via `data-transition-prevent`
 	 */
-	const validLinks: HTMLAnchorElement[] = Array.from(document.querySelectorAll('a')).filter(
+	const validLinks: HTMLAnchorElement[] = Array.from(
+		document.querySelectorAll<HTMLAnchorElement>('a[href]'),
+	).filter(
 		(link: HTMLAnchorElement) => {
-			const rawHref = link.getAttribute('href');
-			const href = rawHref?.trim() ?? '';
+			const href = link.getAttribute('href')!;
 
 			// Ignore "dead" anchors or placeholders (no href / empty href).
 			if (!href) return false;
 
-			try {
-				const url = new URL(href, window.location.origin);
-
-				return (
-					!href.startsWith('#') && // Not an anchor link
-					url.origin === window.location.origin && // Same origin
-					link.getAttribute('target') !== '_blank' && // Not opening in a new tab
-					!link.hasAttribute('data-transition-prevent') // No 'data-transition-prevent' attribute
-				);
-			} catch (error) {
-				// Invalid URL, exclude from valid links
-				console.warn('Invalid URL found:', href, error);
-				return false;
-			}
+			return (
+				!href.startsWith('#') && // Not an anchor link
+				new URL(link.href).origin === window.location.origin && // Same origin
+				link.getAttribute('target') !== '_blank' && // Not opening in a new tab
+				!link.hasAttribute('data-transition-prevent') // No 'data-transition-prevent' attribute
+			);
 		},
 	);
 
