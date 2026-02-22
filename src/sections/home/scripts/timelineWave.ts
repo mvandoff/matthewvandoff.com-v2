@@ -133,7 +133,18 @@ export function createTimelineWaveController(deps: TimelineWaveDeps) {
 			rows,
 		});
 		if (!bounds) return;
-		const items = buildWaveItems(bounds, params.origin, getBlocks(), columns);
+		const rect = params.element.getBoundingClientRect();
+		// The shared bounds helper can include an extra row when the element is slightly
+		// offset from the global background grid (subpixel/layout alignment). For timeline
+		// cards we want the hover wave height to match the card's intended block span.
+		const rowSpan = Math.max(1, Math.round(rect.height / blockSizePx));
+		const snappedBounds = {
+			...bounds,
+			// Keep the original row start, but cap the bottom edge to the card's block-height span
+			// so a 3-row timeline card does not light a 4th row.
+			rowEnd: Math.min(rows - 1, bounds.rowStart + rowSpan - 1),
+		};
+		const items = buildWaveItems(snappedBounds, params.origin, getBlocks(), columns);
 		if (!items.length) return;
 
 		items.sort((a, b) => a.distance - b.distance);
