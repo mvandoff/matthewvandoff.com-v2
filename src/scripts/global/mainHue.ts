@@ -70,6 +70,12 @@ export const prepareDynamicPalette = () => {
 	if (paletteReady) return;
 	const root = document.documentElement;
 	const styles = getComputedStyle(root);
+	const existingBaseHue = Number.parseFloat(styles.getPropertyValue(MAIN_HUE_VAR).trim());
+	// If CSS already defines a dynamic palette driven by `--main-hue-base`, there is nothing to rewrite.
+	if (Number.isFinite(existingBaseHue)) {
+		paletteReady = true;
+		return;
+	}
 	// Snapshot current CSS values so designers can tweak in styles.css.
 	const palette = MAIN_COLOR_KEYS.map((key) => {
 		const raw = styles.getPropertyValue(`${MAIN_COLOR_PREFIX}${key}`).trim();

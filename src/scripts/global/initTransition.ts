@@ -1,5 +1,4 @@
 import gsap from 'gsap';
-import { MAIN_HUE_EVENT, getBaseHue, readStoredHue } from './mainHue';
 
 /**
  * Block-grid page transition with an embedded logo.
@@ -21,7 +20,6 @@ import { MAIN_HUE_EVENT, getBaseHue, readStoredHue } from './mainHue';
 const mvdLogoMaskUrl = new URL('../../assets/images/mvd-logo-mask.svg', import.meta.url).href;
 
 const TRANSITION_STAGGER_FROM: 'random' = 'random';
-const PAGE_LOAD_HUE_FADE_DURATION = 0.5;
 
 // Primary animation timing controls for the reveal (page load) and cover (nav click) phases.
 // `staggerAmount` controls the overall wave duration more than the per-block duration does.
@@ -56,69 +54,6 @@ type Rect = {
 	width: number;
 	height: number;
 };
-
-function prefersReducedMotion() {
-	return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-function getResolvedColor(colorValue: string) {
-	// Resolve CSS vars (e.g. `var(--main-900)`) to a concrete rgb(...) string so GSAP can tween reliably.
-	const probe = document.createElement('div');
-	probe.style.position = 'fixed';
-	probe.style.visibility = 'hidden';
-	probe.style.pointerEvents = 'none';
-	probe.style.backgroundColor = colorValue;
-	document.body.appendChild(probe);
-	const resolved = getComputedStyle(probe).backgroundColor;
-	probe.remove();
-	return resolved;
-}
-
-function playPageLoadReveal(pageLoadTimeline: gsap.core.Timeline) {
-	const transition = document.getElementById('transition') as HTMLElement;
-	const storedHue = readStoredHue();
-	const defaultHue = getBaseHue();
-
-	// No saved hue (or same hue) means there is nothing to crossfade; reveal immediately.
-	if (storedHue === null || Math.round(storedHue) === Math.round(defaultHue)) {
-		pageLoadTimeline.play(0);
-		return;
-	}
-
-	// Freeze the overlay color at first paint so `initMainHue()` changing CSS vars does not cause
-	// a single-frame jump before we intentionally animate to the saved hue color.
-	const initialOverlayColor = getComputedStyle(transition).backgroundColor;
-	transition.style.setProperty('--transition-bg', initialOverlayColor);
-
-	window.addEventListener(
-		MAIN_HUE_EVENT,
-		() => {
-			// By this point `mainHue.ts` has applied the stored hue, so resolve the overlay target color
-			// from the updated theme and tween the transition blocks to it before deconstructing.
-			const nextOverlayColor = getResolvedColor('var(--main-900)');
-
-			if (prefersReducedMotion()) {
-				// Keep the sequencing (apply final color before reveal) but skip the extra motion.
-				transition.style.setProperty('--transition-bg', nextOverlayColor);
-				transition.style.removeProperty('--transition-bg');
-				pageLoadTimeline.play(0);
-				return;
-			}
-
-			gsap.to(transition, {
-				duration: PAGE_LOAD_HUE_FADE_DURATION,
-				ease: 'none',
-				'--transition-bg': nextOverlayColor,
-				onComplete: () => {
-					// Hand control back to the CSS variable-driven theme for future transitions.
-					transition.style.removeProperty('--transition-bg');
-					pageLoadTimeline.play(0);
-				},
-			});
-		},
-		{ once: true },
-	);
-}
 
 function adjustGrid() {
 	const transition = document.getElementById('transition') as HTMLElement;
@@ -272,34 +207,28 @@ export function initTransition() {
 	 */
 	adjustGrid();
 
-	/**
-	 * Page-load reveal timeline.
-	 * Build the timeline first, then play it to reveal the page.
-	 */
-	const pageLoadTimeline = gsap.timeline({
-		paused: true,
-		onStart: () => {
-			gsap.set('#transition', { background: 'transparent' });
-		},
-		onComplete: () => {
-			gsap.set('#transition', { display: 'none' });
-		},
-		defaults: {
-			ease: 'linear',
-		},
-	});
-
-	// Animate blocks out on page load
-	pageLoadTimeline.to(
-		'.transition-block',
-		{
-			opacity: 0,
-			duration: TRANSITION_TIMING.pageLoadBlockDuration,
-			stagger: { amount: TRANSITION_TIMING.pageLoadStaggerAmount, from: TRANSITION_STAGGER_FROM },
-		},
-		TRANSITION_TIMING.pageLoadStartDelay,
-	);
-	playPageLoadReveal(pageLoadTimeline);
+	// Page-load reveal timeline (auto-plays immediately after creation).
+	gsap
+		.timeline({
+			onStart: () => {
+				gsap.set('#transition', { background: 'transparent' });
+			},
+			onComplete: () => {
+				gsap.set('#transition', { display: 'none' });
+			},
+			defaults: {
+				ease: 'linear',
+			},
+		})
+		.to(
+			'.transition-block',
+			{
+				opacity: 0,
+				duration: TRANSITION_TIMING.pageLoadBlockDuration,
+				stagger: { amount: TRANSITION_TIMING.pageLoadStaggerAmount, from: TRANSITION_STAGGER_FROM },
+			},
+			TRANSITION_TIMING.pageLoadStartDelay,
+		);
 
 	/**
 	 * In-app navigation interception.

@@ -20,19 +20,34 @@
     --main-900: #002f4b;
     --main-950: #001623; */
 
-	/* Tailwind indigo colors */
-	--main-50: hsl(226, 100%, 97%);
-	--main-100: hsl(226, 100%, 94%);
-	--main-200: hsl(228, 96%, 89%);
-	--main-300: hsl(230, 94%, 82%);
-	--main-400: hsl(234, 89%, 74%);
-	--main-500: hsl(239, 84%, 67%);
-	--main-600: hsl(243, 75%, 59%);
-	--main-700: hsl(245, 58%, 51%);
-	--main-800: hsl(244, 55%, 41%);
-	--main-900: hsl(242, 47%, 34%);
-	--main-950: hsl(244, 47%, 20%); /* Custom indigo-950 */
-	--main-1k: hsl(244 40% 10% / 1);
+	/* Tailwind indigo colors (literal, kept for posterity before hue-driven refactor) */
+	/* --main-50: hsl(226 100% 97%);
+	--main-100: hsl(226 100% 94%);
+	--main-200: hsl(228 96% 89%);
+	--main-300: hsl(230 94% 82%);
+	--main-400: hsl(234 89% 74%);
+	--main-500: hsl(239 84% 67%);
+	--main-600: hsl(243 75% 59%);
+	--main-700: hsl(245 58% 51%);
+	--main-800: hsl(244 55% 41%);
+	--main-900: hsl(242 47% 34%);
+	--main-950: hsl(244 47% 20%);
+	--main-1k: hsl(244 40% 10% / 1); */
+
+	/* Tailwind indigo colors (hue-driven so the stored hue can apply pre-paint) */
+	--main-hue-base: 243;
+	--main-50: hsl(calc(var(--main-hue-base) - 17) 100% 97%);
+	--main-100: hsl(calc(var(--main-hue-base) - 17) 100% 94%);
+	--main-200: hsl(calc(var(--main-hue-base) - 15) 96% 89%);
+	--main-300: hsl(calc(var(--main-hue-base) - 13) 94% 82%);
+	--main-400: hsl(calc(var(--main-hue-base) - 9) 89% 74%);
+	--main-500: hsl(calc(var(--main-hue-base) - 4) 84% 67%);
+	--main-600: hsl(var(--main-hue-base) 75% 59%);
+	--main-700: hsl(calc(var(--main-hue-base) + 2) 58% 51%);
+	--main-800: hsl(calc(var(--main-hue-base) + 1) 55% 41%);
+	--main-900: hsl(calc(var(--main-hue-base) - 1) 47% 34%);
+	--main-950: hsl(calc(var(--main-hue-base) + 1) 47% 20%); /* Custom indigo-950 */
+	--main-1k: hsl(calc(var(--main-hue-base) + 1) 40% 10% / 1);
 
 	--slate-50: #f8fafc;
 	--slate-100: #f1f5f9;
