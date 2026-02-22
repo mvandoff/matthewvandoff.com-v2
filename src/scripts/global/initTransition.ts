@@ -32,6 +32,7 @@ function adjustGrid() {
 
 function getBlockSizePxFromCss(transition: HTMLElement): number {
 	const raw = window.getComputedStyle(transition).getPropertyValue('grid-auto-columns');
+	if (!Number.isFinite(Number.parseFloat(raw))) throw new Error(`Invalid transition block size: ${raw}`);
 	return Number.parseFloat(raw);
 }
 
