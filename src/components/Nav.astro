@@ -3,8 +3,10 @@ const { pathname } = Astro.url;
 ---
 
 <nav id="main-nav">
-	<a href="/" class={pathname === '/' ? 'selected' : ''}>[ home ]</a>
-	<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
+	<div class="nav-items">
+		<a href="/" class={pathname === '/' ? 'selected' : ''}>[ home ]</a>
+		<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
+	</div>
 </nav>
 
 <style>
@@ -21,6 +23,14 @@ const { pathname } = Astro.url;
 		z-index: 10;
 		font-size: 24px;
 		transition: background var(--overlay-transition-time) ease;
+
+		.nav-items {
+			width: 100%;
+			max-width: 1270px;
+			display: flex;
+			justify-content: space-between;
+			margin: 0 auto;
+		}
 
 		a {
 			transition: color 0.25s ease;

@@ -31,7 +31,6 @@ main {
 	padding-top: 0;
 	padding-bottom: 0;
 	background: hsl(from var(--neutral-950) h s l / 0.31);
-	max-width: calc(32 * var(--block-size));
 }
 .blurb {
 	font-size: 16px;
