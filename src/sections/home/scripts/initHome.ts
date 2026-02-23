@@ -1,7 +1,6 @@
 import { createTimelineWaveController, type WaveTimings } from './timelineWave';
 import { initHomeScrollDistortion } from './homeScrollDistortion';
 import { initDebugGridToggle } from './debugGridToggle';
-import { createSocialLinkWaveController } from './socialLinkWave';
 import { initTimelineEnterDistortion } from './timelineEnterDistortion';
 import { createBlockTrailController } from './homeBlockTrail';
 import {
@@ -58,8 +57,6 @@ export function initHome() {
 	const homeScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#home-scroll-turbulence');
 	const homeScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#home-scroll-displacement');
 	const timelineBlocks = Array.from(homeSectionEl.querySelectorAll<HTMLElement>('.tl-block'));
-	const socialLinks = Array.from(homeSectionEl.querySelectorAll<HTMLAnchorElement>('.social-link'));
-	const hoverDistortTargets = [...timelineBlocks, ...socialLinks];
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
 	let blocks: HTMLDivElement[] = [];
@@ -85,12 +82,6 @@ export function initHome() {
 		getWaveTimings: () => waveTimings,
 	});
 
-	const socialLinkWave = createSocialLinkWaveController({
-		socialLinks,
-		getWaveTimings: () => waveTimings,
-		getSocialBlockSizePx: () => Math.max(8, Math.round(blockSizePx / 4)),
-	});
-
 	const blockTrail = createBlockTrailController({
 		blockContainerEl: blockContainer,
 		mainNavEl: mainNav,
@@ -109,7 +100,6 @@ export function initHome() {
 		 */
 		clearAllBlockTimers(blockStates);
 		timelineWave.clearAllTimers();
-		socialLinkWave.clearAllTimers();
 		timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
 		waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
 		blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
@@ -166,8 +156,6 @@ export function initHome() {
 		blocks = createBlocks(totalBlocks);
 		const debugLabels = createDebugLabelOverlay({ columns, rows, blockSizePx, widthPx, heightPx });
 		blockContainer.replaceChildren(...blocks, debugLabels);
-
-		socialLinkWave.rebuildAll();
 	}
 
 	/**
@@ -178,9 +166,6 @@ export function initHome() {
 	initDebugGridToggle({ container: blockContainer });
 	rebuildGrid();
 	blockTrail.refreshIgnoreRects();
-	if (socialLinks.length > 0) {
-		socialLinkWave.bindHandlers(pointerEvents);
-	}
 
 	// Scroll-driven image distortion (SVG filter + CSS blur) for the headshot.
 	initHomeScrollDistortion({
@@ -196,7 +181,7 @@ export function initHome() {
 	}
 
 	initTimelineEnterDistortion({
-		timelineBlocks: hoverDistortTargets,
+		timelineBlocks,
 		enterEventName: pointerEvents.enter,
 		getBlockSizePx: () => blockSizePx,
 		durationMs: 1000,

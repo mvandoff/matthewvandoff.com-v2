@@ -1,11 +1,29 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 const { pathname } = Astro.url;
 ---
 
 <nav id="main-nav">
 	<div class="nav-items">
-		<a href="/" class={pathname === '/' ? 'selected' : ''}>[ home ]</a>
-		<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
+		<div class="nav-pages">
+			<a href="/" class={pathname === '/' ? 'selected' : ''}>[ home ]</a>
+			<a href="/work" class={pathname === '/work' ? 'selected' : ''}>[ work ]</a>
+		</div>
+		<div class="nav-links">
+			<a
+				href="https://www.linkedin.com/in/matthew-vandoff/"
+				target="_blank"
+				rel="noreferrer"
+				aria-label="LinkedIn"
+				class="social-link"
+			>
+				<Icon name="fa7-brands:linkedin" />
+			</a>
+			<a href="https://github.com/mvandoff" target="_blank" rel="noreferrer" aria-label="GitHub" class="social-link">
+				<Icon name="fa7-brands:github" />
+			</a>
+		</div>
 	</div>
 </nav>
 
@@ -30,6 +48,27 @@ const { pathname } = Astro.url;
 			display: flex;
 			justify-content: space-between;
 			margin: 0 auto;
+
+			.nav-pages {
+				display: flex;
+				gap: 3rem;
+			}
+			.nav-links {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+
+				a {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					svg {
+						width: 2.25rem;
+						height: 2.25rem;
+					}
+				}
+			}
 		}
 
 		a {

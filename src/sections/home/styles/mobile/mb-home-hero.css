@@ -31,7 +31,7 @@
 	.screen-hero {
 		--hero-border: hsl(from var(--neutral-50) h s l / 0.09);
 
-		overflow-x: hidden;
+		overflow-x: visible;
 		.left-image-layer {
 			display: block;
 
