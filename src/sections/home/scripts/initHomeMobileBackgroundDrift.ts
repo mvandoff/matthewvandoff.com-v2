@@ -137,8 +137,8 @@ function clearBackgroundVars(mainEl: HTMLElement) {
 }
 
 export function initHomeMobileBackgroundDrift() {
-	// Re-init safe for Astro client-side page transitions.
-	window[CLEANUP_KEY]?.();
+	// Avoid stacking global listeners if called from both `DOMContentLoaded` and `astro:page-load`.
+	if (window[CLEANUP_KEY]) return;
 
 	const mainEl = document.querySelector<HTMLElement>('main');
 	const homeContent = document.querySelector<HTMLElement>('#home-content');
@@ -150,6 +150,7 @@ export function initHomeMobileBackgroundDrift() {
 	const progressState = { value: 0 };
 	let progressTween: GSAPTween | null = null;
 	let isListening = false;
+	let resizeQueued = false;
 
 	const applyProgress = (progress: number) => {
 		const easedProgress = progressEase(clamp01(progress));
@@ -189,18 +190,28 @@ export function initHomeMobileBackgroundDrift() {
 		});
 	};
 
+	const onResize = () => {
+		// Coalesce repeated resize events into one update per frame.
+		if (resizeQueued) return;
+		resizeQueued = true;
+		requestAnimationFrame(() => {
+			resizeQueued = false;
+			animateToScrollProgress();
+		});
+	};
+
 	const addListeners = () => {
 		if (isListening) return;
 		isListening = true;
 		homeContent.addEventListener('scroll', animateToScrollProgress, { passive: true });
-		window.addEventListener('resize', animateToScrollProgress);
+		window.addEventListener('resize', onResize);
 	};
 
 	const removeListeners = () => {
 		if (!isListening) return;
 		isListening = false;
 		homeContent.removeEventListener('scroll', animateToScrollProgress);
-		window.removeEventListener('resize', animateToScrollProgress);
+		window.removeEventListener('resize', onResize);
 	};
 
 	const refresh = () => {
@@ -224,12 +235,16 @@ export function initHomeMobileBackgroundDrift() {
 
 	refresh();
 
-	window[CLEANUP_KEY] = () => {
+	const cleanup = () => {
 		removeListeners();
 		progressTween?.kill();
 		progressTween = null;
 		clearBackgroundVars(mainEl);
 		mobileMedia.removeEventListener('change', refresh);
 		reducedMotionMedia.removeEventListener('change', refresh);
+		window[CLEANUP_KEY] = undefined;
 	};
+	window[CLEANUP_KEY] = cleanup;
+	// Detach global listeners before Astro swaps the page DOM.
+	document.addEventListener('astro:before-swap', cleanup, { once: true });
 }

@@ -18,6 +18,8 @@ import gsap from 'gsap';
  * during both page-load reveal and nav-click cover transitions.
  */
 const mvdLogoMaskUrl = new URL('../../assets/images/mvd-logo-mask.svg', import.meta.url).href;
+// Prevent duplicate global listeners across Astro client-side navigations.
+const CLEANUP_KEY = '__transitionCleanup__' as const;
 
 const TRANSITION_STAGGER_FROM: 'random' = 'random';
 
@@ -47,6 +49,12 @@ const TRANSITION_LOGO_LAYOUT = {
 
 const MVD_LOGO_VIEWBOX_WIDTH = 73;
 const MVD_LOGO_VIEWBOX_HEIGHT = 23;
+
+declare global {
+	interface Window {
+		__transitionCleanup__?: () => void;
+	}
+}
 
 type Rect = {
 	left: number;
@@ -201,6 +209,10 @@ function rectanglesOverlap(a: Rect, b: Rect): boolean {
  */
 
 export function initTransition() {
+	// `Transition.astro` runs in the global layout, and can be initialized again on Astro page loads.
+	// Cleanup ensures we don't stack delegated nav handlers across navigations.
+	window[CLEANUP_KEY]?.();
+
 	/**
 	 * Build the grid once on startup so the first paint already has the correct block count
 	 * and per-block logo slicing metadata.
@@ -239,68 +251,91 @@ export function initTransition() {
 	 * - Non-_blank targets
 	 * - Links not explicitly opting out via `data-transition-prevent`
 	 */
-	const validLinks: HTMLAnchorElement[] = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]')).filter(
-		(link: HTMLAnchorElement) => {
-			const href = link.getAttribute('href')!;
+	const isValidTransitionLink = (link: HTMLAnchorElement) => {
+		const href = link.getAttribute('href');
 
-			// Ignore "dead" anchors or placeholders (no href / empty href).
-			if (!href) return false;
+		// Ignore "dead" anchors or placeholders (no href / empty href).
+		if (!href) return false;
 
-			return (
-				!href.startsWith('#') && // Not an anchor link
-				new URL(link.href).origin === window.location.origin && // Same origin
-				link.getAttribute('target') !== '_blank' && // Not opening in a new tab
-				!link.hasAttribute('data-transition-prevent') // No 'data-transition-prevent' attribute
-			);
-		},
-	);
+		return (
+			!href.startsWith('#') && // Not an anchor link
+			new URL(link.href).origin === window.location.origin && // Same origin
+			link.getAttribute('target') !== '_blank' && // Not opening in a new tab
+			!link.hasAttribute('data-transition-prevent') // No 'data-transition-prevent' attribute
+		);
+	};
 
-	// Add event listeners to pre-processed valid links
-	validLinks.forEach((link: HTMLAnchorElement) => {
-		link.addEventListener('pointerdown', (event: MouseEvent) => {
-			event.preventDefault();
+	const stopImmediate = (event: Event) => {
+		event.stopImmediatePropagation();
+	};
 
-			// Intercept mouseleave event. Prevents the current page nav link from re-highlighting when transition starts.
-			validLinks.forEach((vl: HTMLAnchorElement) =>
-				vl.addEventListener('mouseleave', (e) => e.stopImmediatePropagation(), true),
-			);
-			link.classList.add('transitioning');
+	// Guard: only allow one cover animation / navigation at a time.
+	let isCovering = false;
+	const onPointerDown = (event: PointerEvent) => {
+		if (event.defaultPrevented) return;
 
-			const destination: string = link.href;
+		const mouseEvent = event as unknown as MouseEvent;
+		if (typeof mouseEvent.button === 'number' && mouseEvent.button !== 0) return;
+		if (mouseEvent.metaKey || mouseEvent.ctrlKey || mouseEvent.shiftKey || mouseEvent.altKey) return;
+		if (isCovering) return;
 
-			/**
-			 * Cover the current page before navigation.
-			 * The destination load happens only once the overlay fully covers the viewport.
-			 */
-			gsap.set('#transition', { display: 'grid' });
-			gsap.fromTo(
-				'.transition-block',
-				{ autoAlpha: 0 },
-				{
-					autoAlpha: 1,
-					duration: TRANSITION_TIMING.navCoverBlockDuration,
-					ease: 'linear',
-					stagger: { amount: TRANSITION_TIMING.navCoverStaggerAmount, from: TRANSITION_STAGGER_FROM },
-					onComplete: () => {
-						window.location.href = destination;
-					},
+		const target = event.target as Element | null;
+		const link = target?.closest('a[href]') as HTMLAnchorElement | null;
+		if (!link) return;
+		if (!isValidTransitionLink(link)) return;
+
+		event.preventDefault();
+		isCovering = true;
+
+		// Intercept mouseleave event. Prevents nav links from re-highlighting when transition starts.
+		Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]'))
+			.filter(isValidTransitionLink)
+			.forEach((validLink) => validLink.addEventListener('mouseleave', stopImmediate, true));
+
+		link.classList.add('transitioning');
+		const destination: string = link.href;
+
+		/**
+		 * Cover the current page before navigation.
+		 * The destination load happens only once the overlay fully covers the viewport.
+		 */
+		// Rebuild right before covering so the grid matches the current viewport.
+		adjustGrid();
+		gsap.set('#transition', { display: 'grid' });
+		gsap.fromTo(
+			'.transition-block',
+			{ autoAlpha: 0 },
+			{
+				autoAlpha: 1,
+				duration: TRANSITION_TIMING.navCoverBlockDuration,
+				ease: 'linear',
+				stagger: { amount: TRANSITION_TIMING.navCoverStaggerAmount, from: TRANSITION_STAGGER_FROM },
+				onComplete: () => {
+					window.location.href = destination;
 				},
-			);
-		});
-	});
+			},
+		);
+	};
+
+	document.addEventListener('pointerdown', onPointerDown, true);
 
 	/**
 	 * If the page is restored from bfcache (back/forward cache), our one-shot transition state
 	 * and listeners can be stale. For consistency, we hard-reload on persisted pageshow.
 	 */
-	window.addEventListener('pageshow', (event: PageTransitionEvent) => {
+	const onPageShow = (event: PageTransitionEvent) => {
 		if (event.persisted) {
 			window.location.reload();
 		}
-	});
+	};
+	window.addEventListener('pageshow', onPageShow);
 
-	/**
-	 * Rebuild the transition grid on resize so it always covers the viewport.
-	 */
-	window.addEventListener('resize', adjustGrid);
+	const cleanup = () => {
+		document.removeEventListener('pointerdown', onPointerDown, true);
+		window.removeEventListener('pageshow', onPageShow);
+		window[CLEANUP_KEY] = undefined;
+	};
+	window[CLEANUP_KEY] = cleanup;
+	// Detach global listeners before Astro swaps the page DOM.
+	document.addEventListener('astro:before-swap', cleanup, { once: true });
 }

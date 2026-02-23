@@ -18,7 +18,18 @@ import {
 	type BlockTimings,
 } from './homeBlockGrid';
 
+const CLEANUP_KEY = '__homeResizeCleanup__' as const;
+
+declare global {
+	interface Window {
+		__homeResizeCleanup__?: () => void;
+	}
+}
+
 export function initHome() {
+	// Home attaches a global `resize` listener; `DOMContentLoaded` + `astro:page-load` would otherwise double-bind.
+	if (window[CLEANUP_KEY]) return;
+
 	const homeSectionEl = document.querySelector<HTMLElement>('#home');
 	if (!homeSectionEl) throw new Error('#home element not found');
 	const homeSection = homeSectionEl;
@@ -198,7 +209,7 @@ export function initHome() {
 
 	const resizeDebounceMs = 150;
 	let resizeTimeoutId: number | null = null;
-	window.addEventListener('resize', () => {
+	const onResize = () => {
 		/**
 		 * Resize handling:
 		 * - Rebuilds the grid for the new size.
@@ -211,5 +222,15 @@ export function initHome() {
 			rebuildGrid();
 			blockTrail.refreshIgnoreRects();
 		}, resizeDebounceMs);
-	});
+	};
+	window.addEventListener('resize', onResize);
+
+	const cleanup = () => {
+		if (resizeTimeoutId) window.clearTimeout(resizeTimeoutId);
+		window.removeEventListener('resize', onResize);
+		window[CLEANUP_KEY] = undefined;
+	};
+	window[CLEANUP_KEY] = cleanup;
+	// Ensure this page instance detaches its listeners before Astro swaps DOM.
+	document.addEventListener('astro:before-swap', cleanup, { once: true });
 }

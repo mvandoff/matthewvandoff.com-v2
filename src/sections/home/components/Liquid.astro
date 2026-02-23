@@ -91,6 +91,8 @@
 	import FOG from 'vanta/dist/vanta.fog.min';
 	import { getLiquidOpacity, initIntroLiquidMirror } from 'sections/home/components/scripts/initIntroLiquidMirror';
 
+	// `Liquid.astro` listens to `astro:page-load`; keep only one instance of global listeners/observers active.
+	const CLEANUP_KEY = '__mbLiquidCleanup__';
 	const fallbackFogColors = {
 		highlightColor: 0xb3b3b3,
 		midtoneColor: 0x8c7373,
@@ -100,6 +102,12 @@
 	const MAIN_HUE_EVENT = 'mb-main-hue-change';
 	const LIQUID_READY_ATTR = 'data-liquid-ready';
 	let colorProbe: HTMLElement | null = null;
+
+	declare global {
+		interface Window {
+			__mbLiquidCleanup__?: () => void;
+		}
+	}
 
 	const getColorProbe = () => {
 		if (colorProbe?.isConnected) return colorProbe;
@@ -155,6 +163,9 @@
 		const alphaMaskEl = document.querySelector<SVGMaskElement>('#mb-liquid-alpha-mask');
 		if (!fogEl || !alphaMaskEl) return;
 		if (fogEl.hasAttribute(LIQUID_READY_ATTR)) return;
+
+		// Clear any previous page instance before wiring a new one.
+		window[CLEANUP_KEY]?.();
 
 		const scope = fogEl.closest<HTMLElement>('.screen-hero') ?? document.body;
 		// The intro tile uses a local mirrored liquid stage so it can tilt independently.
@@ -248,6 +259,19 @@
 		resizeObserver = new ResizeObserver(scheduleClipUpdate);
 		resizeObserver.observe(fogEl);
 		window.addEventListener('resize', scheduleClipUpdate);
+
+		const cleanup = () => {
+			window.removeEventListener(MAIN_HUE_EVENT, scheduleColorUpdate);
+			window.removeEventListener('resize', scheduleClipUpdate);
+			resizeObserver?.disconnect();
+			resizeObserver = null;
+			if (colorProbe?.isConnected) colorProbe.remove();
+			colorProbe = null;
+			window[CLEANUP_KEY] = undefined;
+		};
+		window[CLEANUP_KEY] = cleanup;
+		// Detach listeners/observers before Astro swaps the page DOM.
+		document.addEventListener('astro:before-swap', cleanup, { once: true });
 	};
 
 	const initOnLoad = () => initLiquid();
