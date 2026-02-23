@@ -138,6 +138,7 @@ export function initHomeMobileNav() {
 			return;
 		}
 
+		const isInitialScreen = currentScreenIndex === null;
 		const nextScreenIndex = labeledScreens.indexOf(activeScreen);
 		const direction: Direction = currentScreenIndex === null || nextScreenIndex >= currentScreenIndex ? 1 : -1;
 		currentScreenIndex = nextScreenIndex;
@@ -145,12 +146,12 @@ export function initHomeMobileNav() {
 		const labelIndex = LABEL_INDEX[label];
 		if (labelIndex !== undefined) {
 			messageSwap.setActive(labelIndex, {
-				immediate: prefersReducedMotion,
+				immediate: prefersReducedMotion || isInitialScreen,
 				direction,
 			});
 		}
 		if (label === 'experience') {
-			setExperienceMessage(activeScreen, direction, prefersReducedMotion);
+			setExperienceMessage(activeScreen, direction, prefersReducedMotion || isInitialScreen);
 		}
 	});
 }

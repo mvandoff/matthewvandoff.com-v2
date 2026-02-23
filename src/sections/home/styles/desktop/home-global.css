@@ -7,20 +7,20 @@ main {
 	background-color: var(--neutral-950);
 	background-image:
 		radial-gradient(
-			var(--home-bg-radial-1-size-x, 120%) var(--home-bg-radial-1-size-y, 120%) at
-				var(--home-bg-radial-1-x, 12%) var(--home-bg-radial-1-y, 0%),
+			var(--home-bg-radial-1-size-x, 120%) var(--home-bg-radial-1-size-y, 120%) at var(--home-bg-radial-1-x, 12%)
+				var(--home-bg-radial-1-y, 0%),
 			hsl(from var(--neutral-400) h s l / var(--home-bg-radial-1-alpha, 0.04)),
 			transparent 60%
 		),
 		radial-gradient(
-			var(--home-bg-radial-2-size-x, 130%) var(--home-bg-radial-2-size-y, 130%) at
-				var(--home-bg-radial-2-x, 85%) var(--home-bg-radial-2-y, 10%),
+			var(--home-bg-radial-2-size-x, 130%) var(--home-bg-radial-2-size-y, 130%) at var(--home-bg-radial-2-x, 85%)
+				var(--home-bg-radial-2-y, 10%),
 			rgba(99, 102, 241, var(--home-bg-radial-2-alpha, 0.08)),
 			transparent 55%
 		),
 		radial-gradient(
-			var(--home-bg-radial-3-size-x, 130%) var(--home-bg-radial-3-size-y, 130%) at
-				var(--home-bg-radial-3-x, 85%) var(--home-bg-radial-3-y, 10%),
+			var(--home-bg-radial-3-size-x, 130%) var(--home-bg-radial-3-size-y, 130%) at var(--home-bg-radial-3-x, 85%)
+				var(--home-bg-radial-3-y, 10%),
 			hsl(from var(--main-950) h s l / var(--home-bg-radial-3-alpha, 0.1)),
 			transparent 55%
 		);
