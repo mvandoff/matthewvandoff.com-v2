@@ -11,10 +11,6 @@
 	display: grid;
 	grid-template-columns: repeat(var(--right-col-span), var(--block-size));
 	grid-auto-rows: var(--block-size);
-	padding-bottom: 8rem;
-	padding-right: var(--block-size);
-	/* background: rgb(111, 32, 3); */
-	/* border: 5px solid red; */
 
 	h3 {
 		color: var(--neutral-200);
@@ -23,7 +19,6 @@
 		font-size: 22px;
 	}
 	.home-h3-container {
-		/* background: green; */
 		grid-column: 1 / -1;
 		grid-row: var(--right-row-home) / span 1;
 		height: var(--block-size);
