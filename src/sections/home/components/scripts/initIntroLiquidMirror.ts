@@ -11,25 +11,6 @@ export const getLiquidOpacity = (rawValue: string | undefined | null, fallback =
 };
 
 const getRectInScope = (target: HTMLElement, scope: HTMLElement) => {
-	let left = 0;
-	let top = 0;
-	let node: HTMLElement | null = target;
-
-	while (node && node !== scope) {
-		left += node.offsetLeft;
-		top += node.offsetTop;
-		node = node.offsetParent as HTMLElement | null;
-	}
-
-	if (node === scope) {
-		return {
-			left,
-			top,
-			width: target.offsetWidth,
-			height: target.offsetHeight,
-		};
-	}
-
 	const targetRect = target.getBoundingClientRect();
 	const scopeRect = scope.getBoundingClientRect();
 	return {
@@ -91,14 +72,12 @@ export const initIntroLiquidMirror = ({
 	// Read the same declarative opacity contract used by the SVG mask path.
 	const introOpacity = getLiquidOpacity(intro.dataset.liquidOpacity);
 
-	// Pause work when the page is hidden or when the parent screen is fully off viewport.
-	// This keeps the mirror cheap while preserving instant resume when the hero is visible.
+	// The home mobile layout uses scroll snapping, so the hero can be fully offscreen while the
+	// page is still active. Pause the mirror loop in that case to avoid unnecessary draws.
 	const observedScreen = intro.closest<HTMLElement>('.screen') ?? scope;
-	let isPageVisible = !document.hidden;
-	let isScreenVisible = true;
 	let frameHandle: number | null = null;
-
-	const shouldAnimate = () => isPageVisible && isScreenVisible;
+	let isDisposed = false;
+	let isScreenVisible = true;
 
 	const cancelFrame = () => {
 		if (frameHandle === null) return;
@@ -106,21 +85,14 @@ export const initIntroLiquidMirror = ({
 		frameHandle = null;
 	};
 
-	const onVisibilityChange = () => {
-		isPageVisible = !document.hidden;
-		if (shouldAnimate()) scheduleDraw();
-		else cancelFrame();
-	};
-	document.addEventListener('visibilitychange', onVisibilityChange);
-
 	let intersectionObserver: IntersectionObserver | null = null;
 	if ('IntersectionObserver' in window) {
 		intersectionObserver = new IntersectionObserver(
 			(entries) => {
 				const [entry] = entries;
-				if (!entry) return;
+				if (!entry || isDisposed) return;
 				isScreenVisible = entry.isIntersecting;
-				if (shouldAnimate()) scheduleDraw();
+				if (isScreenVisible) scheduleDraw();
 				else cancelFrame();
 			},
 			{ threshold: 0 },
@@ -128,20 +100,24 @@ export const initIntroLiquidMirror = ({
 		intersectionObserver.observe(observedScreen);
 	}
 
-	const teardown = () => {
+	const cleanup = () => {
+		if (isDisposed) return;
+		isDisposed = true;
 		cancelFrame();
 		intersectionObserver?.disconnect();
-		document.removeEventListener('visibilitychange', onVisibilityChange);
+		stage.remove();
+		intro.removeAttribute(readyAttr);
 	};
 
 	// Mirror the shared Vanta canvas into a local intro canvas each frame.
 	// This keeps one WebGL effect while allowing intro-only transforms.
 	const draw = () => {
 		frameHandle = null;
-		if (!shouldAnimate()) return;
+		if (isDisposed) return;
+		if (!isScreenVisible) return;
 
 		if (!sourceStage.isConnected || !intro.isConnected || !stage.isConnected) {
-			teardown();
+			cleanup();
 			return;
 		}
 
@@ -187,10 +163,12 @@ export const initIntroLiquidMirror = ({
 	};
 
 	function scheduleDraw() {
+		if (isDisposed) return;
+		if (!isScreenVisible) return;
 		if (frameHandle !== null) return;
-		if (!shouldAnimate()) return;
 		frameHandle = requestAnimationFrame(draw);
 	}
 
 	scheduleDraw();
+	return cleanup;
 };

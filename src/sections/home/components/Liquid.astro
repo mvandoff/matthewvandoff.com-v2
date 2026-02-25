@@ -30,6 +30,10 @@
 	#mb-liquid-stage {
 		display: none;
 	}
+	/* Guard against a leftover injected intro canvas if a resize crosses breakpoints mid-animation. */
+	.screen-hero .intro-container .mb-liquid-local-stage {
+		display: none;
+	}
 	@media screen and (max-width: 1280px) {
 		#mb-liquid-mask,
 		#mb-liquid-stage {
@@ -63,6 +67,7 @@
 			height: 100% !important;
 		}
 		.screen-hero .intro-container .mb-liquid-local-stage {
+			display: block;
 			position: absolute;
 			inset: 0;
 			border-radius: inherit;
@@ -87,194 +92,9 @@
 </style>
 
 <script>
-	import * as THREE from 'three';
-	import FOG from 'vanta/dist/vanta.fog.min';
-	import { getLiquidOpacity, initIntroLiquidMirror } from 'sections/home/components/scripts/initIntroLiquidMirror';
+	import { initHomeLiquid } from 'sections/home/components/scripts/initHomeLiquid';
 
-	// `Liquid.astro` listens to `astro:page-load`; keep only one instance of global listeners/observers active.
-	const CLEANUP_KEY = '__mbLiquidCleanup__';
-	const fallbackFogColors = {
-		highlightColor: 0xb3b3b3,
-		midtoneColor: 0x8c7373,
-		lowlightColor: 0x462582,
-		baseColor: 0x313131,
-	};
-	const MAIN_HUE_EVENT = 'mb-main-hue-change';
-	const LIQUID_READY_ATTR = 'data-liquid-ready';
-	let colorProbe: HTMLElement | null = null;
-
-	declare global {
-		interface Window {
-			__mbLiquidCleanup__?: () => void;
-		}
-	}
-
-	const getColorProbe = () => {
-		if (colorProbe?.isConnected) return colorProbe;
-		const probe = document.createElement('span');
-		probe.style.cssText =
-			'position:absolute;left:-9999px;top:-9999px;visibility:hidden;pointer-events:none;width:0;height:0;';
-		probe.setAttribute('aria-hidden', 'true');
-		(document.body ?? document.documentElement).appendChild(probe);
-		colorProbe = probe;
-		return probe;
-	};
-
-	// Resolve CSS vars to computed color strings so Vanta can consume theme colors directly.
-	const resolveCssColorVar = (varName: string, fallback: number) => {
-		const raw = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-		if (!raw) return fallback;
-		const probe = getColorProbe();
-		probe.style.color = `var(${varName})`;
-		const resolved = getComputedStyle(probe).color.trim();
-		return resolved || raw;
-	};
-
-	const getFogColors = () => {
-		const highlight = resolveCssColorVar('--main-100', fallbackFogColors.highlightColor);
-		const midtone = resolveCssColorVar('--main-400', fallbackFogColors.midtoneColor);
-		const lowlight = resolveCssColorVar('--main-600', fallbackFogColors.lowlightColor);
-		const base = resolveCssColorVar('--main-950', fallbackFogColors.baseColor);
-
-		return {
-			highlightColor: highlight,
-			midtoneColor: midtone,
-			lowlightColor: lowlight,
-			baseColor: base,
-		};
-	};
-
-	const getRadiusPx = (el: HTMLElement) => {
-		const styles = getComputedStyle(el);
-		const radii = [
-			styles.borderTopLeftRadius,
-			styles.borderTopRightRadius,
-			styles.borderBottomRightRadius,
-			styles.borderBottomLeftRadius,
-		].map((value) => Number.parseFloat(value) || 0);
-		return Math.max(0, Math.min(...radii));
-	};
-
-	const initLiquid = () => {
-		if (!window.matchMedia('(max-width: 1280px)').matches) return;
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-		const fogEl = document.querySelector<HTMLElement>('#mb-liquid-stage');
-		const alphaMaskEl = document.querySelector<SVGMaskElement>('#mb-liquid-alpha-mask');
-		if (!fogEl || !alphaMaskEl) return;
-		if (fogEl.hasAttribute(LIQUID_READY_ATTR)) return;
-
-		// Clear any previous page instance before wiring a new one.
-		window[CLEANUP_KEY]?.();
-
-		const scope = fogEl.closest<HTMLElement>('.screen-hero') ?? document.body;
-		// The intro tile uses a local mirrored liquid stage so it can tilt independently.
-		const getTargets = () => Array.from(scope.querySelectorAll<HTMLElement>('.liquid:not(.intro-container)'));
-		if (getTargets().length === 0) return;
-		fogEl.setAttribute(LIQUID_READY_ATTR, 'true');
-
-		const fogColors = getFogColors();
-		const effect = FOG({
-			el: fogEl,
-			THREE,
-			mouseControls: false,
-			touchControls: false,
-			gyroControls: false,
-			minHeight: 0,
-			minWidth: 0,
-			highlightColor: fogColors.highlightColor,
-			midtoneColor: fogColors.midtoneColor,
-			lowlightColor: fogColors.lowlightColor,
-			baseColor: fogColors.baseColor,
-			blurFactor: 0.26,
-			zoom: 0.08,
-			speed: 0.5,
-		});
-
-		let updateQueued = false;
-		// Throttle theme updates to one frame to avoid repeated Vanta option writes.
-		const scheduleColorUpdate = () => {
-			if (updateQueued) return;
-			updateQueued = true;
-			requestAnimationFrame(() => {
-				updateQueued = false;
-				if (typeof effect?.setOptions !== 'function') return;
-				effect.setOptions(getFogColors());
-			});
-		};
-
-		window.addEventListener(MAIN_HUE_EVENT, scheduleColorUpdate);
-		initIntroLiquidMirror({ scope, sourceStage: fogEl });
-
-		let resizeObserver: ResizeObserver | null = null;
-		// Build mask rectangles that match each liquid target in stage-local coordinates.
-		const updateMask = () => {
-			const stageRect = fogEl.getBoundingClientRect();
-			if (!stageRect.width || !stageRect.height) return;
-			const rects: SVGRectElement[] = [];
-			alphaMaskEl.setAttribute('x', '0');
-			alphaMaskEl.setAttribute('y', '0');
-			alphaMaskEl.setAttribute('width', `${Math.round(stageRect.width)}`);
-			alphaMaskEl.setAttribute('height', `${Math.round(stageRect.height)}`);
-			const targets = getTargets();
-
-			targets.forEach((target) => {
-				const targetRect = target.getBoundingClientRect();
-				if (!targetRect.width || !targetRect.height) return;
-
-				const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-				rect.setAttribute('x', `${Math.round(targetRect.left - stageRect.left)}`);
-				rect.setAttribute('y', `${Math.round(targetRect.top - stageRect.top)}`);
-				rect.setAttribute('width', `${Math.round(targetRect.width)}`);
-				rect.setAttribute('height', `${Math.round(targetRect.height)}`);
-				rect.setAttribute('fill', '#fff');
-				// The mask alpha controls how strongly fog appears in this target.
-				rect.setAttribute('fill-opacity', `${getLiquidOpacity(target.dataset.liquidOpacity)}`);
-
-				const radius = getRadiusPx(target);
-				if (radius > 0) {
-					rect.setAttribute('rx', `${radius}`);
-					rect.setAttribute('ry', `${radius}`);
-				}
-
-				rects.push(rect);
-				if (resizeObserver) resizeObserver.observe(target);
-			});
-
-			alphaMaskEl.replaceChildren(...rects);
-		};
-
-		let clipQueued = false;
-		// Coalesce geometry updates from resize + observers into one RAF pass.
-		const scheduleClipUpdate = () => {
-			if (clipQueued) return;
-			clipQueued = true;
-			requestAnimationFrame(() => {
-				clipQueued = false;
-				updateMask();
-			});
-		};
-
-		updateMask();
-		resizeObserver = new ResizeObserver(scheduleClipUpdate);
-		resizeObserver.observe(fogEl);
-		window.addEventListener('resize', scheduleClipUpdate);
-
-		const cleanup = () => {
-			window.removeEventListener(MAIN_HUE_EVENT, scheduleColorUpdate);
-			window.removeEventListener('resize', scheduleClipUpdate);
-			resizeObserver?.disconnect();
-			resizeObserver = null;
-			if (colorProbe?.isConnected) colorProbe.remove();
-			colorProbe = null;
-			window[CLEANUP_KEY] = undefined;
-		};
-		window[CLEANUP_KEY] = cleanup;
-		// Detach listeners/observers before Astro swaps the page DOM.
-		document.addEventListener('astro:before-swap', cleanup, { once: true });
-	};
-
-	const initOnLoad = () => initLiquid();
+	const initOnLoad = () => initHomeLiquid();
 	document.addEventListener('DOMContentLoaded', initOnLoad, { once: true });
 	document.addEventListener('astro:page-load', initOnLoad);
 </script>
