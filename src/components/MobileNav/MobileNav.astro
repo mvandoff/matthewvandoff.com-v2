@@ -69,13 +69,12 @@ import MobileMenu from 'components/MobileNav/MobileMenu.astro';
 		.mobile-nav-counter__value {
 			display: inline-block;
 		}
-		#work-help-msg-mobile::before,
-		.mobile-nav-msg--spinner::before {
+		.mobile-nav-msg::before {
 			content: '';
 			display: inline-block;
 			width: 6px;
 			height: 6px;
-			background: white;
+			background: currentColor;
 			margin-top: 4px;
 			animation: spin 4s infinite linear;
 		}
