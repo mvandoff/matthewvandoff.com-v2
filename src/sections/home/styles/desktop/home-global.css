@@ -26,10 +26,6 @@ main {
 		);
 }
 #main-nav {
-	z-index: 10;
-	height: var(--block-size);
-	padding-top: 0;
-	padding-bottom: 0;
 	background: hsl(from var(--neutral-950) h s l / 0.31);
 }
 .blurb {
