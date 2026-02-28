@@ -1,4 +1,5 @@
 import { createTimelineWaveController, type WaveTimings } from './timelineWave';
+import { createTimelineProgressLineController } from './timelineProgressLine';
 import { initHomeScrollDistortion } from './homeScrollDistortion';
 import { initDebugGridToggle } from './debugGridToggle';
 import { initTimelineEnterDistortion } from './timelineEnterDistortion';
@@ -57,6 +58,8 @@ export function initHome() {
 	const homeScrollTurbulenceEl = document.querySelector<SVGFETurbulenceElement>('#home-scroll-turbulence');
 	const homeScrollDisplacementEl = document.querySelector<SVGFEDisplacementMapElement>('#home-scroll-displacement');
 	const timelineBlocks = Array.from(homeSectionEl.querySelectorAll<HTMLElement>('.tl-block'));
+	const timelineBlocksContainerEl = homeSectionEl.querySelector<HTMLElement>('.tl-blocks');
+	if (!timelineBlocksContainerEl) throw new Error('.tl-blocks element not found');
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
 
 	let blocks: HTMLDivElement[] = [];
@@ -81,6 +84,10 @@ export function initHome() {
 		getGridBoundsForElement,
 		getWaveTimings: () => waveTimings,
 	});
+	const timelineProgressLine = createTimelineProgressLineController({
+		timelineBlocks,
+		timelineContainerEl: timelineBlocksContainerEl,
+	});
 
 	const blockTrail = createBlockTrailController({
 		blockContainerEl: blockContainer,
@@ -100,6 +107,7 @@ export function initHome() {
 		 */
 		clearAllBlockTimers(blockStates);
 		timelineWave.clearAllTimers();
+		timelineProgressLine.reset();
 		timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
 		waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
 		blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
@@ -178,6 +186,7 @@ export function initHome() {
 
 	if (timelineBlocks.length > 0) {
 		timelineWave.bindHandlers(pointerEvents);
+		timelineProgressLine.bindHandlers(pointerEvents);
 	}
 
 	initTimelineEnterDistortion({
