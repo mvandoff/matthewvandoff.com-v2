@@ -27,10 +27,10 @@ const TRANSITION_STAGGER_FROM: 'random' = 'random';
 // `staggerAmount` controls the overall wave duration more than the per-block duration does.
 const TRANSITION_TIMING = {
 	pageLoadStartDelay: 0.1,
-	pageLoadBlockDuration: 0.1,
-	pageLoadStaggerAmount: 1,
-	navCoverBlockDuration: 0.001,
-	navCoverStaggerAmount: 0.75,
+	pageLoadBlockDuration: 0.15,
+	pageLoadStaggerAmount: 0.55,
+	navCoverBlockDuration: 0.15,
+	navCoverStaggerAmount: 0.55,
 } as const;
 
 // Centered logo sizing heuristic for the transition grid.
