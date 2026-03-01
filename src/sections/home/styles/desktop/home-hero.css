@@ -1,6 +1,11 @@
 .mb-tile {
 	display: none;
 }
+
+.mb-hero-tile-group {
+	display: none;
+}
+
 .left-grid {
 	width: calc(var(--left-col-span) * var(--block-size));
 	position: fixed;

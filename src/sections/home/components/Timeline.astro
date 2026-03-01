@@ -63,28 +63,28 @@ import TimelineBlock from 'sections/home/components/TimelineBlock.astro';
 		&::after {
 			content: '';
 			position: absolute;
-			right: -3px;
+			left: -5px;
 			width: var(--timeline-line-width);
 			pointer-events: none;
 		}
 
-			&::before {
-				top: 0;
-				bottom: 1px;
-				background: var(--timeline-line-idle);
-				/* Keep the connector line above timeline-card overlay effects. */
-				z-index: 140;
-			}
+		&::before {
+			top: 0;
+			bottom: 1px;
+			background: var(--timeline-line-idle);
+			/* Keep the connector line above timeline-card overlay effects. */
+			z-index: 140;
+		}
 
-			&::after {
-				bottom: 2px;
-				height: var(--timeline-line-lit);
-				background: var(--timeline-line-active);
-				box-shadow: 0 0 12px color-mix(in srgb, var(--timeline-line-active) 70%, transparent);
-				transition: height 320ms ease-in-out;
-				/* Active segment should remain on top of the idle segment and card overlays. */
-				z-index: 141;
-			}
+		&::after {
+			bottom: 2px;
+			height: var(--timeline-line-lit);
+			background: var(--timeline-line-active);
+			box-shadow: 0 0 12px color-mix(in srgb, var(--timeline-line-active) 70%, transparent);
+			transition: height 320ms ease-in-out;
+			/* Active segment should remain on top of the idle segment and card overlays. */
+			z-index: 141;
+		}
 	}
 	@media screen and (max-width: 1280px) {
 		.timeline {
