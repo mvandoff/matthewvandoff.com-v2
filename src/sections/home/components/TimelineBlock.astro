@@ -12,7 +12,18 @@ type Props = {
 const { start, end, title, company, description, link, icon } = Astro.props;
 ---
 
-<a class="tl-block" href={link} target={link ? '_blank' : undefined} rel={link ? 'noreferrer' : undefined}>
+<!-- Disable the global Home background trail over timeline cards. -->
+<a
+	class="tl-block"
+	href={link}
+	target={link ? '_blank' : undefined}
+	rel={link ? 'noreferrer' : undefined}
+	data-block-trail="ignore"
+>
+	<!-- Overlay grid used for enter/leave wave propagation. -->
+	<div class="tl-mini-wave-grid" aria-hidden="true"></div>
+	<!-- Overlay grid used for pointer-following trail while hovered. -->
+	<div class="tl-mini-trail-grid" aria-hidden="true"></div>
 	<div class="tl-left">
 		{start} – {end}
 	</div>
@@ -30,11 +41,26 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 
 <style>
 	.tl-block {
+		/* Timeline-local mini-grid sizing and animation tuning knobs. */
+		--tl-mini-block-size: calc(var(--block-size) / 2);
+		--tl-mini-wave-color: color-mix(in srgb, var(--main-900) 45%, transparent);
+		--tl-mini-wave-border-color: color-mix(in srgb, var(--main-600) 10%, transparent);
+		--tl-mini-wave-fade-in: 250ms;
+		--tl-mini-wave-fade-out: 420ms;
+		--tl-mini-trail-color: color-mix(in srgb, var(--main-800) 48%, transparent);
+		--tl-mini-trail-border-color: color-mix(in srgb, var(--main-800) 48%, transparent);
+		--tl-mini-trail-fade-in: 100ms;
+		--tl-mini-trail-fade-out: 800ms;
+		--tl-mini-trail-hold: 700ms;
+		--tl-mini-trail-radius: 18px;
+
 		height: calc(var(--block-size) * 3);
 		font-family: 'Inter', sans-serif;
 		display: flex;
 		gap: 3rem;
 		position: relative;
+		/* Isolate stacking so overlay z-index stays local to the card. */
+		isolation: isolate;
 		z-index: 130;
 		padding: 1.5rem 1.5rem 0rem 1rem;
 		transition: all 0.25s;
@@ -62,6 +88,69 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 			}
 		}
 	}
+
+	.tl-mini-wave-grid {
+		/* Base wave layer sits beneath the local trail and text content. */
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		display: grid;
+		justify-content: center;
+		align-content: center;
+		pointer-events: none;
+	}
+
+	.tl-mini-wave-grid :global(.tl-mini-wave-block) {
+		position: relative;
+	}
+
+	.tl-mini-wave-grid :global(.tl-mini-wave-block)::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		background-color: var(--tl-mini-wave-color);
+		box-sizing: border-box;
+		border: 1px solid var(--tl-mini-wave-border-color);
+		transition: opacity var(--tl-mini-wave-fade-out) ease-out;
+	}
+
+	.tl-mini-wave-grid :global(.tl-mini-wave-block.is-lit)::before {
+		opacity: 1;
+		transition-duration: var(--tl-mini-wave-fade-in);
+	}
+
+	.tl-mini-trail-grid {
+		/* Trail layer sits above the wave so pointer movement is obvious. */
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		display: grid;
+		justify-content: center;
+		align-content: center;
+		pointer-events: none;
+	}
+
+	.tl-mini-trail-grid :global(.tl-mini-trail-block) {
+		position: relative;
+	}
+
+	.tl-mini-trail-grid :global(.tl-mini-trail-block)::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		background-color: var(--tl-mini-trail-color);
+		box-sizing: border-box;
+		border: 1px solid var(--tl-mini-trail-border-color);
+		transition: opacity var(--tl-mini-trail-fade-out) ease-out;
+	}
+
+	.tl-mini-trail-grid :global(.tl-mini-trail-block.is-lit)::after {
+		opacity: 1;
+		transition-duration: var(--tl-mini-trail-fade-in);
+	}
+
 	.tl-left {
 		color: var(--neutral-400);
 		font-family: monospace;
@@ -71,11 +160,18 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 		padding-top: 4px;
 		transition: all 0.15s;
 		text-wrap: nowrap;
+		position: relative;
+		/* Keep content readable above both overlay layers. */
+		z-index: 3;
 	}
+
 	.tl-right {
 		display: flex;
 		flex-direction: column;
 		font-size: 18px;
+		position: relative;
+		/* Keep content readable above both overlay layers. */
+		z-index: 3;
 
 		.tl-company {
 			font-size: 18px;
@@ -87,9 +183,11 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 				margin-left: 0.25rem;
 			}
 		}
+
 		.tl-spacer {
 			margin: 0 6px;
 		}
+
 		.tl-description {
 			margin-top: 0.5rem;
 			font-size: 15px;

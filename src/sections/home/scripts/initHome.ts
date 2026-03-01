@@ -1,17 +1,16 @@
-import { createTimelineWaveController, type WaveTimings } from './timelineWave';
+import type { WaveTimings } from './timelineWave';
 import { createTimelineProgressLineController } from './timelineProgressLine';
 import { initHomeScrollDistortion } from './homeScrollDistortion';
 import { initDebugGridToggle } from './debugGridToggle';
 import { initTimelineEnterDistortion } from './timelineEnterDistortion';
 import { createBlockTrailController } from './homeBlockTrail';
+import { createTimelineBlockWaveController } from './timelineBlockWave';
 import {
 	clearAllBlockTimers,
 	createBlocks,
 	createDebugLabelOverlay,
-	getBlockCoordsFromClient,
 	getBlockSizePxFromCss,
 	getBlockTimingsFromCss,
-	getGridBoundsForElement,
 	getPointerEventNames,
 	getWaveTimingsFromCss,
 	type BlockState,
@@ -72,16 +71,9 @@ export function initHome() {
 	const defaultWaveTimings: WaveTimings = { fadeInMs: 250, fadeOutMs: 400, stepMs: 40 };
 	let waveTimings = defaultWaveTimings;
 
-	// Timeline hover effect:
-	// When hovering a `.tl-block`, we light up the background grid blocks underneath it,
-	// propagating outward from the pointer location as a “wave”.
-	const timelineWave = createTimelineWaveController({
-		blockContainerEl: blockContainer,
+	// Local timeline-card overlays (mini wave + mini trail). Replaces the old background timeline wave.
+	const timelineBlockWave = createTimelineBlockWaveController({
 		timelineBlocks,
-		getBlocks: () => blocks,
-		getGridMetrics: () => ({ blockSizePx, columns, rows }),
-		getBlockCoordsFromClient,
-		getGridBoundsForElement,
 		getWaveTimings: () => waveTimings,
 	});
 	const timelineProgressLine = createTimelineProgressLineController({
@@ -106,7 +98,7 @@ export function initHome() {
 		 * - Replace all block elements (mouse trail + wave propagation targets).
 		 */
 		clearAllBlockTimers(blockStates);
-		timelineWave.clearAllTimers();
+		timelineBlockWave.clearAllTimers();
 		timelineProgressLine.reset();
 		timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
 		waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
@@ -164,6 +156,9 @@ export function initHome() {
 		blocks = createBlocks(totalBlocks);
 		const debugLabels = createDebugLabelOverlay({ columns, rows, blockSizePx, widthPx, heightPx });
 		blockContainer.replaceChildren(...blocks, debugLabels);
+
+		// Rebuild timeline mini-grids whenever layout/block sizing changes.
+		timelineBlockWave.rebuildAll();
 	}
 
 	/**
@@ -185,7 +180,8 @@ export function initHome() {
 	});
 
 	if (timelineBlocks.length > 0) {
-		timelineWave.bindHandlers(pointerEvents);
+		// Pointer handlers for timeline-card-local wave/trail and line progress behavior.
+		timelineBlockWave.bindHandlers(pointerEvents);
 		timelineProgressLine.bindHandlers(pointerEvents);
 	}
 

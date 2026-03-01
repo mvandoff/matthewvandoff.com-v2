@@ -27,7 +27,7 @@ export function createTimelineProgressLineController(params: {
 		const target = event.currentTarget as HTMLElement | null;
 		if (!target) return;
 		const litHeight = Math.max(0, timelineContainerEl.clientHeight - target.offsetTop);
-		timelineContainerEl.style.setProperty(LINE_LIT_VAR, `${litHeight - 1}px`);
+		timelineContainerEl.style.setProperty(LINE_LIT_VAR, `${litHeight - 3}px`);
 	}
 
 	function handleLeave() {
