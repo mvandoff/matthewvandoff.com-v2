@@ -32,6 +32,7 @@ import Projects from 'sections/work/Projects.astro';
 	}
 
 	#project-overlay {
+		position: relative;
 		/* background:
 			radial-gradient(1200px 600px at 100% 100%, rgba(255, 143, 201, 0.12), transparent 60%),
 			linear-gradient(180deg, rgba(16, 10, 19, 0.96), rgba(6, 6, 8, 0.98)); */
@@ -48,9 +49,16 @@ import Projects from 'sections/work/Projects.astro';
 		height: 8em;
 		display: flex;
 		position: relative;
+		z-index: 3;
+
+		.proj-title {
+			position: relative;
+			z-index: 3;
+		}
 	}
 	.overlay-img-wrap {
 		position: relative;
+		z-index: 1;
 		display: flex;
 		justify-content: center;
 		img {
