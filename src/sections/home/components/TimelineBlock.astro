@@ -53,6 +53,10 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 		--tl-mini-trail-fade-out: 800ms;
 		--tl-mini-trail-hold: 700ms;
 		--tl-mini-trail-radius: 18px;
+		--tl-mini-static-opacity: 0;
+		--tl-mini-static-border-strength: 0%;
+		--tl-chrono-dim-strength: 0%;
+		--tl-chrono-dim-color: color-mix(in srgb, var(--main-700) var(--tl-chrono-dim-strength), transparent);
 
 		height: calc(var(--block-size) * 3);
 		font-family: 'Inter', sans-serif;
@@ -64,6 +68,7 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 		z-index: 130;
 		padding: 1.5rem 1.5rem 0rem 1rem;
 		transition: all 0.25s;
+		background-color: var(--tl-chrono-dim-color);
 
 		.tl-left,
 		b,
@@ -102,13 +107,15 @@ const { start, end, title, company, description, link, icon } = Astro.props;
 
 	.tl-mini-wave-grid :global(.tl-mini-wave-block) {
 		position: relative;
+		box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--main-600) var(--tl-mini-static-border-strength), transparent);
+		transition: box-shadow var(--tl-mini-wave-fade-out) ease-out;
 	}
 
 	.tl-mini-wave-grid :global(.tl-mini-wave-block)::before {
 		content: '';
 		position: absolute;
 		inset: 0;
-		opacity: 0;
+		opacity: var(--tl-mini-static-opacity);
 		background-color: var(--tl-mini-wave-color);
 		box-sizing: border-box;
 		border: 1px solid var(--tl-mini-wave-border-color);
