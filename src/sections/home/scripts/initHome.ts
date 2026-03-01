@@ -18,6 +18,7 @@ import {
 } from './homeBlockGrid';
 
 const CLEANUP_KEY = '__homeResizeCleanup__' as const;
+const SAFARI_UA_PATTERN = /^((?!chrome|chromium|crios|fxios|edg|opr|android).)*safari/i;
 
 declare global {
 	interface Window {
@@ -60,6 +61,7 @@ export function initHome() {
 	const timelineBlocksContainerEl = homeSectionEl.querySelector<HTMLElement>('.tl-blocks');
 	if (!timelineBlocksContainerEl) throw new Error('.tl-blocks element not found');
 	const pointerEvents = getPointerEventNames('PointerEvent' in window);
+	const isSafari = SAFARI_UA_PATTERN.test(window.navigator.userAgent);
 
 	let blocks: HTMLDivElement[] = [];
 	let columns = 0;
@@ -79,6 +81,8 @@ export function initHome() {
 	const timelineProgressLine = createTimelineProgressLineController({
 		timelineBlocks,
 		timelineContainerEl: timelineBlocksContainerEl,
+		trackingEl: document,
+		isSafari,
 	});
 
 	const blockTrail = createBlockTrailController({
@@ -185,12 +189,17 @@ export function initHome() {
 		timelineProgressLine.bindHandlers(pointerEvents);
 	}
 
-	initTimelineEnterDistortion({
-		timelineBlocks,
-		enterEventName: pointerEvents.enter,
-		getBlockSizePx: () => blockSizePx,
-		durationMs: 1000,
-	});
+	// Safari keeps hover hit-testing "stuck" while timeline filter distortion is active,
+	// which delays tl-block leave/out events and breaks line-progress unhover behavior.
+	// Keep the effect on other desktop browsers, skip on Safari for consistent interaction.
+	if (!isSafari) {
+		initTimelineEnterDistortion({
+			timelineBlocks,
+			enterEventName: pointerEvents.enter,
+			getBlockSizePx: () => blockSizePx,
+			durationMs: 1000,
+		});
+	}
 
 	// The blocks overlay the page, but use `pointer-events: none` so all interactions
 	// hit the real content. That means we can't use `mouseenter` on blocks; we light

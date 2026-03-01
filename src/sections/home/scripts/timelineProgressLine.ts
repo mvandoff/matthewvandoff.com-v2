@@ -22,8 +22,10 @@ const CHRONO_MINI_BORDER_MIN = 6;
 export function createTimelineProgressLineController(params: {
 	timelineBlocks: HTMLElement[];
 	timelineContainerEl: HTMLElement;
+	trackingEl: Document | HTMLElement;
+	isSafari?: boolean;
 }) {
-	const { timelineBlocks, timelineContainerEl } = params;
+	const { timelineBlocks, timelineContainerEl, trackingEl, isSafari = false } = params;
 	const timelineLineGrid = timelineContainerEl.querySelector<HTMLElement>(LINE_GRID_SELECTOR);
 	if (!timelineLineGrid) throw new Error('.timeline-line-grid element not found');
 	const timelineLineGridEl = timelineLineGrid;
@@ -33,18 +35,29 @@ export function createTimelineProgressLineController(params: {
 	let miniBlocks: HTMLDivElement[] = [];
 	let activeCount = 0;
 	let targetCount = 0;
-	let stepTimeoutId: number | null = null;
+	let stepRafId: number | null = null;
+	let lastStepTs = 0;
+	let hoverPollRafId: number | null = null;
+	let activeTimelineBlock: HTMLElement | null = null;
 
 	rebuild();
 
 	function bindHandlers(events: PointerEventNames) {
 		for (const timelineBlock of timelineBlocks) {
 			timelineBlock.addEventListener(events.enter, handleEnter);
+			if (events.enter !== 'mouseenter') timelineBlock.addEventListener('mouseenter', handleEnter);
+		}
+		trackingEl.addEventListener(events.move, handleTrackingMoveEvent, { passive: true, capture: true });
+		if (events.move !== 'mousemove') {
+			trackingEl.addEventListener('mousemove', handleTrackingMoveEvent, { passive: true, capture: true });
 		}
 		timelineContainerEl.addEventListener(events.leave, handleLeave);
+		if (events.leave !== 'mouseleave') timelineContainerEl.addEventListener('mouseleave', handleLeave);
 	}
 
 	function reset() {
+		stopHoverMonitor();
+		activeTimelineBlock = null;
 		setTargetCount(0, true);
 		clearChronoDim();
 	}
@@ -56,26 +69,58 @@ export function createTimelineProgressLineController(params: {
 		miniBlocks = Array.from({ length: miniBlockCount }, () => {
 			const block = document.createElement('div');
 			block.classList.add(LINE_MINI_BLOCK_CLASS);
+			if (isSafari) {
+				block.style.transition = 'none';
+				block.style.opacity = '0';
+			}
 			return block;
 		});
 		timelineLineGridEl.replaceChildren(...miniBlocks);
 
+		stopHoverMonitor();
+		activeTimelineBlock = null;
 		setTargetCount(0, true);
 	}
 
 	function handleEnter(event: PointerEvent | MouseEvent) {
 		const target = event.currentTarget as HTMLElement | null;
 		if (!target) return;
-		const activeIndex = timelineBlockIndexMap.get(target);
-		if (activeIndex === undefined) return;
-		const nextTargetCount = (timelineBlocks.length - activeIndex) * MINI_BLOCKS_PER_TIMELINE_BLOCK;
-		setTargetCount(nextTargetCount);
-		applyChronoDim(target);
+		activateTimelineBlock(target);
+	}
+
+	function handleTrackingMove(event: PointerEvent | MouseEvent) {
+		const pointTimelineBlock = getTimelineBlockFromPoint(event.clientX, event.clientY);
+		if (!pointTimelineBlock) {
+			activateTimelineBlock(null);
+			return;
+		}
+		activateTimelineBlock(pointTimelineBlock);
+	}
+
+	function handleTrackingMoveEvent(event: Event) {
+		if (!(event instanceof MouseEvent || event instanceof PointerEvent)) return;
+		handleTrackingMove(event);
 	}
 
 	function handleLeave() {
-		setTargetCount(0);
-		clearChronoDim();
+		activateTimelineBlock(null);
+	}
+
+	function activateTimelineBlock(nextTimelineBlock: HTMLElement | null) {
+		if (activeTimelineBlock === nextTimelineBlock) return;
+		activeTimelineBlock = nextTimelineBlock;
+		if (!nextTimelineBlock) {
+			stopHoverMonitor();
+			setTargetCount(0);
+			clearChronoDim();
+			return;
+		}
+		startHoverMonitor();
+		const activeIndex = timelineBlockIndexMap.get(nextTimelineBlock);
+		if (activeIndex === undefined) return;
+		const nextTargetCount = (timelineBlocks.length - activeIndex) * MINI_BLOCKS_PER_TIMELINE_BLOCK;
+		setTargetCount(nextTargetCount);
+		applyChronoDim(nextTimelineBlock);
 	}
 
 	return { bindHandlers, rebuild, reset };
@@ -92,30 +137,40 @@ export function createTimelineProgressLineController(params: {
 	}
 
 	function runSteppedAnimation() {
-		if (stepTimeoutId) return;
-		stepLine();
+		if (stepRafId !== null) return;
+		lastStepTs = 0;
+		stepRafId = window.requestAnimationFrame(stepLine);
 	}
 
-	function stepLine() {
+	function stepLine(timestamp: number) {
+		stepRafId = null;
 		if (activeCount === targetCount) {
-			stepTimeoutId = null;
 			return;
 		}
 
-		activeCount += activeCount < targetCount ? 1 : -1;
-		renderBlocks();
-		stepTimeoutId = window.setTimeout(stepLine, lineStepMs);
+		if (lastStepTs === 0 || timestamp - lastStepTs >= lineStepMs) {
+			activeCount += activeCount < targetCount ? 1 : -1;
+			lastStepTs = timestamp;
+			renderBlocks();
+		}
+		stepRafId = window.requestAnimationFrame(stepLine);
 	}
 
 	function clearStepTimer() {
-		if (!stepTimeoutId) return;
-		window.clearTimeout(stepTimeoutId);
-		stepTimeoutId = null;
+		if (stepRafId === null) return;
+		window.cancelAnimationFrame(stepRafId);
+		stepRafId = null;
+		lastStepTs = 0;
 	}
 
 	function renderBlocks() {
 		for (let index = 0; index < miniBlocks.length; index += 1) {
-			miniBlocks[index].classList.toggle('is-lit', index < activeCount);
+			const block = miniBlocks[index];
+			if (isSafari) {
+				block.style.opacity = index < activeCount ? '1' : '0';
+				continue;
+			}
+			block.classList.toggle('is-lit', index < activeCount);
 		}
 	}
 
@@ -150,6 +205,46 @@ export function createTimelineProgressLineController(params: {
 			block.style.setProperty(CHRONO_MINI_GRID_VAR, '0');
 			block.style.setProperty(CHRONO_MINI_BORDER_VAR, '0%');
 		}
+	}
+
+	function getTimelineBlockFromPoint(clientX: number, clientY: number) {
+		for (const timelineBlock of timelineBlocks) {
+			const rect = timelineBlock.getBoundingClientRect();
+			if (clientX < rect.left || clientX > rect.right) continue;
+			if (clientY < rect.top || clientY > rect.bottom) continue;
+			return timelineBlock;
+		}
+		return null;
+	}
+
+	function startHoverMonitor() {
+		if (hoverPollRafId !== null) return;
+		hoverPollRafId = window.requestAnimationFrame(pollHoveredTimelineBlock);
+	}
+
+	function stopHoverMonitor() {
+		if (hoverPollRafId === null) return;
+		window.cancelAnimationFrame(hoverPollRafId);
+		hoverPollRafId = null;
+	}
+
+	function pollHoveredTimelineBlock() {
+		hoverPollRafId = null;
+		if (!activeTimelineBlock) return;
+		const hoveredTimelineBlock = getHoveredTimelineBlock();
+		if (hoveredTimelineBlock !== activeTimelineBlock) {
+			activateTimelineBlock(hoveredTimelineBlock);
+		}
+		if (activeTimelineBlock) {
+			hoverPollRafId = window.requestAnimationFrame(pollHoveredTimelineBlock);
+		}
+	}
+
+	function getHoveredTimelineBlock() {
+		for (const timelineBlock of timelineBlocks) {
+			if (timelineBlock.matches(':hover')) return timelineBlock;
+		}
+		return null;
 	}
 }
 

@@ -29,6 +29,7 @@ const { pathname } = Astro.url;
 
 <style>
 	nav {
+		--nav-items-max-width: 1270px;
 		display: flex;
 		flex-direction: row;
 		height: var(--block-size);
@@ -45,7 +46,7 @@ const { pathname } = Astro.url;
 
 		.nav-items {
 			width: 100%;
-			max-width: 1270px;
+			max-width: var(--nav-items-max-width);
 			display: flex;
 			justify-content: space-between;
 			margin: 0 auto;
@@ -123,8 +124,11 @@ const { pathname } = Astro.url;
 		opacity: 0;
 		pointer-events: none;
 	}
+	#work-back-btn {
+		left: max(4rem, calc(50% - (var(--nav-items-max-width, 1270px) / 2)));
+	}
 	#work-scroll-msg {
-		right: 2rem;
+		right: max(2rem, calc(50% - (var(--nav-items-max-width, 1270px) / 2)));
 		font-size: 1.25rem;
 		letter-spacing: 0.15rem;
 	}
