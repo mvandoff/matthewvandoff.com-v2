@@ -7,6 +7,7 @@ import TimelineBlock from 'sections/home/components/TimelineBlock.astro';
 		<h3>experience</h3>
 	</div>
 	<div class="tl-blocks">
+		<div class="timeline-line-grid" aria-hidden="true"></div>
 		<TimelineBlock
 			company="Cyncly"
 			title="Web Developer"
@@ -41,6 +42,9 @@ import TimelineBlock from 'sections/home/components/TimelineBlock.astro';
 		--timeline-line-width: 4px;
 		--timeline-line-active: var(--main-300);
 		--timeline-line-mini-block-size: calc(var(--block-size) / 2);
+		--timeline-line-mini-block-gap: 1px;
+		--timeline-line-mini-block-fade: 65ms;
+		--timeline-line-step: 30ms;
 		--timeline-line-seam-color: color-mix(in srgb, var(--timeline-line-active) 55%, transparent);
 		width: 100%;
 		display: flex;
@@ -59,27 +63,32 @@ import TimelineBlock from 'sections/home/components/TimelineBlock.astro';
 		display: flex;
 		flex-direction: column;
 		position: relative;
+	}
 
-		&::after {
-			content: '';
-			position: absolute;
-			left: -5px;
-			width: var(--timeline-line-width);
-			pointer-events: none;
-			bottom: 2px;
-			height: var(--timeline-line-lit);
-			background: repeating-linear-gradient(
-				to top,
-				var(--timeline-line-active) 0,
-				var(--timeline-line-active) calc(var(--timeline-line-mini-block-size) - 1px),
-				var(--timeline-line-seam-color) calc(var(--timeline-line-mini-block-size) - 1px),
-				var(--timeline-line-seam-color) var(--timeline-line-mini-block-size)
-			);
-			box-shadow: 0 0 12px color-mix(in srgb, var(--timeline-line-active) 70%, transparent);
-			transition: height 320ms ease-in-out;
-			/* Keep the lit connector above timeline-card overlay effects. */
-			z-index: 140;
-		}
+	.timeline-line-grid {
+		position: absolute;
+		left: -5px;
+		bottom: 0;
+		width: var(--timeline-line-width);
+		height: 100%;
+		display: flex;
+		flex-direction: column-reverse;
+		gap: var(--timeline-line-mini-block-gap);
+		overflow: hidden;
+		pointer-events: none;
+		/* Keep the lit connector above timeline-card overlay effects. */
+		z-index: 140;
+	}
+
+	.timeline-line-grid :global(.timeline-line-mini-block) {
+		flex: 0 0 calc(var(--timeline-line-mini-block-size) - var(--timeline-line-mini-block-gap));
+		opacity: 0;
+		background-color: var(--timeline-line-active);
+		transition: opacity var(--timeline-line-mini-block-fade) linear;
+	}
+
+	.timeline-line-grid :global(.timeline-line-mini-block.is-lit) {
+		opacity: 1;
 	}
 	@media screen and (max-width: 1280px) {
 		.timeline {
