@@ -15,9 +15,8 @@ import { Image } from 'astro:assets';
 	</a>
 	<h3>motivation</h3>
 	<p class="motivation">
-		Create a brand identity, design, and build a professional website that conveys a sense of luxury to serve a high-end
-		massage therapy business, enhancing client trust and increasing bookings through an elegant, responsive one-page
-		website
+		Create a brand identity, design, and build a professional, luxury-forward website for a high-end massage therapy
+		business, building trust and increasing bookings through an elegant, responsive one-page site.
 	</p>
 
 	<BrandsGrid>
@@ -32,50 +31,47 @@ import { Image } from 'astro:assets';
 
 	<h3>about</h3>
 	<p>
-		By the Sea was my attempt to foray into the world of design. As frontend developers, we're often called on to make
-		design decisions. But most of us don't have any training in design, so we do the best we can. Having designed
-		syfr.studio and being a regular peruser of <ExternalLink link="https://awwwards.com" title="awwwards.com" />, I
-		wasn't unfamiliar with design entirely but with this project I wanted to dive headfirst into the techniques and
-		mindsets of a real designer. The client was starting from scratch, and trusted me not just to create a functioning
-		website, but also create a brand identity, logo, and design aesthetic that would fit their business.
+		By the Sea was my attempt to foray into the world of design. As front-end developers, we're often asked to make
+		design decisions, but most of us don't have formal design training, so we do the best we can. Having designed
+		<ExternalLink link="https://syfr.studio" title="Syfr (syfr.studio)" /> and being a regular visitor to
+		<ExternalLink link="https://awwwards.com" title="awwwards.com" />, I wasn't entirely new to design, but with this
+		project I wanted to dive headfirst into the techniques and mindset of a real designer. The client was starting from
+		scratch and trusted me not just to create a functioning website, but also to create a brand identity, logo, and
+		design aesthetic that fit their business.
 	</p>
 	<p>
-		I immersed myself in beautiful designs in every way I could think of. I bought design books, renewed my long dormant
-		Adobe account, took an online Adobe Illustrator course, and even started learning how to draw! Once my environment
-		was tuned, and I was familiar with the basics, it was easy to get inspired and get started doing what I needed to
-		do.
+		I immersed myself in great design in every way I could think of. I bought design books, renewed my long-dormant
+		Adobe subscription, took an online Adobe Illustrator course, and even started learning how to draw. Once my workflow
+		was dialed in and I had the basics down, it was easy to get inspired and get to work.
 	</p>
-	<Image alt="" src={designBooks} loading="lazy" class="body-img" />
-	<p>
-		The design process varies from person to person, but usually they share these core processes:
-		<ol>
-			<li>
-				<b>Gather requirements:</b> Ascertain the vision of the client in as much detail as possible. In this case the client
-				very clearly wanted to evoke feelings of calmness and serenity and steer away from other businesses which are focused
-				on athletic injury recovery.
-			</li>
-			<li>
-				<b>Mood boards: </b> Learn how other desginers have appraoched these problems and get a feeling of what's possible,
-				what you like and what you don't like. I looked at websites for any kind of similar businesses like spas and anything
-				that evoked feelings of calm. I also started curating any stock photos that I might like to use, creating a color
-				palette and font pairings.
-			</li>
-			<li>
-				<b>Low fidelity mockups: </b>Make a rough sketch of what sections or pages you will need, what they might look
-				like in general and where they will go. In this case we just wanted a simple one pager, with an about section, a
-				section to list what services are offered and a contact section which might turn into a section for online
-				booking at some point.
-			</li>
-			<li>
-				<b>High fidelity mockups: </b>The hard part. Take the design out of the realm of the imagination and onto the
-				screen. For a website, you probably need separate layouts for desktop, tablet, and mobile. I went through many
-				different revisions, hashing out different ideas only to find they didn't work like I thought they would. I have
-				always found this process to be very time consuming and this time was no different, even armed with new
-				knowledge. Being the developer gives me some advantage here, I don't have to be quite as detailed since I know
-				that information won't be lost in the "handoff" from developer to designer.
-			</li>
-		</ol>
-	</p>
+	<figure class="proj-footer-img body-figure">
+		<Image alt="" src={designBooks} loading="lazy" class="image" />
+		<figcaption class="caption">A few of the books I used to strengthen my design fundamentals.</figcaption>
+	</figure>
+	<p>The design process varies from person to person, but most projects follow a similar set of core steps:</p>
+	<ol>
+		<li>
+			<b>Gather requirements:</b> Ascertain the client's vision in as much detail as possible. In this case, the client wanted
+			to evoke feelings of calmness and serenity and steer away from businesses focused on athletic injury recovery.
+		</li>
+		<li>
+			<b>Mood boards:</b> Learn how other designers have approached similar problems and get a feel for what's possible, what
+			you like, and what you don't. I looked at websites for similar businesses (spas, boutique wellness brands, and anything
+			that felt calm). I also started curating stock photos, building a color palette, and exploring font pairings.
+		</li>
+		<li>
+			<b>Low-fidelity mockups:</b> Make a rough sketch of what sections you need, what they might look like, and where they
+			will live on the page. In this case, we wanted a simple one-pager with an about section, a services section, and a contact
+			section that could evolve into online booking later.
+		</li>
+		<li>
+			<b>High-fidelity mockups:</b> The hard part. Take the design out of your head and onto the screen. For a website, you
+			usually need separate layouts for desktop, tablet, and mobile. I went through many revisions, hashing out ideas only
+			to find they didn't work the way I expected. I've always found this process to be time-consuming, and this time was
+			no different, even with new knowledge. Being the developer does give me an advantage here. I don't have to be quite
+			as detailed because I know the intent won't be lost in the handoff from design to development.
+		</li>
+	</ol>
 	<div class="proj-footer-img">
 		<Image alt="" src={btsmFima} loading="lazy" class="image" />
 		<span class="caption"
@@ -84,16 +80,16 @@ import { Image } from 'astro:assets';
 		</span>
 	</div>
 	<p>
-		As far as tech goes, I tried to keep it simple. Astro is my go to "framework" for building simple static sites. It
-		allows me to use basic HTML/CSS/JS but lets me break it up into components which allows for cleaner, structured
-		code. It also comes with built in optimizations and TypeScript support. The hard part was learning GSAP. GSAP is the
-		industry standard for building interactive animations on the web. Having the 3 slats in the hero swipe across the
-		screen, tied to the user's scroll, with a parallax effect was an idea I had early on. It wasn't easy but I was able
-		to get it done with GSAP's ScrollTrigger plugin.
+		On the tech side, I tried to keep it simple. Astro is my go-to "framework" for building static sites. It lets me use
+		basic HTML/CSS/JS, while still breaking things into components for cleaner, more structured code. It also comes with
+		built-in optimizations and TypeScript support. The hard part was learning GSAP. GSAP is the industry standard for
+		building interactive animations on the web. Having the three slats in the hero swipe across the screen, tied to
+		scroll, with a parallax effect was an idea I had early on. It wasn't easy, but I was able to pull it off with GSAP's
+		ScrollTrigger plugin.
 	</p>
 	<p>
-		I learned a ton from this project and am glad I had the opportunity to do it. I can say that I'm happy to leave the
-		desgining to the designers but won't be afraid to get my hands dirty when I need to!
+		I learned a ton from this project, and I'm grateful I had the opportunity to do it. I'm happy to leave the designing
+		to the designers, but I'm glad that I feel a little more comfortable now stepping in if I need to.
 	</p>
 </div>
 
@@ -136,11 +132,8 @@ import { Image } from 'astro:assets';
 			height: auto;
 			max-width: 90%;
 		}
-		.body-img {
+		.body-figure {
 			margin: 2rem 0;
-			box-shadow:
-				0 10px 18px rgb(0 0 0 / 0.08),
-				inset 0 0 0 1px hsl(from var(--neutral-950) h s l / 0.06);
 		}
 		.proj-footer-img .image {
 			box-shadow:
