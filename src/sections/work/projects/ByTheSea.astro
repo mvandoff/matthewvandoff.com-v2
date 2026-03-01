@@ -104,9 +104,6 @@ import { Image } from 'astro:assets';
 		li {
 			color: var(--btsm-bg-800);
 		}
-		p:last-child {
-			margin-bottom: 10rem;
-		}
 		h3 {
 			color: var(--btsm-bg-700);
 		}
@@ -141,6 +138,14 @@ import { Image } from 'astro:assets';
 		}
 		.body-img {
 			margin: 2rem 0;
+			box-shadow:
+				0 10px 18px rgb(0 0 0 / 0.08),
+				inset 0 0 0 1px hsl(from var(--neutral-950) h s l / 0.06);
+		}
+		.proj-footer-img .image {
+			box-shadow:
+				0 10px 18px rgb(0 0 0 / 0.08),
+				inset 0 0 0 1px hsl(from var(--neutral-950) h s l / 0.06);
 		}
 		ol {
 			max-width: 100%;
