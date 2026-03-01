@@ -99,7 +99,6 @@ export function initHome() {
 		 */
 		clearAllBlockTimers(blockStates);
 		timelineBlockWave.clearAllTimers();
-		timelineProgressLine.reset();
 		timings = getBlockTimingsFromCss(blockContainer, defaultTimings);
 		waveTimings = getWaveTimingsFromCss(blockContainer, defaultWaveTimings);
 		blockSizePx = getBlockSizePxFromCss(blockContainer, blockSizePx);
@@ -159,6 +158,7 @@ export function initHome() {
 
 		// Rebuild timeline mini-grids whenever layout/block sizing changes.
 		timelineBlockWave.rebuildAll();
+		timelineProgressLine.rebuild();
 	}
 
 	/**
