@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import Brand from '../../../components/Brand.astro';
 import ExternalLink from 'sections/work/component/ExternalLink.astro';
+import BrandsGrid from 'sections/work/component/BrandsGrid.astro';
 import btsmFima from 'assets/images/btsm-figma.png';
 import designBooks from 'assets/images/design-books.png';
 import { Image } from 'astro:assets';
@@ -20,15 +21,15 @@ import { Image } from 'astro:assets';
 	</p>
 
 	<h3>tech used</h3>
-	<div class="brands-grid">
-		<Brand icon="vscode-icons:file-type-typescript-official" label={`JavaScript /`} label2="TypeScript" />
+	<BrandsGrid>
+		<Brand icon="vscode-icons:file-type-typescript-official" label="TypeScript" />
 		<Brand icon="vscode-icons:file-type-html" label="HTML" />
 		<Brand icon="vscode-icons:file-type-css2" label="CSS" />
 		<Brand icon="vscode-icons:file-type-light-astro" label="Astro" />
 		<Brand icon="skill-icons:photoshop" label="Photoshop" />
 		<Brand icon="skill-icons:illustrator" label="Illustrator" />
 		<Brand icon="simple-icons:gsap" label="GSAP" class="gsap-logo" />
-	</div>
+	</BrandsGrid>
 
 	<h3>about</h3>
 	<p>
@@ -151,20 +152,10 @@ import { Image } from 'astro:assets';
 	}
 	@media screen and (max-width: 1023px) {
 		.proj {
-			.brands-grid {
-				/* padding-left: 20%; */
-				width: 600px;
-			}
 		}
 	}
 	@media screen and (max-width: 767px) {
 		.proj {
-			.brands-grid {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				padding: 0 2rem;
-				gap: 1rem;
-			}
 		}
 	}
 </style>

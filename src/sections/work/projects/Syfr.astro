@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Brand from '../../../components/Brand.astro';
+import BrandsGrid from 'sections/work/component/BrandsGrid.astro';
 ---
 
 <div class="proj" data-proj-id={'syfr'}>
@@ -15,24 +16,18 @@ import Brand from '../../../components/Brand.astro';
 	</p>
 
 	<h3>tech used</h3>
-	<div class="brands-grid">
-		<div class="brands-col">
-			<Brand icon="vscode-icons:file-type-typescript-official" label="JavaScript / TypeScript" />
-			<Brand icon="vscode-icons:file-type-reactjs" label="React" />
-			<Brand icon="vscode-icons:file-type-html" label="HTML" />
-			<Brand icon="vscode-icons:file-type-css2" label="CSS" />
-			<Brand icon="vscode-icons:file-type-tailwind" label="Tailwind CSS" />
-		</div>
-		<div class="brands-col">
-			<Brand icon="vscode-icons:file-type-next" label="Next.js" />
-			<Brand icon="vscode-icons:file-type-node" label="Node.js" />
-			<Brand icon="vscode-icons:file-type-light-prisma" label="Prisma" />
-		</div>
-		<div class="brands-col">
-			<Brand icon="fa7-brands:aws" label="AWS" class="aws" />
-			<Brand icon="skill-icons:postgresql-dark" label="PostgreSQL" />
-		</div>
-	</div>
+	<BrandsGrid>
+		<Brand icon="vscode-icons:file-type-typescript-official" label="TypeScript" />
+		<Brand icon="vscode-icons:file-type-reactjs" label="React" />
+		<Brand icon="vscode-icons:file-type-html" label="HTML" />
+		<Brand icon="vscode-icons:file-type-css2" label="CSS" />
+		<Brand icon="vscode-icons:file-type-tailwind" label="Tailwind CSS" />
+		<Brand icon="vscode-icons:file-type-next" label="Next.js" />
+		<Brand icon="vscode-icons:file-type-node" label="Node.js" />
+		<Brand icon="vscode-icons:file-type-light-prisma" label="Prisma" />
+		<Brand icon="fa7-brands:aws" label="AWS" class="aws" />
+		<Brand icon="skill-icons:postgresql-dark" label="PostgreSQL" />
+	</BrandsGrid>
 
 	<h3>about</h3>
 	<p>
@@ -86,40 +81,6 @@ import Brand from '../../../components/Brand.astro';
 
 			&:hover {
 				border-color: var(--main-500);
-			}
-		}
-		.brands-grid {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-
-			.brands-col {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				justify-content: center;
-				border-top: 1px dotted grey;
-				padding: 2rem 20% 0 20%;
-				/* max-width: 600px; */
-				width: 100%;
-				margin: 0 auto;
-			}
-		}
-	}
-	@media screen and (max-width: 1023px) {
-		.brands-grid {
-			flex-direction: column;
-			.brands-col {
-			}
-		}
-	}
-	@media screen and (max-width: 767px) {
-		.brands-grid {
-			flex-direction: column;
-			.brands-col {
-				display: grid !important;
-				grid-template-columns: 1fr;
-				padding: 2rem 15% 0 15% !important;
 			}
 		}
 	}

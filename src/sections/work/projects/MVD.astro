@@ -1,5 +1,6 @@
 ---
 import Brand from 'components/Brand.astro';
+import BrandsGrid from 'sections/work/component/BrandsGrid.astro';
 ---
 
 <div class="proj" data-proj-id="mvdc">
@@ -7,13 +8,13 @@ import Brand from 'components/Brand.astro';
 	<p class="motivation">Create my own personal space on the web, for funsies.</p>
 
 	<h3>tech used</h3>
-	<div class="brands-grid">
-		<Brand icon="vscode-icons:file-type-typescript-official" label={`JavaScript /`} label2="TypeScript" />
+	<BrandsGrid>
+		<Brand icon="vscode-icons:file-type-typescript-official" label="TypeScript" />
 		<Brand icon="vscode-icons:file-type-html" label="HTML" />
 		<Brand icon="vscode-icons:file-type-css2" label="CSS" />
 		<Brand icon="vscode-icons:file-type-astro" label="Astro" />
 		<Brand icon="simple-icons:gsap" label="GSAP" />
-	</div>
+	</BrandsGrid>
 
 	<h3>about</h3>
 	<p>
@@ -28,26 +29,6 @@ import Brand from 'components/Brand.astro';
 		}
 		p:last-child {
 			margin-bottom: 10rem;
-		}
-	}
-	.brands-grid {
-		width: 600px !important;
-		display: grid;
-		margin: 0 auto;
-		gap: 2rem;
-	}
-	@media screen and (max-width: 1023px) {
-		.proj {
-			.brands-grid {
-				width: 500px !important;
-			}
-		}
-	}
-	@media screen and (max-width: 767px) {
-		.proj {
-			.brands-grid {
-				/* width: 400px !important; */
-			}
 		}
 	}
 </style>
