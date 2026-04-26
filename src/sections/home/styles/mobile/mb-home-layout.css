@@ -8,8 +8,10 @@
 	#home-content {
 		width: 100%;
 		max-width: none;
+		display: block;
 		margin: 0 auto;
 		min-height: 0;
+		padding-top: 0;
 		padding-bottom: 0;
 		overflow-y: auto !important;
 		scroll-snap-type: y mandatory;

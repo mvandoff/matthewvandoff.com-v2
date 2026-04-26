@@ -1,38 +1,19 @@
 .right {
-	--right-col-start: calc(var(--left-col-span) + var(--content-gap) + var(--edge-gap));
-	--right-row-home: 2;
-	--right-row-blurbs: 3;
-	--right-row-blurbs-span: 5;
-	--right-row-timeline: 8;
-	--right-row-timeline-span: 10;
-
-	margin-left: calc(var(--right-col-start) * var(--block-size));
-	width: calc(var(--right-col-span) * var(--block-size));
-	display: grid;
-	grid-template-columns: repeat(var(--right-col-span), var(--block-size));
-	grid-auto-rows: var(--block-size);
+	width: 100%;
 
 	h3 {
 		color: var(--neutral-200);
 		margin: 0;
-		padding-left: 1rem;
 		font-size: 22px;
 	}
 	.home-h3-container {
-		grid-column: 1 / -1;
-		grid-row: var(--right-row-home) / span 1;
 		height: var(--block-size);
 		width: 100%;
 		display: flex;
 		align-items: center;
 	}
 	.blurbs {
-		grid-column: 1 / -1;
-		grid-row: var(--right-row-blurbs) / span var(--right-row-blurbs-span);
-		height: calc(var(--right-row-blurbs-span) * var(--block-size));
-	}
-	.timeline-slot {
-		grid-column: 1 / -1;
-		grid-row: var(--right-row-timeline) / span var(--right-row-timeline-span);
+		display: flex;
+		flex-direction: column;
 	}
 }

@@ -1,5 +1,5 @@
 @media screen and (max-width: 1280px) {
-	.screen-hero .left-image-layer {
+	.screen-hero .mb-hero-image-layer {
 		grid-column: 3 / -1;
 		grid-row: 1 / 12;
 	}

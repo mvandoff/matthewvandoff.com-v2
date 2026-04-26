@@ -1,0 +1,44 @@
+@media screen and (min-width: 1281px) {
+	#home {
+		--home-grid-columns: var(--right-col-span);
+		--home-intro-row: 2;
+		--home-intro-row-span: 3;
+		--home-about-heading-row: 5;
+		--home-blurbs-row: 6;
+		--home-blurbs-row-span: 5;
+		--home-timeline-row: 11;
+		--home-timeline-row-span: 10;
+	}
+
+	#home-content {
+		display: grid;
+		grid-template-columns: repeat(var(--home-grid-columns), var(--block-size));
+		grid-auto-rows: var(--block-size);
+	}
+
+	.screen-hero .left,
+	.screen-about .right {
+		display: contents;
+	}
+
+	.screen-hero .left-intro {
+		grid-column: 1 / -1;
+		grid-row: var(--home-intro-row) / span var(--home-intro-row-span);
+	}
+
+	.screen-about .home-h3-container {
+		grid-column: 1 / -1;
+		grid-row: var(--home-about-heading-row) / span 1;
+	}
+
+	.screen-about .blurbs {
+		grid-column: 1 / -1;
+		grid-row: var(--home-blurbs-row) / span var(--home-blurbs-row-span);
+		height: calc(var(--home-blurbs-row-span) * var(--block-size));
+	}
+
+	.screen-about .timeline-slot {
+		grid-column: 1 / -1;
+		grid-row: var(--home-timeline-row) / span var(--home-timeline-row-span);
+	}
+}
