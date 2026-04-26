@@ -1,9 +1,14 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Brand from 'components/Brand.astro';
 import BrandsGrid from 'sections/work/component/BrandsGrid.astro';
 ---
 
 <div class="proj" data-proj-id="mvdc">
+	<a class="live-site-btn" href="https://github.com/mvandoff/matthewvandoff.com-v2" target="_blank"
+		>repository
+		<Icon name="heroicons:arrow-top-right-on-square" />
+	</a>
 	<h3>motivation</h3>
 	<p class="motivation">Create my own personal space on the web, for funsies.</p>
 
@@ -51,7 +56,13 @@ import BrandsGrid from 'sections/work/component/BrandsGrid.astro';
 <style>
 	.proj {
 		.live-site-btn {
-			border: 1px solid white;
+			margin-top: 4rem;
+			border: 2px solid var(--main-700);
+			color: white;
+
+			&:hover {
+				border-color: var(--main-500);
+			}
 		}
 	}
 </style>
