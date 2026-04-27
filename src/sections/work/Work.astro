@@ -105,10 +105,10 @@ import ProjectImageList from 'sections/work/ProjectImageList.astro';
 
 	document.addEventListener('DOMContentLoaded', () => {
 		gsap.registerPlugin(CustomEase, Flip);
-		CustomEase.create('osmo-ease', '0.625, 0.05, 0, 1');
+		CustomEase.create('cool-ease', '0.625, 0.05, 0, 1');
 
 		gsap.defaults({
-			ease: 'osmo-ease',
+			ease: 'cool-ease',
 			duration: 1,
 		});
 
