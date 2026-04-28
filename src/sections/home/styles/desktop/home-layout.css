@@ -1,6 +1,7 @@
 #home {
 	position: fixed;
-	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: auto;
 	height: auto;
 	width: 100%;
 	max-width: none;
