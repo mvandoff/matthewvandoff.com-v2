@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 
-const { pathname } = Astro.url;
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
 <nav id="main-nav">
