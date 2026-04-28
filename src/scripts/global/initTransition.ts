@@ -23,6 +23,7 @@ const CLEANUP_KEY = '__transitionCleanup__' as const;
 
 const TRANSITION_STAGGER_FROM: 'random' = 'random';
 const TRANSITION_INITIALIZED_DATA_KEY = 'transitionInitialized';
+const TRANSITION_LOGO_READY_CLASS = 'transition--logo-ready';
 
 // Primary animation timing controls for the reveal (page load) and cover (nav click) phases.
 // `staggerAmount` controls the overall wave duration more than the per-block duration does.
@@ -30,6 +31,7 @@ const TRANSITION_TIMING = {
 	pageLoadStartDelay: 0.1,
 	pageLoadBlockDuration: 0.15,
 	pageLoadStaggerAmount: 0.55,
+	logoReadyMaxWaitMs: 600,
 	navCoverBlockDuration: 0.15,
 	navCoverStaggerAmount: 0.55,
 } as const;
@@ -223,7 +225,7 @@ function rectanglesOverlap(a: Rect, b: Rect): boolean {
  *    - Only once the screen is covered do we navigate to the destination URL.
  */
 
-export function initTransition() {
+export async function initTransition() {
 	try {
 		// `Transition.astro` runs in the global layout, and can be initialized again on Astro page loads.
 		// Cleanup ensures we don't stack delegated nav handlers across navigations.
@@ -235,6 +237,9 @@ export function initTransition() {
 		 */
 		adjustGrid();
 		markTransitionInitialized();
+		await waitForLogoImage();
+		showTransitionLogo();
+		await waitForLogoFade();
 
 		// Page-load reveal timeline (auto-plays immediately after creation).
 		gsap
@@ -371,4 +376,41 @@ export function initTransition() {
 		console.error('Transition failed to initialize.', error);
 		resetTransition();
 	}
+}
+
+function waitForLogoImage() {
+	return new Promise<void>((resolve) => {
+		const image = new Image();
+		const timeout = window.setTimeout(resolve, TRANSITION_TIMING.logoReadyMaxWaitMs);
+		const finish = () => {
+			window.clearTimeout(timeout);
+			resolve();
+		};
+
+		image.addEventListener('load', finish, { once: true });
+		image.addEventListener('error', finish, { once: true });
+		image.src = mvdLogoMaskUrl;
+		if (image.complete) finish();
+	});
+}
+
+function showTransitionLogo() {
+	const transition = document.getElementById('transition') as HTMLElement;
+
+	transition.classList.add(TRANSITION_LOGO_READY_CLASS);
+}
+
+function waitForLogoFade() {
+	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve();
+
+	return new Promise((resolve) => window.setTimeout(resolve, getTransitionLogoFadeMs()));
+}
+
+function getTransitionLogoFadeMs() {
+	const duration = window
+		.getComputedStyle(document.documentElement)
+		.getPropertyValue('--transition-logo-fade-duration')
+		.trim();
+
+	return duration.endsWith('ms') ? Number.parseFloat(duration) : Number.parseFloat(duration) * 1000;
 }

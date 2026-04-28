@@ -4,6 +4,7 @@
 	:root {
 		--transition-bg: var(--main-800);
 		--transition-block-size: var(--block-size);
+		--transition-logo-fade-duration: 500ms;
 	}
 	.transition {
 		display: grid;
@@ -34,11 +35,23 @@
 		background-repeat: no-repeat;
 		background-size: var(--transition-logo-width) var(--transition-logo-height);
 		background-position: var(--transition-logo-pos-x) var(--transition-logo-pos-y);
+		opacity: 0;
+		transition: opacity var(--transition-logo-fade-duration) ease;
+	}
+
+	.transition--logo-ready .transition-block--logo::before {
+		opacity: 1;
 	}
 
 	@media screen and (max-width: 1280px) {
 		:root {
 			--transition-block-size: 48px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.transition-block--logo::before {
+			transition: none;
 		}
 	}
 </style>
