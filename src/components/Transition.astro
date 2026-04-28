@@ -42,6 +42,20 @@
 		}
 	}
 </style>
+<script is:inline>
+	window.setTimeout(() => {
+		const transition = document.getElementById('transition');
+		if (transition.dataset.transitionInitialized === 'true') return;
+
+		console.error('Transition failed to initialize before the fallback timeout.');
+		transition.style.display = 'none';
+		transition.style.background = 'transparent';
+		transition.querySelectorAll('.transition-block').forEach((block) => {
+			block.style.opacity = '0';
+			block.style.visibility = 'hidden';
+		});
+	}, 2000);
+</script>
 <script>
 	import { initTransition } from 'scripts/global/initTransition';
 
