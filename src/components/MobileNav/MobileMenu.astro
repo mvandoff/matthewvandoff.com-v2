@@ -1,5 +1,5 @@
 ---
-const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const pathname = Astro.url.pathname;
 ---
 
 <nav id="mobile-menu" class="closed" aria-hidden="true">
@@ -13,7 +13,7 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 			<a href="/" data-label="home" data-mobile-menu-link class={pathname === '/' ? 'selected' : ''}>home {pathname}</a>
 		</li>
 		<li>
-			<a href="/work" data-label="work" data-mobile-menu-link class={pathname === '/work' ? 'selected' : ''}>work</a>
+			<a href="/work" data-label="work" data-mobile-menu-link class={pathname === '/work/' ? 'selected' : ''}>work</a>
 		</li>
 	</ul>
 </nav>
