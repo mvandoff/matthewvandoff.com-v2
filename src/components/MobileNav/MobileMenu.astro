@@ -9,7 +9,9 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 		<div class="mobile-menu__warp mobile-menu__warp--two"></div>
 	</div>
 	<ul>
-		<li><a href="/" data-label="home" data-mobile-menu-link class={pathname === '/' ? 'selected' : ''}>home</a></li>
+		<li>
+			<a href="/" data-label="home" data-mobile-menu-link class={pathname === '/' ? 'selected' : ''}>home {pathname}</a>
+		</li>
 		<li>
 			<a href="/work" data-label="work" data-mobile-menu-link class={pathname === '/work' ? 'selected' : ''}>work</a>
 		</li>
