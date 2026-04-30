@@ -24,6 +24,8 @@ const CLEANUP_KEY = '__transitionCleanup__' as const;
 const TRANSITION_STAGGER_FROM: 'random' = 'random';
 const TRANSITION_INITIALIZED_DATA_KEY = 'transitionInitialized';
 const TRANSITION_LOGO_READY_CLASS = 'transition--logo-ready';
+const TRANSITION_LOGO_NO_FADE_CLASS = 'transition--logo-no-fade';
+const INTERNAL_TRANSITION_STORAGE_KEY = 'mvd-internal-transition-destination';
 
 // Primary animation timing controls for the reveal (page load) and cover (nav click) phases.
 // `staggerAmount` controls the overall wave duration more than the per-block duration does.
@@ -237,9 +239,10 @@ export async function initTransition() {
 		 */
 		adjustGrid();
 		markTransitionInitialized();
+		const shouldFadeLogo = !consumeInternalTransitionDestination();
 		await waitForLogoImage();
-		showTransitionLogo();
-		await waitForLogoFade();
+		showTransitionLogo({ shouldFade: shouldFadeLogo });
+		if (shouldFadeLogo) await waitForLogoFade();
 
 		// Page-load reveal timeline (auto-plays immediately after creation).
 		gsap
@@ -340,6 +343,7 @@ export async function initTransition() {
 					ease: 'linear',
 					stagger: { amount: TRANSITION_TIMING.navCoverStaggerAmount, from: TRANSITION_STAGGER_FROM },
 					onComplete: () => {
+						markInternalTransitionDestination(destination);
 						window.location.href = destination;
 					},
 				},
@@ -394,9 +398,10 @@ function waitForLogoImage() {
 	});
 }
 
-function showTransitionLogo() {
+function showTransitionLogo({ shouldFade }: { shouldFade: boolean }) {
 	const transition = document.getElementById('transition') as HTMLElement;
 
+	if (!shouldFade) transition.classList.add(TRANSITION_LOGO_NO_FADE_CLASS);
 	transition.classList.add(TRANSITION_LOGO_READY_CLASS);
 }
 
@@ -413,4 +418,23 @@ function getTransitionLogoFadeMs() {
 		.trim();
 
 	return duration.endsWith('ms') ? Number.parseFloat(duration) : Number.parseFloat(duration) * 1000;
+}
+
+/**
+ * Stores the exact URL that will be loaded after an in-app transition cover completes.
+ * The next page load consumes this marker to know it should reveal immediately from the already-covered state.
+ */
+function markInternalTransitionDestination(destination: string) {
+	window.sessionStorage.setItem(INTERNAL_TRANSITION_STORAGE_KEY, destination);
+}
+
+/**
+ * Reads and clears the pending in-app transition destination marker.
+ * Returns true only when the stored destination matches the current page URL, preventing stale markers from affecting later loads.
+ */
+function consumeInternalTransitionDestination() {
+	const destination = window.sessionStorage.getItem(INTERNAL_TRANSITION_STORAGE_KEY);
+	window.sessionStorage.removeItem(INTERNAL_TRANSITION_STORAGE_KEY);
+
+	return destination === window.location.href;
 }

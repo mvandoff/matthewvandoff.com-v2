@@ -39,6 +39,10 @@
 		transition: opacity var(--transition-logo-fade-duration) ease;
 	}
 
+	.transition--logo-no-fade .transition-block--logo::before {
+		transition: none;
+	}
+
 	.transition--logo-ready .transition-block--logo::before {
 		opacity: 1;
 	}
