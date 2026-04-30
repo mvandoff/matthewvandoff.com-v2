@@ -31,8 +31,8 @@ const INTERNAL_TRANSITION_STORAGE_KEY = 'mvd-internal-transition-destination';
 // `staggerAmount` controls the overall wave duration more than the per-block duration does.
 const TRANSITION_TIMING = {
 	pageLoadStartDelay: 0.1,
-	pageLoadBlockDuration: 0.15,
-	pageLoadStaggerAmount: 0.55,
+	pageLoadBlockDuration: 0.35,
+	pageLoadStaggerAmount: 0.6,
 	logoReadyMaxWaitMs: 600,
 	navCoverBlockDuration: 0.15,
 	navCoverStaggerAmount: 0.55,
@@ -300,7 +300,9 @@ export async function initTransition() {
 		};
 
 		const resetLinkTransitionState = () => {
-			getValidTransitionLinks().forEach((validLink) => validLink.removeEventListener('mouseleave', stopImmediate, true));
+			getValidTransitionLinks().forEach((validLink) =>
+				validLink.removeEventListener('mouseleave', stopImmediate, true),
+			);
 			document.querySelectorAll('.transitioning').forEach((link) => link.classList.remove('transitioning'));
 		};
 
