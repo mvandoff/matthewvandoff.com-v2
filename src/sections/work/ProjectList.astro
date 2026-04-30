@@ -18,6 +18,7 @@
 <style>
 	.proj-list {
 		width: fit-content;
+		max-width: 100%;
 		position: relative;
 		flex-flow: column;
 		align-items: flex-start;
@@ -38,6 +39,7 @@
 		background-color: transparent;
 		border: none;
 		padding: 0;
+		max-width: 100%;
 	}
 	.button.text {
 		transition: opacity 0.2s;
@@ -52,6 +54,7 @@
 		line-height: 1;
 		white-space: nowrap;
 		cursor: pointer;
+		max-width: 100%;
 	}
 </style>
 <style is:global>
@@ -61,8 +64,11 @@
 		}
 	}
 	@media screen and (min-width: 1024px) {
+		.proj-list {
+			padding-inline: clamp(2rem, 4vw, 4rem);
+		}
 		.proj-title {
-			font-size: clamp(3rem, 4.75vw, 5rem);
+			font-size: clamp(3rem, 4vw, 4.5rem);
 		}
 		.proj-list-item:not(.selected) {
 			opacity: 0.45;
